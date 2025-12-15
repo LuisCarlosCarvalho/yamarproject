@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Contacte Yemar Makeup Artist - Maquilhadora Profissional">
+    <title>Contacto - Yemar Makeup Artist</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://images.unsplash.com">
+    <link rel="dns-prefetch" href="https://images.unsplash.com">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="top-bar">
+                <button class="hamburger" id="hamburger" aria-label="Abrir menu">
+                    <span></span><span></span><span></span>
+                </button>
+                <nav class="main-nav" aria-label="Navegação principal">
+                    <a href="index.html">INÍCIO</a>
+                    <div class="dropdown">
+                        <a href="servicos.html" class="dropdown-toggle">SERVIÇOS <i>▼</i></a>
+                        <div class="dropdown-menu">
+                            <a href="servicos.html">Todos os Serviços</a>
+                            <a href="workshops.html">Workshops</a>
+                        </div>
+                    </div>
+                    <a href="contacto.html">CONTACTO</a>
+                    <a href="sobre.html">SOBRE MIM</a>
+                    <div class="dropdown">
+                        <a href="#" class="dropdown-toggle">SERVIÇOS DIGITAIS <i>▼</i></a>
+                        <div class="dropdown-menu">
+                            <a href="produtos.html">Loja Online</a>
+                            <a href="blog.html">Blog</a>
+                        </div>
+                    </div>
+                </nav>
+                <div class="header-right">
+                    <div class="social-icons">
+                        <a href="https://www.facebook.com/share/1Darek4Pov/" target="_blank" aria-label="Facebook">f</a>
+                        <a href="https://www.instagram.com/yemarmakeup?igsh=MTFvcTZ2emdjem96OA==" target="_blank" aria-label="Instagram">i</a>
+                    </div>
+                    <button class="search-toggle" id="searchToggle" aria-label="Pesquisar">🔍</button>
+                    <button class="cart-icon" onclick="toggleMiniCart()" aria-label="Carrinho">
+                        🛒<span class="cart-badge" id="cartBadge" style="display: none;">0</span>
+                    </button>
+                    <div class="auth-link"><a href="conta.html">Entrar</a></div>
+                    <a href="admin.html" class="admin-link" style="display: none;">Admin</a>
+                </div>
+            </div>
+            <div class="logo-section">
+                <a href="index.html"><img src="assets/images/logo.png" alt="Yemar Makeup Artist" class="logo-img" style="height: 80px;"></a>
+                <p class="tagline">I AM BAFÓNICA</p>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <div class="mobile-menu-header">
+            <img src="assets/images/logo.png" alt="Yemar Makeup Artist" style="height: 40px;">
+            <button class="mobile-menu-close" id="closeMenu" aria-label="Fechar menu">&times;</button>
+        </div>
+        <nav class="mobile-nav">
+            <a href="index.html">Início</a>
+            <a href="servicos.html">Serviços</a>
+            <a href="workshops.html">Workshops</a>
+            <a href="produtos.html">Produtos</a>
+            <a href="blog.html">Blog</a>
+            <a href="eventos.html">Eventos</a>
+            <a href="contacto.html">Contacto</a>
+            <a href="conta.html">Entrar / Registar</a>
+        </nav>
+    </div>
+
+    <!-- Search Overlay -->
+    <div class="search-overlay" id="searchOverlay">
+        <button class="search-close" id="searchClose" aria-label="Fechar pesquisa">&times;</button>
+        <div class="search-input-wrapper">
+            <input type="text" id="searchInput" placeholder="Pesquisar..." aria-label="Pesquisar">
+        </div>
+        <div id="searchResults"></div>
+    </div>
+
+    <!-- Mini Cart -->
+    <div class="mini-cart" id="miniCart">
+        <div class="mini-cart-header">
+            <h3>Carrinho</h3>
+            <button class="mini-cart-close" onclick="toggleMiniCart()">&times;</button>
+        </div>
+        <div class="mini-cart-content" id="miniCartContent"></div>
+    </div>
+
+    <!-- Main Content -->
+    <main id="main">
+        <div class="page-header">
+            <div class="container">
+                <h1 class="page-title">Contacto</h1>
+            </div>
+        </div>
+
+        <section class="section">
+            <div class="container">
+                <div class="contact-grid">
+                    <!-- Formulário de Contacto -->
+                    <div class="contact-form-container">
+                        <h2 style="margin-bottom: 1.5rem;">Envia-me uma mensagem</h2>
+                        <form id="contactForm">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="contactName">Nome *</label>
+                                    <input type="text" id="contactName" required placeholder="O teu nome">
+                                </div>
+                                <div class="form-group">
+                                    <label for="contactPhone">Telefone</label>
+                                    <input type="tel" id="contactPhone" placeholder="(+351) 933758731">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="contactEmail">Email *</label>
+                                <input type="email" id="contactEmail" required placeholder="o.teu@email.com">
+                            </div>
+                            <div class="form-group">
+                                <label for="contactSubject">Assunto *</label>
+                                <select id="contactSubject" required>
+                                    <option value="">Seleciona um assunto</option>
+                                    <option value="orcamento">Pedido de Orçamento</option>
+                                    <option value="marcacao">Marcação de Serviço</option>
+                                    <option value="workshop">Informações sobre Workshops</option>
+                                    <option value="produtos">Dúvidas sobre Produtos</option>
+                                    <option value="parceria">Proposta de Parceria</option>
+                                    <option value="outro">Outro Assunto</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="contactMessage">Mensagem *</label>
+                                <textarea id="contactMessage" rows="6" required placeholder="Escreve a tua mensagem..."></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Enviar Mensagem</button>
+                        </form>
+                    </div>
+
+                    <!-- Informações de Contacto -->
+                    <div class="contact-info">
+                        <h3>Informações de Contacto</h3>
+                        <p><strong>Email:</strong> <a href="mailto:yemarmk@gmail.com">yemarmk@gmail.com</a></p>
+                        <p><strong>Telefone:</strong> <a href="tel:+351912345678">(+351) 933758731</a></p>
+                        <p><strong>Horário:</strong> Segunda a Sexta, 9h - 18h</p>
+                        
+                        <h3 style="margin-top: 2rem;">Localização</h3>
+                        <p>Atendimento ao domicílio em Lisboa e arredores.</p>
+                        <p>Estúdio disponível para sessões fotográficas.</p>
+
+                        <h3 style="margin-top: 2rem;">Redes Sociais</h3>
+                        <div class="footer-social" style="justify-content: flex-start; margin-top: 1rem;">
+                            <a href="https://www.facebook.com/share/1Darek4Pov/" target="_blank" aria-label="Facebook" style="background: #c9a227; border-color: #c9a227; color: #fff;">f</a>
+                            <a href="https://www.instagram.com/yemarmakeup?igsh=MTFvcTZ2emdjem96OA==" target="_blank" aria-label="Instagram" style="background: #c9a227; border-color: #c9a227; color: #fff;">i</a>
+                        </div>
+
+                        <h3 style="margin-top: 2rem;">Localização no Mapa</h3>
+                        <div id="mapContainer" style="margin-top: 1rem; border-radius: 8px; overflow: hidden;">
+                            <iframe 
+                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d194347.38440883!2d-9.229838!3d38.736946!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd19331a61e4f33b%3A0x400ebbde49036d0!2sLisboa%2C%20Portugal!5e0!3m2!1spt-PT!2spt!4v1702656000000!5m2!1spt-PT!2spt" 
+                                width="100%" 
+                                height="250" 
+                                style="border:0;" 
+                                allowfullscreen="" 
+                                loading="lazy" 
+                                referrerpolicy="no-referrer-when-downgrade">
+                            </iframe>
+                        </div>
+
+                        <h3 style="margin-top: 2rem;">Tempo de Resposta</h3>
+                        <p>Respondo a todas as mensagens num prazo máximo de 24 horas úteis.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-section">
+                    <h4>Serviços</h4>
+                    <a href="servicos.html">Maquilhagem Noiva</a>
+                    <a href="servicos.html">Maquilhagem Social</a>
+                    <a href="workshops.html">Workshops</a>
+                    <a href="produtos.html">Loja Online</a>
+                </div>
+                <div class="footer-section footer-about">
+                    <h4>Yemar Makeup Artist</h4>
+                    <p>Maquilhadora profissional apaixonada por realçar a beleza natural.</p>
+                    <div class="footer-social">
+                        <a href="https://www.facebook.com/share/1Darek4Pov/" target="_blank" aria-label="Facebook">f</a>
+                        <a href="https://www.instagram.com/yemarmakeup?igsh=MTFvcTZ2emdjem96OA==" target="_blank" aria-label="Instagram">i</a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Contacto</h4>
+                    <a href="contacto.html">Formulário de Contacto</a>
+                    <a href="mailto:yemarmk@gmail.com">yemarmk@gmail.com</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 YemarMakeupArtist. Todos os direitos reservados.</p>
+                <p class="prototype-notice">Protótipo funcional - FSL Solution Digital.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/storage.js" defer></script>
+    <script src="js/ui.js" defer></script>
+    <script src="js/app.js" defer></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            loadContactPage();
+        });
+    </script>
+</body>
+</html>
