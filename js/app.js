@@ -2094,13 +2094,44 @@ function handleSettingsSubmit(e) {
     // Forçar salvamento direto no localStorage
     const users = getUsers();
     console.log('Usuários antes da atualização:', users);
+    console.log('Sessão atual:', session);
     
-    const userIndex = users.findIndex(u => u.id === session.id);
-    console.log('Índice do usuário:', userIndex);
+    // Buscar por email (mais confiável que ID)
+    const userIndex = users.findIndex(u => u.email.toLowerCase() === session.email.toLowerCase());
+    console.log('Índice do usuário (busca por email):', userIndex);
     
     if (userIndex === -1) {
         console.error('Usuário não encontrado na lista');
-        showToast('Erro: Usuário não encontrado', 'error');
+        console.log('Tentando buscar por ID como fallback...');
+        const userIndexById = users.findIndex(u => u.id === session.id);
+        console.log('Índice por ID:', userIndexById);
+        
+        if (userIndexById === -1) {
+            showToast('Erro: Usuário não encontrado', 'error');
+            return;
+        }
+        
+        // Usar índice encontrado por ID
+        const finalIndex = userIndexById;
+        
+        // Atualizar dados
+        users[finalIndex] = {
+            ...users[finalIndex],
+            nome: nome,
+            telefone: telefone,
+            email: email
+        };
+        
+        console.log('Usuário atualizado (via ID):', users[finalIndex]);
+        
+        // Salvar
+        localStorage.setItem('users', JSON.stringify(users));
+        console.log('Dados salvos no localStorage');
+        
+        // Atualizar sessão
+        setCurrentSession(users[finalIndex]);
+        showToast('Dados atualizados com sucesso!', 'success');
+        updateAuthUI();
         return;
     }
     
