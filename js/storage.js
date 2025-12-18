@@ -542,7 +542,7 @@ function initializeSeed() {
             currentSettings.portfolioImages = SEED_SITE_SETTINGS.portfolioImages;
             setData('siteSettings', currentSettings);
         }
-        if (!currentSettings.certificates) {
+        if (!currentSettings.certificates || currentSettings.certificates.length === 0) {
             currentSettings.certificates = SEED_SITE_SETTINGS.certificates || [];
             setData('siteSettings', currentSettings);
         }
