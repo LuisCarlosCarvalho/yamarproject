@@ -521,8 +521,12 @@ function getUsers() {
 }
 
 function getUserById(id) {
+    console.log('getUserById chamada com id:', id);
     const users = getUsers();
-    return users.find(u => u.id === id);
+    console.log('Todos os usuários:', users);
+    const user = users.find(u => u.id === id);
+    console.log('Usuário encontrado:', user);
+    return user;
 }
 
 function getUserByEmail(email) {

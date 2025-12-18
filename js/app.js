@@ -2010,13 +2010,10 @@ function loadUserSettings() {
         return;
     }
     
-    const user = getUserById(session.id);
-    if (!user) {
-        console.log('loadUserSettings: Usuário não encontrado');
-        return;
-    }
+    console.log('loadUserSettings: Sessão encontrada', session);
     
-    console.log('loadUserSettings: Carregando dados do usuário', user);
+    // Usar dados da sessão diretamente
+    const user = session;
     
     // Aguardar DOM estar pronto
     setTimeout(() => {
@@ -2086,28 +2083,48 @@ function handleSettingsSubmit(e) {
     
     console.log('Dados do formulário:', { nome, telefone, email });
     
-    if (!nome || !email) {
-        console.log('Validação falhou: nome ou email vazio');
-        showToast('Nome e email são obrigatórios!', 'error');
+    if (!nome || !email || !telefone) {
+        console.log('Validação falhou: campo obrigatório vazio');
+        showToast('Nome, telefone e email são obrigatórios!', 'error');
         return;
     }
     
-    console.log('Chamando updateUser...');
+    console.log('Salvando diretamente no localStorage...');
     
-    // Atualizar usuário
-    const result = updateUser(session.id, { nome, telefone, email });
-    console.log('Resultado updateUser:', result);
+    // Forçar salvamento direto no localStorage
+    const users = getUsers();
+    console.log('Usuários antes da atualização:', users);
     
-    if (!result) {
-        console.error('updateUser retornou null');
-        showToast('Erro ao atualizar dados', 'error');
+    const userIndex = users.findIndex(u => u.id === session.id);
+    console.log('Índice do usuário:', userIndex);
+    
+    if (userIndex === -1) {
+        console.error('Usuário não encontrado na lista');
+        showToast('Erro: Usuário não encontrado', 'error');
         return;
     }
+    
+    // Atualizar dados do usuário
+    users[userIndex] = {
+        ...users[userIndex],
+        nome: nome,
+        telefone: telefone,
+        email: email
+    };
+    
+    console.log('Usuário atualizado:', users[userIndex]);
+    
+    // Salvar diretamente no localStorage
+    localStorage.setItem('users', JSON.stringify(users));
+    console.log('Dados salvos no localStorage');
+    
+    // Verificar se foi salvo
+    const savedUsers = JSON.parse(localStorage.getItem('users') || '[]');
+    const savedUser = savedUsers.find(u => u.id === session.id);
+    console.log('Usuário verificado após salvar:', savedUser);
     
     // Atualizar sessão
-    const updatedUser = getUserById(session.id);
-    console.log('Usuário após update:', updatedUser);
-    setCurrentSession(updatedUser);
+    setCurrentSession(users[userIndex]);
     
     showToast('Dados atualizados com sucesso!', 'success');
     
