@@ -3049,9 +3049,9 @@ function loadCertificatesCarousel() {
         </div>
     `).join('');
     
-    // Show controls only if more than 3 certificates
+    // Show controls only if more than 1 certificate
     if (controls) {
-        controls.style.display = certificates.length > 3 ? 'flex' : 'none';
+        controls.style.display = certificates.length > 1 ? 'flex' : 'none';
     }
     
     currentCertificateIndex = 0;
@@ -3060,7 +3060,7 @@ function loadCertificatesCarousel() {
 
 function moveCertificatesCarousel(direction) {
     const certificates = getCertificates();
-    const maxIndex = Math.max(0, certificates.length - 3);
+    const maxIndex = Math.max(0, certificates.length - 1);
     
     currentCertificateIndex += direction;
     
@@ -3077,14 +3077,17 @@ function updateCertificatesCarousel() {
     const track = document.getElementById('certificatesTrack');
     if (!track) return;
     
-    const offset = currentCertificateIndex * -320; // 300px width + 20px gap
+    // Calcula offset baseado no container width para centralizar
+    const containerWidth = track.parentElement.offsetWidth;
+    const itemWidth = 300;
+    const offset = (containerWidth / 2) - (itemWidth / 2) - (currentCertificateIndex * (itemWidth + 20));
     track.style.transform = `translateX(${offset}px)`;
     
     // Update button states
     const prevBtn = document.getElementById('prevBtn');
     const nextBtn = document.getElementById('nextBtn');
     const certificates = getCertificates();
-    const maxIndex = Math.max(0, certificates.length - 3);
+    const maxIndex = Math.max(0, certificates.length - 1);
     
     if (prevBtn) {
         prevBtn.disabled = currentCertificateIndex === 0;
