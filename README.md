@@ -77,7 +77,7 @@ Site completo para maquilhadora profissional, desenvolvido em HTML, CSS e JavaSc
 
 ### Utilizador
 - **Email**: user@site.com
-- **Senha**: User@123
+- **Senha**: 1234
 
 ## Contactos
 
