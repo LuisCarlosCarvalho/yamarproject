@@ -372,7 +372,43 @@ _Yemar Makeup Artist_`,
         twitter: 'https://twitter.com/yemarmakeup',
         youtube: 'https://youtube.com/yemarmakeup'
     },
-    certificates: [],
+    certificates: [
+        {
+            id: generateUUID(),
+            imageUrl: 'images/certificates/cert1.jpg',
+            title: 'QC Makeup Academy - Master International Makeup Professional',
+            description: 'Certificação internacional em maquilhagem profissional',
+            createdAt: getCurrentDateTime()
+        },
+        {
+            id: generateUUID(),
+            imageUrl: 'images/certificates/cert2.jpg',
+            title: 'Certificate of Completion - Master Makeup Artist Program',
+            description: 'Programa avançado de formação em maquilhagem artística',
+            createdAt: getCurrentDateTime()
+        },
+        {
+            id: generateUUID(),
+            imageUrl: 'images/certificates/cert3.jpg',
+            title: 'Makeup Artist Certificate',
+            description: 'Certificado profissional de maquilhagem',
+            createdAt: getCurrentDateTime()
+        },
+        {
+            id: generateUUID(),
+            imageUrl: 'images/certificates/cert4.webp',
+            title: 'Certificado Profissional de Maquilhagem - La Femme',
+            description: 'Curso online de maquilhagem profissional',
+            createdAt: getCurrentDateTime()
+        },
+        {
+            id: generateUUID(),
+            imageUrl: 'images/certificates/cert5.jpg',
+            title: 'Beauty Academy - Certificate of Completion',
+            description: 'Certificado de conclusão em técnicas avançadas de beleza',
+            createdAt: getCurrentDateTime()
+        }
+    ],
     portfolioImages: [
         {
             id: generateUUID(),
