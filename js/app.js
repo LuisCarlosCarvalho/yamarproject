@@ -276,6 +276,12 @@ function applySiteSettings() {
             img.style.display = 'block';
         });
     }
+    
+    // Sincronizar foto do rodapé com foto do Sobre Mim
+    const footerAvatar = document.getElementById('footerAvatar');
+    if (footerAvatar && settings.aboutAvatarUrl) {
+        footerAvatar.src = settings.aboutAvatarUrl;
+    }
 }
 
 // ============================================

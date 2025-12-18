@@ -81,6 +81,9 @@
                 <!-- Dashboard -->
                 <section id="dashboardSection" class="admin-section active">
                     <h2 style="margin-bottom: 1.5rem;">Dashboard</h2>
+                    <div class="alert alert-info" style="margin-bottom: 1.5rem; padding: 1rem; background: #e8f4f8; border-left: 4px solid #0066cc; border-radius: 4px;">
+                        <strong>📊 Visão Geral:</strong> Aqui você encontra um resumo das principais estatísticas do site, incluindo total de serviços, marcasções, produtos e posts. As últimas marcações e encomendas são exibidas para acompanhamento rápido.
+                    </div>
                     <div class="stats-grid" id="statsGrid">
                         <!-- Stats serão carregadas via JS -->
                     </div>
@@ -108,6 +111,9 @@
                 <!-- Marcações -->
                 <section id="bookingsSection" class="admin-section">
                     <h2 style="margin-bottom: 1.5rem;">Gestão de Marcações</h2>
+                    <div class="alert alert-info" style="margin-bottom: 1.5rem; padding: 1rem; background: #e8f4f8; border-left: 4px solid #0066cc; border-radius: 4px;">
+                        <strong>📅 Como usar:</strong> Visualize e gerencie todas as marcações de serviços, workshops e eventos. Ao <strong>confirmar</strong> uma marcação, o sistema abre automaticamente o WhatsApp com uma mensagem pré-formatada para o cliente. Use os filtros para ver apenas marcações pendentes, confirmadas, concluídas ou canceladas.
+                    </div>
                     <div class="filters" style="margin-bottom: 1rem;">
                         <select id="bookingStatusFilter" onchange="loadAdminBookings()">
                             <option value="">Todos os Estados</option>
@@ -138,6 +144,9 @@
                 <!-- Encomendas -->
                 <section id="ordersSection" class="admin-section">
                     <h2 style="margin-bottom: 1.5rem;">Gestão de Encomendas</h2>
+                    <div class="alert alert-info" style="margin-bottom: 1.5rem; padding: 1rem; background: #e8f4f8; border-left: 4px solid #0066cc; border-radius: 4px;">
+                        <strong>🛒 Como usar:</strong> Gerencie todas as encomendas da loja online. Atualize o estado de cada encomenda (Pendente → Em Processamento → Enviada → Entregue). Use os filtros para visualizar encomendas por estado.
+                    </div>
                     <div class="filters" style="margin-bottom: 1rem;">
                         <select id="orderStatusFilter" onchange="loadAdminOrders()">
                             <option value="">Todos os Estados</option>
@@ -169,6 +178,9 @@
 
                 <!-- Serviços -->
                 <section id="servicesSection" class="admin-section">
+                    <div class="alert alert-info" style="margin-bottom: 1.5rem; padding: 1rem; background: #e8f4f8; border-left: 4px solid #0066cc; border-radius: 4px;">
+                        <strong>💄 Como usar:</strong> Adicione, edite ou remova serviços de maquilhagem. Cada serviço pode ter nome, descrição, preço, duração e imagem. Clique em "+ Novo Serviço" para adicionar. Use "Editar" para alterar informações ou "Eliminar" para remover.
+                    </div>
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
                         <h2>Gestão de Serviços</h2>
                         <button class="btn btn-primary btn-sm" onclick="openServiceModal()">+ Novo Serviço</button>
@@ -193,6 +205,9 @@
 
                 <!-- Workshops -->
                 <section id="workshopsSection" class="admin-section">
+                    <div class="alert alert-info" style="margin-bottom: 1.5rem; padding: 1rem; background: #e8f4f8; border-left: 4px solid #0066cc; border-radius: 4px;">
+                        <strong>🎯 Como usar:</strong> Crie e gerencie workshops de maquilhagem (presenciais ou online). Defina nome, descrição, preço, número de vagas, duração e modalidade. Os clientes podem fazer marcações através do site.
+                    </div>
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
                         <h2>Gestão de Workshops</h2>
                         <button class="btn btn-primary btn-sm" onclick="openWorkshopModal()">+ Novo Workshop</button>
@@ -217,6 +232,9 @@
 
                 <!-- Produtos -->
                 <section id="productsSection" class="admin-section">
+                    <div class="alert alert-info" style="margin-bottom: 1.5rem; padding: 1rem; background: #e8f4f8; border-left: 4px solid #0066cc; border-radius: 4px;">
+                        <strong>🛍️ Como usar:</strong> Adicione produtos à loja online (maquilhagem, pincéis, etc.). Defina nome, descrição, preço, categoria, stock e imagem. <strong>Nota:</strong> A loja pode ser ativada/desativada em Definições.
+                    </div>
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
                         <h2>Gestão de Produtos</h2>
                         <button class="btn btn-primary btn-sm" onclick="openProductModal()">+ Novo Produto</button>
@@ -241,6 +259,9 @@
 
                 <!-- Blog -->
                 <section id="postsSection" class="admin-section">
+                    <div class="alert alert-info" style="margin-bottom: 1.5rem; padding: 1rem; background: #e8f4f8; border-left: 4px solid #0066cc; border-radius: 4px;">
+                        <strong>✍️ Como usar:</strong> Publique artigos no blog sobre tendências, tutoriais, dicas de maquilhagem, etc. Cada artigo pode ter título, conteúdo, categoria, imagem e data de publicação. Os visitantes podem dar "like" nos artigos.
+                    </div>
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
                         <h2>Gestão do Blog</h2>
                         <button class="btn btn-primary btn-sm" onclick="openPostModal()">+ Novo Artigo</button>
@@ -265,6 +286,9 @@
 
                 <!-- Eventos -->
                 <section id="eventsSection" class="admin-section">
+                    <div class="alert alert-info" style="margin-bottom: 1.5rem; padding: 1rem; background: #e8f4f8; border-left: 4px solid #0066cc; border-radius: 4px;">
+                        <strong>🎉 Como usar:</strong> Divulgue eventos especiais como lançamentos, desfiles, sessões fotográficas, etc. Defina nome, descrição, data, local e imagem. Os clientes podem fazer marcações para participar.
+                    </div>
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
                         <h2>Gestão de Eventos</h2>
                         <button class="btn btn-primary btn-sm" onclick="openEventModal()">+ Novo Evento</button>
@@ -290,6 +314,9 @@
                 <!-- Utilizadores -->
                 <section id="usersSection" class="admin-section">
                     <h2 style="margin-bottom: 1.5rem;">Gestão de Utilizadores</h2>
+                    <div class="alert alert-info" style="margin-bottom: 1.5rem; padding: 1rem; background: #e8f4f8; border-left: 4px solid #0066cc; border-radius: 4px;">
+                        <strong>👥 Como usar:</strong> Visualize todos os utilizadores registados no site. Veja informações como nome, email, telefone e data de registo. Os utilizadores podem fazer marcações e compras após registo.
+                    </div>
                     <div class="admin-table-container">
                         <table class="admin-table">
                             <thead>
@@ -311,6 +338,9 @@
                 <!-- Mensagens -->
                 <section id="messagesSection" class="admin-section">
                     <h2 style="margin-bottom: 1.5rem;">Mensagens de Contacto</h2>
+                    <div class="alert alert-info" style="margin-bottom: 1.5rem; padding: 1rem; background: #e8f4f8; border-left: 4px solid #0066cc; border-radius: 4px;">
+                        <strong>📧 Como usar:</strong> Visualize mensagens enviadas pelos visitantes através do formulário de contacto. Marque como "Lida" após responder. Clique em "Ver" para ler a mensagem completa.
+                    </div>
                     <div class="admin-table-container">
                         <table class="admin-table">
                             <thead>
@@ -333,6 +363,9 @@
                 <!-- Definições -->
                 <section id="settingsSection" class="admin-section">
                     <h2 style="margin-bottom: 1.5rem;">Definições do Site</h2>
+                    <div class="alert alert-info" style="margin-bottom: 1.5rem; padding: 1rem; background: #e8f4f8; border-left: 4px solid #0066cc; border-radius: 4px;">
+                        <strong>⚙️ Como usar:</strong> Configure todos os aspectos do site: nome, loja online, imagens, portfólio, certificados e analytics. Cada seção tem instruções específicas. Lembre-se de clicar em "Guardar Alterações" após editar.
+                    </div>
                     
                     <div class="settings-section">
                         <h3>Nome do Site</h3>
