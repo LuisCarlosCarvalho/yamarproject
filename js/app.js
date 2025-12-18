@@ -256,10 +256,15 @@ function applySiteSettings() {
         cartIcon.style.display = shopEnabled ? 'flex' : 'none';
     }
     
-    // Ocultar links da loja
+    // Ocultar links e elementos da loja
     const shopLinks = document.querySelectorAll('.shop-link');
     shopLinks.forEach(link => {
         link.style.display = shopEnabled ? '' : 'none';
+    });
+    
+    const shopElements = document.querySelectorAll('.shop-element');
+    shopElements.forEach(element => {
+        element.style.display = shopEnabled ? '' : 'none';
     });
     
     // Ocultar seção de produtos na homepage
@@ -2012,12 +2017,21 @@ function loadUserSettings() {
     
     const settingsForm = document.getElementById('settingsForm');
     if (settingsForm) {
-        settingsForm.addEventListener('submit', function(e) {
+        // Remover event listeners anteriores
+        const newForm = settingsForm.cloneNode(true);
+        settingsForm.parentNode.replaceChild(newForm, settingsForm);
+        
+        newForm.addEventListener('submit', function(e) {
             e.preventDefault();
             
             const nome = document.getElementById('settingsName').value.trim();
             const telefone = document.getElementById('settingsPhone').value.trim();
             const email = document.getElementById('settingsEmail').value.trim();
+            
+            if (!nome || !email) {
+                showToast('Nome e email são obrigatórios!', 'error');
+                return;
+            }
             
             updateUser(session.id, { nome, telefone, email });
             
@@ -2030,6 +2044,11 @@ function loadUserSettings() {
             // Atualizar UI
             document.getElementById('userName').textContent = nome;
             document.getElementById('userEmail').textContent = email;
+            if (telefone) {
+                // Atualizar telefone se houver campo na UI
+                const userPhoneEl = document.getElementById('userPhone');
+                if (userPhoneEl) userPhoneEl.textContent = telefone;
+            }
         });
     }
 }

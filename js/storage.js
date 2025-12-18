@@ -883,6 +883,10 @@ function createBooking(bookingData) {
     };
     bookings.push(newBooking);
     setData('bookings', bookings);
+    
+    // Enviar notificação ao admin via WhatsApp
+    sendWhatsAppToAdmin(newBooking);
+    
     return newBooking;
 }
 
@@ -1324,4 +1328,56 @@ function updatePortfolioImage(id, imageData) {
         return images[index];
     }
     return null;
+}
+
+
+/**
+ * Envia notificação ao admin via WhatsApp quando cliente faz marcação
+ */
+function sendWhatsAppToAdmin(booking) {
+    const settings = getSiteSettings();
+    const adminWhatsApp = settings.whatsapp || '351933758731';
+    
+    // Obter informações do serviço/workshop/evento
+    let serviceName = 'Serviço';
+    let serviceType = '';
+    
+    if (booking.serviceId) {
+        const service = getServiceById(booking.serviceId);
+        serviceName = service ? service.nome : 'Serviço';
+        serviceType = 'Serviço';
+    } else if (booking.workshopId) {
+        const workshop = getWorkshopById(booking.workshopId);
+        serviceName = workshop ? workshop.nome : 'Workshop';
+        serviceType = 'Workshop';
+    } else if (booking.eventId) {
+        const event = getEventById(booking.eventId);
+        serviceName = event ? event.nome : 'Evento';
+        serviceType = 'Evento';
+    }
+    
+    // Formatar data e hora
+    const dataFormatada = booking.data || 'Data não definida';
+    const horaFormatada = booking.hora || 'Hora não definida';
+    
+    // Criar mensagem
+    const message = `🔔 *Nova Marcação Recebida!*
+
+*Cliente:* ${booking.userName || 'Cliente'}
+*Email:* ${booking.userEmail || 'Não informado'}
+*Telefone:* ${booking.userPhone || 'Não informado'}
+
+*${serviceType}:* ${serviceName}
+*Data:* ${dataFormatada}
+*Hora:* ${horaFormatada}
+
+*Status:* Pendente
+
+Por favor, confirme esta marcação no painel administrativo.
+
+_Yemar Makeup Artist_`;
+    
+    // Abrir WhatsApp
+    const whatsappUrl = `https://wa.me/${adminWhatsApp}?text=${encodeURIComponent(message)}`;
+    window.open(whatsappUrl, '_blank');
 }
