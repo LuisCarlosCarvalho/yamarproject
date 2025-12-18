@@ -470,6 +470,25 @@ function initializeSeed() {
     }
     if (!getData('siteSettings')) {
         setData('siteSettings', SEED_SITE_SETTINGS);
+    } else {
+        // Atualizar portfólio e certificados se estiverem vazios
+        const currentSettings = getData('siteSettings');
+        if (!currentSettings.portfolioImages || currentSettings.portfolioImages.length === 0) {
+            currentSettings.portfolioImages = SEED_SITE_SETTINGS.portfolioImages;
+            setData('siteSettings', currentSettings);
+        }
+        if (!currentSettings.certificates) {
+            currentSettings.certificates = SEED_SITE_SETTINGS.certificates || [];
+            setData('siteSettings', currentSettings);
+        }
+        if (!currentSettings.whatsapp) {
+            currentSettings.whatsapp = SEED_SITE_SETTINGS.whatsapp;
+            setData('siteSettings', currentSettings);
+        }
+        if (currentSettings.shopEnabled === undefined) {
+            currentSettings.shopEnabled = SEED_SITE_SETTINGS.shopEnabled;
+            setData('siteSettings', currentSettings);
+        }
     }
     if (!getData('cart')) {
         setData('cart', []);
