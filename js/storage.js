@@ -347,9 +347,23 @@ const SEED_SITE_SETTINGS = {
     aboutImageUrl: 'assets/images/capa.png',
     footerAvatarUrl: 'assets/images/capa.png',
     emailContacto: 'yemarmk@gmail.com',
-    emailColaboracao: 'yemarmk@gmail.com',
     telefone: '(+351) 933758731',
     whatsapp: '351933758731',
+    whatsappNotificationTemplate: `🔔 *Nova Marcação Recebida!*
+
+*Cliente:* {clienteNome}
+*Email:* {clienteEmail}
+*Telefone:* {clienteTelefone}
+
+*{tipoServico}:* {nomeServico}
+*Data:* {data}
+*Hora:* {hora}
+
+*Status:* Pendente
+
+Por favor, confirme esta marcação no painel administrativo.
+
+_Yemar Makeup Artist_`,
     endereco: 'Rua das Flores, 123 - Porto',
     shopEnabled: true,
     redesSociais: {
@@ -1360,22 +1374,18 @@ function sendWhatsAppToAdmin(booking) {
     const dataFormatada = booking.data || 'Data não definida';
     const horaFormatada = booking.hora || 'Hora não definida';
     
-    // Criar mensagem
-    const message = `🔔 *Nova Marcação Recebida!*
-
-*Cliente:* ${booking.userName || 'Cliente'}
-*Email:* ${booking.userEmail || 'Não informado'}
-*Telefone:* ${booking.userPhone || 'Não informado'}
-
-*${serviceType}:* ${serviceName}
-*Data:* ${dataFormatada}
-*Hora:* ${horaFormatada}
-
-*Status:* Pendente
-
-Por favor, confirme esta marcação no painel administrativo.
-
-_Yemar Makeup Artist_`;
+    // Obter template personalizado ou usar padrão
+    let template = settings.whatsappNotificationTemplate || getDefaultWhatsAppTemplate();
+    
+    // Substituir variáveis no template
+    const message = template
+        .replace(/{clienteNome}/g, booking.userName || 'Cliente')
+        .replace(/{clienteEmail}/g, booking.userEmail || 'Não informado')
+        .replace(/{clienteTelefone}/g, booking.userPhone || 'Não informado')
+        .replace(/{tipoServico}/g, serviceType)
+        .replace(/{nomeServico}/g, serviceName)
+        .replace(/{data}/g, dataFormatada)
+        .replace(/{hora}/g, horaFormatada);
     
     // Abrir WhatsApp
     const whatsappUrl = `https://wa.me/${adminWhatsApp}?text=${encodeURIComponent(message)}`;

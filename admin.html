@@ -522,9 +522,35 @@
                                 <input type="text" id="settingsAddress" placeholder="Ex: Rua das Flores, 123 - Lisboa">
                             </div>
                             <div class="form-group">
+                                <label for="settingsWhatsApp">WhatsApp (apenas números)</label>
+                                <input type="text" id="settingsWhatsApp" placeholder="Ex: 351933758731" value="351933758731">
+                                <small style="color: #666; font-size: 0.8rem;">Número com código do país, sem espaços ou caracteres especiais</small>
+                            </div>
+                            <div class="form-group">
                                 <label for="settingsMapUrl">URL do Mapa (Google Maps Embed)</label>
                                 <input type="url" id="settingsMapUrl" placeholder="Cole aqui o link embed do Google Maps">
                                 <small style="color: #666; font-size: 0.8rem;">Vá ao Google Maps, clique em "Partilhar" > "Incorporar um mapa" e copie o URL do src</small>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Guardar Alterações</button>
+                        </form>
+                    </div>
+
+                    <div class="settings-section">
+                        <h3>Mensagens WhatsApp</h3>
+                        <form id="whatsappSettingsForm">
+                            <div class="form-group">
+                                <label for="whatsappNotificationTemplate">Mensagem de Notificação ao Admin</label>
+                                <textarea id="whatsappNotificationTemplate" rows="10" placeholder="Personalize a mensagem enviada ao admin quando cliente faz marcação"></textarea>
+                                <small style="color: #666; font-size: 0.8rem; display: block; margin-top: 0.5rem;">
+                                    <strong>Variáveis disponíveis:</strong><br>
+                                    {clienteNome} - Nome do cliente<br>
+                                    {clienteEmail} - Email do cliente<br>
+                                    {clienteTelefone} - Telefone do cliente<br>
+                                    {tipoServico} - Tipo (Serviço, Workshop ou Evento)<br>
+                                    {nomeServico} - Nome do serviço/workshop/evento<br>
+                                    {data} - Data da marcação<br>
+                                    {hora} - Hora da marcação
+                                </small>
                             </div>
                             <button type="submit" class="btn btn-primary">Guardar Alterações</button>
                         </form>

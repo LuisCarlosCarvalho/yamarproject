@@ -2463,7 +2463,9 @@ function loadAdminSettingsPage() {
     const contactEmail = document.getElementById('settingsContactEmail');
     const contactPhone = document.getElementById('settingsContactPhone');
     const contactAddress = document.getElementById('settingsAddress');
+    const contactWhatsApp = document.getElementById('settingsWhatsApp');
     const contactMapUrl = document.getElementById('settingsMapUrl');
+    const whatsappTemplate = document.getElementById('whatsappNotificationTemplate');
     
     if (heroTitle) heroTitle.value = settings.bannerTitulo || 'Realça a Tua Beleza Natural';
     if (heroSubtitle) heroSubtitle.value = settings.bannerSubtitulo || 'Maquilhagem profissional para todos os momentos especiais da tua vida';
@@ -2472,7 +2474,9 @@ function loadAdminSettingsPage() {
     if (contactEmail) contactEmail.value = settings.emailContacto || 'yemarmk@gmail.com';
     if (contactPhone) contactPhone.value = settings.telefone || '(+351) 933758731';
     if (contactAddress) contactAddress.value = settings.endereco || '';
+    if (contactWhatsApp) contactWhatsApp.value = settings.whatsapp || '351933758731';
     if (contactMapUrl) contactMapUrl.value = settings.mapUrl || '';
+    if (whatsappTemplate) whatsappTemplate.value = settings.whatsappNotificationTemplate || getDefaultWhatsAppTemplate();
     
     // Form handlers
     const heroForm = document.getElementById('heroSettingsForm');
@@ -2503,6 +2507,7 @@ function loadAdminSettingsPage() {
                 ...currentSettings,
                 emailContacto: document.getElementById('settingsContactEmail').value,
                 telefone: document.getElementById('settingsContactPhone').value,
+                whatsapp: document.getElementById('settingsWhatsApp').value,
                 endereco: document.getElementById('settingsAddress').value,
                 mapUrl: document.getElementById('settingsMapUrl').value
             });
@@ -2537,6 +2542,40 @@ function loadAdminSettingsPage() {
             showToast('Imagens guardadas! Recarregue a página para ver as alterações.', 'success');
         });
     }
+    
+    // Form handler para mensagens WhatsApp
+    const whatsappForm = document.getElementById('whatsappSettingsForm');
+    if (whatsappForm) {
+        whatsappForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const currentSettings = getSiteSettings();
+            updateSiteSettings({
+                ...currentSettings,
+                whatsappNotificationTemplate: document.getElementById('whatsappNotificationTemplate').value
+            });
+            
+            showToast('Mensagem WhatsApp guardada!', 'success');
+        });
+    }
+}
+
+function getDefaultWhatsAppTemplate() {
+    return `🔔 *Nova Marcação Recebida!*
+
+*Cliente:* {clienteNome}
+*Email:* {clienteEmail}
+*Telefone:* {clienteTelefone}
+
+*{tipoServico}:* {nomeServico}
+*Data:* {data}
+*Hora:* {hora}
+
+*Status:* Pendente
+
+Por favor, confirme esta marcação no painel administrativo.
+
+_Yemar Makeup Artist_`;
 }
 
 function resetData() {
