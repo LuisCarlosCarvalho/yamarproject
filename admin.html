@@ -52,6 +52,7 @@
             <a href="#" data-section="events">Eventos</a>
             <a href="#" data-section="users">Utilizadores</a>
             <a href="#" data-section="messages">Mensagens</a>
+            <a href="#" data-section="images">Gestão de Imagens</a>
             <a href="#" data-section="settings">Definições</a>
         </nav>
     </div>
@@ -72,6 +73,7 @@
                     <a class="admin-menu-item" data-section="events">🎉 Eventos</a>
                     <a class="admin-menu-item" data-section="users">👥 Utilizadores</a>
                     <a class="admin-menu-item" data-section="messages">✉️ Mensagens</a>
+                    <a class="admin-menu-item" data-section="images">🖼️ Gestão de Imagens</a>
                     <a class="admin-menu-item" data-section="reports">📈 Relatórios</a>
                     <a class="admin-menu-item" data-section="settings">⚙️ Definições</a>
                 </nav>
@@ -444,6 +446,90 @@
                                     <!-- Dados serão carregados via JS -->
                                 </tbody>
                             </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Gestão de Imagens -->
+                <section id="imagesSection" class="admin-section">
+                    <h2 style="margin-bottom: 1.5rem;">🖼️ Gestão de Imagens</h2>
+                    <div class="alert alert-info" style="margin-bottom: 1.5rem; padding: 1rem; background: #e8f4f8; border-left: 4px solid #0066cc; border-radius: 4px;">
+                        <strong>📸 Como usar:</strong> Visualize e edite todas as imagens do site organizadas por secção. Clique em "Editar" para alterar a URL da imagem. As imagens são exibidas com pré-visualização para facilitar a identificação.
+                    </div>
+
+                    <!-- Serviços -->
+                    <div class="settings-section" style="margin-bottom: 2rem;">
+                        <h3 style="margin-bottom: 1rem; color: var(--color-red); border-bottom: 2px solid var(--color-red); padding-bottom: 0.5rem;">💼 Serviços</h3>
+                        <div id="imagesServicesGrid" class="admin-image-preview-grid">
+                            <!-- Carregado via JS -->
+                        </div>
+                    </div>
+
+                    <!-- Workshops -->
+                    <div class="settings-section" style="margin-bottom: 2rem;">
+                        <h3 style="margin-bottom: 1rem; color: var(--color-red); border-bottom: 2px solid var(--color-red); padding-bottom: 0.5rem;">🎯 Workshops & Cursos</h3>
+                        <div id="imagesWorkshopsGrid" class="admin-image-preview-grid">
+                            <!-- Carregado via JS -->
+                        </div>
+                    </div>
+
+                    <!-- Blog / Últimas Novidades -->
+                    <div class="settings-section" style="margin-bottom: 2rem;">
+                        <h3 style="margin-bottom: 1rem; color: var(--color-red); border-bottom: 2px solid var(--color-red); padding-bottom: 0.5rem;">📰 Blog (Últimas Novidades)</h3>
+                        <div id="imagesPostsGrid" class="admin-image-preview-grid">
+                            <!-- Carregado via JS -->
+                        </div>
+                    </div>
+
+                    <!-- Tendências Verão 2025 -->
+                    <div class="settings-section" style="margin-bottom: 2rem;">
+                        <h3 style="margin-bottom: 1rem; color: var(--color-red); border-bottom: 2px solid var(--color-red); padding-bottom: 0.5rem;">☀️ Tendências de Maquilhagem Verão 2025</h3>
+                        <p style="font-size: 0.9rem; color: #666; margin-bottom: 1rem;"><em>Posts com categoria "Tendências"</em></p>
+                        <div id="imagesTrendGrid" class="admin-image-preview-grid">
+                            <!-- Carregado via JS -->
+                        </div>
+                    </div>
+
+                    <!-- Guia Noivas -->
+                    <div class="settings-section" style="margin-bottom: 2rem;">
+                        <h3 style="margin-bottom: 1rem; color: var(--color-red); border-bottom: 2px solid var(--color-red); padding-bottom: 0.5rem;">💍 Guia Completo: Maquilhagem para Noivas</h3>
+                        <p style="font-size: 0.9rem; color: #666; margin-bottom: 1rem;"><em>Posts com categoria "Tutorial"</em></p>
+                        <div id="imagesBrideGrid" class="admin-image-preview-grid">
+                            <!-- Carregado via JS -->
+                        </div>
+                    </div>
+
+                    <!-- Erros Comuns -->
+                    <div class="settings-section" style="margin-bottom: 2rem;">
+                        <h3 style="margin-bottom: 1rem; color: var(--color-red); border-bottom: 2px solid var(--color-red); padding-bottom: 0.5rem;">⚠️ Os Erros Mais Comuns na Maquilhagem</h3>
+                        <p style="font-size: 0.9rem; color: #666; margin-bottom: 1rem;"><em>Posts com categoria "Dicas"</em></p>
+                        <div id="imagesMistakesGrid" class="admin-image-preview-grid">
+                            <!-- Carregado via JS -->
+                        </div>
+                    </div>
+
+                    <!-- Pincéis Essenciais -->
+                    <div class="settings-section" style="margin-bottom: 2rem;">
+                        <h3 style="margin-bottom: 1rem; color: var(--color-red); border-bottom: 2px solid var(--color-red); padding-bottom: 0.5rem;">🖌️ Pincéis Essenciais para Iniciantes</h3>
+                        <p style="font-size: 0.9rem; color: #666; margin-bottom: 1rem;"><em>Posts com categoria "Produtos"</em></p>
+                        <div id="imagesBrushesGrid" class="admin-image-preview-grid">
+                            <!-- Carregado via JS -->
+                        </div>
+                    </div>
+
+                    <!-- Produtos -->
+                    <div class="settings-section" style="margin-bottom: 2rem;">
+                        <h3 style="margin-bottom: 1rem; color: var(--color-red); border-bottom: 2px solid var(--color-red); padding-bottom: 0.5rem;">🛍️ Produtos</h3>
+                        <div id="imagesProductsGrid" class="admin-image-preview-grid">
+                            <!-- Carregado via JS -->
+                        </div>
+                    </div>
+
+                    <!-- Eventos -->
+                    <div class="settings-section" style="margin-bottom: 2rem;">
+                        <h3 style="margin-bottom: 1rem; color: var(--color-red); border-bottom: 2px solid var(--color-red); padding-bottom: 0.5rem;">🎉 Eventos</h3>
+                        <div id="imagesEventsGrid" class="admin-image-preview-grid">
+                            <!-- Carregado via JS -->
                         </div>
                     </div>
                 </section>

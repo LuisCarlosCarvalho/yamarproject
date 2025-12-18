@@ -2464,6 +2464,9 @@ function loadAdminSection(section) {
         case 'messages':
             loadAdminMessages();
             break;
+        case 'images':
+            loadImagesSection();
+            break;
         case 'reports':
             loadAdminReports();
             break;
@@ -4234,4 +4237,303 @@ function loadCertificacoesSobrePage() {
     }
     
     list.innerHTML = certificacoes.map(c => `<li>${c}</li>`).join('');
+}
+
+
+// ============================================
+// ADMIN - IMAGES MANAGEMENT SECTION
+// ============================================
+
+function loadImagesSection() {
+    loadImagesServices();
+    loadImagesWorkshops();
+    loadImagesPosts();
+    loadImagesTrend();
+    loadImagesBride();
+    loadImagesMistakes();
+    loadImagesBrushes();
+    loadImagesProducts();
+    loadImagesEvents();
+}
+
+function loadImagesServices() {
+    const services = getActiveServices();
+    const grid = document.getElementById('imagesServicesGrid');
+    if (!grid) return;
+    
+    if (services.length === 0) {
+        grid.innerHTML = '<p style="color: #666; text-align: center; padding: 20px;">Nenhum serviço cadastrado.</p>';
+        return;
+    }
+    
+    grid.innerHTML = services.map(service => `
+        <div class="admin-image-preview-card">
+            <img src="${service.imagemUrl}" alt="${service.nome}" onerror="this.src='https://via.placeholder.com/300x180?text=Sem+Imagem'">
+            <div class="admin-image-preview-info">
+                <div class="admin-image-preview-title">${service.nome}</div>
+                <div class="admin-image-preview-url">${service.imagemUrl}</div>
+                <div class="admin-image-preview-actions">
+                    <button class="btn btn-sm btn-primary" onclick="editImageUrl('service', '${service.id}', '${service.nome}', '${service.imagemUrl}')">Editar</button>
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+function loadImagesWorkshops() {
+    const workshops = getActiveWorkshops();
+    const grid = document.getElementById('imagesWorkshopsGrid');
+    if (!grid) return;
+    
+    if (workshops.length === 0) {
+        grid.innerHTML = '<p style="color: #666; text-align: center; padding: 20px;">Nenhum workshop cadastrado.</p>';
+        return;
+    }
+    
+    grid.innerHTML = workshops.map(workshop => `
+        <div class="admin-image-preview-card">
+            <img src="${workshop.imagemUrl}" alt="${workshop.nome}" onerror="this.src='https://via.placeholder.com/300x180?text=Sem+Imagem'">
+            <div class="admin-image-preview-info">
+                <div class="admin-image-preview-title">${workshop.nome}</div>
+                <div class="admin-image-preview-url">${workshop.imagemUrl}</div>
+                <div class="admin-image-preview-actions">
+                    <button class="btn btn-sm btn-primary" onclick="editImageUrl('workshop', '${workshop.id}', '${workshop.nome}', '${workshop.imagemUrl}')">Editar</button>
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+function loadImagesPosts() {
+    const posts = getActivePosts();
+    const grid = document.getElementById('imagesPostsGrid');
+    if (!grid) return;
+    
+    if (posts.length === 0) {
+        grid.innerHTML = '<p style="color: #666; text-align: center; padding: 20px;">Nenhum post cadastrado.</p>';
+        return;
+    }
+    
+    grid.innerHTML = posts.map(post => `
+        <div class="admin-image-preview-card">
+            <img src="${post.imagemUrl}" alt="${post.titulo}" onerror="this.src='https://via.placeholder.com/300x180?text=Sem+Imagem'">
+            <div class="admin-image-preview-info">
+                <div class="admin-image-preview-title">${post.titulo}</div>
+                <div class="admin-image-preview-url">${post.imagemUrl}</div>
+                <div class="admin-image-preview-actions">
+                    <button class="btn btn-sm btn-primary" onclick="editImageUrl('post', '${post.id}', '${post.titulo}', '${post.imagemUrl}')">Editar</button>
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+function loadImagesTrend() {
+    const posts = getActivePosts().filter(p => p.categoria === 'Tendências');
+    const grid = document.getElementById('imagesTrendGrid');
+    if (!grid) return;
+    
+    if (posts.length === 0) {
+        grid.innerHTML = '<p style="color: #666; text-align: center; padding: 20px;">Nenhum post com categoria "Tendências" encontrado.</p>';
+        return;
+    }
+    
+    grid.innerHTML = posts.map(post => `
+        <div class="admin-image-preview-card">
+            <img src="${post.imagemUrl}" alt="${post.titulo}" onerror="this.src='https://via.placeholder.com/300x180?text=Sem+Imagem'">
+            <div class="admin-image-preview-info">
+                <div class="admin-image-preview-title">${post.titulo}</div>
+                <div class="admin-image-preview-url">${post.imagemUrl}</div>
+                <div class="admin-image-preview-actions">
+                    <button class="btn btn-sm btn-primary" onclick="editImageUrl('post', '${post.id}', '${post.titulo}', '${post.imagemUrl}')">Editar</button>
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+function loadImagesBride() {
+    const posts = getActivePosts().filter(p => p.categoria === 'Tutorial');
+    const grid = document.getElementById('imagesBrideGrid');
+    if (!grid) return;
+    
+    if (posts.length === 0) {
+        grid.innerHTML = '<p style="color: #666; text-align: center; padding: 20px;">Nenhum post com categoria "Tutorial" encontrado.</p>';
+        return;
+    }
+    
+    grid.innerHTML = posts.map(post => `
+        <div class="admin-image-preview-card">
+            <img src="${post.imagemUrl}" alt="${post.titulo}" onerror="this.src='https://via.placeholder.com/300x180?text=Sem+Imagem'">
+            <div class="admin-image-preview-info">
+                <div class="admin-image-preview-title">${post.titulo}</div>
+                <div class="admin-image-preview-url">${post.imagemUrl}</div>
+                <div class="admin-image-preview-actions">
+                    <button class="btn btn-sm btn-primary" onclick="editImageUrl('post', '${post.id}', '${post.titulo}', '${post.imagemUrl}')">Editar</button>
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+function loadImagesMistakes() {
+    const posts = getActivePosts().filter(p => p.categoria === 'Dicas');
+    const grid = document.getElementById('imagesMistakesGrid');
+    if (!grid) return;
+    
+    if (posts.length === 0) {
+        grid.innerHTML = '<p style="color: #666; text-align: center; padding: 20px;">Nenhum post com categoria "Dicas" encontrado.</p>';
+        return;
+    }
+    
+    grid.innerHTML = posts.map(post => `
+        <div class="admin-image-preview-card">
+            <img src="${post.imagemUrl}" alt="${post.titulo}" onerror="this.src='https://via.placeholder.com/300x180?text=Sem+Imagem'">
+            <div class="admin-image-preview-info">
+                <div class="admin-image-preview-title">${post.titulo}</div>
+                <div class="admin-image-preview-url">${post.imagemUrl}</div>
+                <div class="admin-image-preview-actions">
+                    <button class="btn btn-sm btn-primary" onclick="editImageUrl('post', '${post.id}', '${post.titulo}', '${post.imagemUrl}')">Editar</button>
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+function loadImagesBrushes() {
+    const posts = getActivePosts().filter(p => p.categoria === 'Produtos');
+    const grid = document.getElementById('imagesBrushesGrid');
+    if (!grid) return;
+    
+    if (posts.length === 0) {
+        grid.innerHTML = '<p style="color: #666; text-align: center; padding: 20px;">Nenhum post com categoria "Produtos" encontrado.</p>';
+        return;
+    }
+    
+    grid.innerHTML = posts.map(post => `
+        <div class="admin-image-preview-card">
+            <img src="${post.imagemUrl}" alt="${post.titulo}" onerror="this.src='https://via.placeholder.com/300x180?text=Sem+Imagem'">
+            <div class="admin-image-preview-info">
+                <div class="admin-image-preview-title">${post.titulo}</div>
+                <div class="admin-image-preview-url">${post.imagemUrl}</div>
+                <div class="admin-image-preview-actions">
+                    <button class="btn btn-sm btn-primary" onclick="editImageUrl('post', '${post.id}', '${post.titulo}', '${post.imagemUrl}')">Editar</button>
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+function loadImagesProducts() {
+    const products = getActiveProducts();
+    const grid = document.getElementById('imagesProductsGrid');
+    if (!grid) return;
+    
+    if (products.length === 0) {
+        grid.innerHTML = '<p style="color: #666; text-align: center; padding: 20px;">Nenhum produto cadastrado.</p>';
+        return;
+    }
+    
+    grid.innerHTML = products.map(product => `
+        <div class="admin-image-preview-card">
+            <img src="${product.imagemUrl}" alt="${product.nome}" onerror="this.src='https://via.placeholder.com/300x180?text=Sem+Imagem'">
+            <div class="admin-image-preview-info">
+                <div class="admin-image-preview-title">${product.nome}</div>
+                <div class="admin-image-preview-url">${product.imagemUrl}</div>
+                <div class="admin-image-preview-actions">
+                    <button class="btn btn-sm btn-primary" onclick="editImageUrl('product', '${product.id}', '${product.nome}', '${product.imagemUrl}')">Editar</button>
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+function loadImagesEvents() {
+    const events = getActiveEvents();
+    const grid = document.getElementById('imagesEventsGrid');
+    if (!grid) return;
+    
+    if (events.length === 0) {
+        grid.innerHTML = '<p style="color: #666; text-align: center; padding: 20px;">Nenhum evento cadastrado.</p>';
+        return;
+    }
+    
+    grid.innerHTML = events.map(event => `
+        <div class="admin-image-preview-card">
+            <img src="${event.imagemUrl}" alt="${event.nome}" onerror="this.src='https://via.placeholder.com/300x180?text=Sem+Imagem'">
+            <div class="admin-image-preview-info">
+                <div class="admin-image-preview-title">${event.nome}</div>
+                <div class="admin-image-preview-url">${event.imagemUrl}</div>
+                <div class="admin-image-preview-actions">
+                    <button class="btn btn-sm btn-primary" onclick="editImageUrl('event', '${event.id}', '${event.nome}', '${event.imagemUrl}')">Editar</button>
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+function editImageUrl(type, id, title, currentUrl) {
+    const newUrl = prompt(`Editar URL da imagem de "${title}":\n\nURL atual:\n${currentUrl}\n\nNova URL:`, currentUrl);
+    
+    if (newUrl === null || newUrl === currentUrl) {
+        return; // Cancelado ou sem alteração
+    }
+    
+    if (!newUrl.trim()) {
+        showToast('URL não pode estar vazia!', 'error');
+        return;
+    }
+    
+    // Atualizar conforme o tipo
+    switch(type) {
+        case 'service':
+            const service = getServiceById(id);
+            if (service) {
+                service.imagemUrl = newUrl.trim();
+                updateService(service);
+                showToast('Imagem do serviço atualizada!', 'success');
+                loadImagesServices();
+            }
+            break;
+        case 'workshop':
+            const workshop = getWorkshopById(id);
+            if (workshop) {
+                workshop.imagemUrl = newUrl.trim();
+                updateWorkshop(workshop);
+                showToast('Imagem do workshop atualizada!', 'success');
+                loadImagesWorkshops();
+            }
+            break;
+        case 'post':
+            const post = getPostById(id);
+            if (post) {
+                post.imagemUrl = newUrl.trim();
+                updatePost(post);
+                showToast('Imagem do post atualizada!', 'success');
+                loadImagesPosts();
+                loadImagesTrend();
+                loadImagesBride();
+                loadImagesMistakes();
+                loadImagesBrushes();
+            }
+            break;
+        case 'product':
+            const product = getProductById(id);
+            if (product) {
+                product.imagemUrl = newUrl.trim();
+                updateProduct(product);
+                showToast('Imagem do produto atualizada!', 'success');
+                loadImagesProducts();
+            }
+            break;
+        case 'event':
+            const event = getEventById(id);
+            if (event) {
+                event.imagemUrl = newUrl.trim();
+                updateEvent(event);
+                showToast('Imagem do evento atualizada!', 'success');
+                loadImagesEvents();
+            }
+            break;
+    }
 }

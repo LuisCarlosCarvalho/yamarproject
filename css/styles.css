@@ -2556,3 +2556,80 @@ h1, h2, h3, h4, h5, h6 {
         grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
     }
 }
+
+/* ============================================
+   ADMIN - IMAGE PREVIEW GRID
+   ============================================ */
+
+.admin-image-preview-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    margin-top: 1rem;
+}
+
+.admin-image-preview-card {
+    background: var(--color-white);
+    border: 1px solid var(--color-gray-200);
+    border-radius: var(--border-radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    transition: all var(--transition-fast);
+}
+
+.admin-image-preview-card:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+}
+
+.admin-image-preview-card img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    background: var(--color-gray-100);
+}
+
+.admin-image-preview-info {
+    padding: 15px;
+}
+
+.admin-image-preview-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--color-black);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.admin-image-preview-url {
+    font-size: 0.75rem;
+    color: var(--color-gray-500);
+    margin-bottom: 12px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-family: 'Courier New', monospace;
+}
+
+.admin-image-preview-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.admin-image-preview-card .btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.75rem;
+}
+
+@media (max-width: 768px) {
+    .admin-image-preview-grid {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 15px;
+    }
+    
+    .admin-image-preview-card img {
+        height: 150px;
+    }
+}
