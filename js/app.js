@@ -247,6 +247,27 @@ function applySiteSettings() {
         el.textContent = settings.tagline || 'Yemar Makeup Artist';
     });
     
+    // Controlar visibilidade da loja
+    const shopEnabled = settings.shopEnabled !== false;
+    
+    // Ocultar ícone do carrinho
+    const cartIcon = document.getElementById('cartIconBtn');
+    if (cartIcon) {
+        cartIcon.style.display = shopEnabled ? 'flex' : 'none';
+    }
+    
+    // Ocultar links da loja
+    const shopLinks = document.querySelectorAll('.shop-link');
+    shopLinks.forEach(link => {
+        link.style.display = shopEnabled ? '' : 'none';
+    });
+    
+    // Ocultar seção de produtos na homepage
+    const productsSection = document.getElementById('productsSection');
+    if (productsSection) {
+        productsSection.style.display = shopEnabled ? 'block' : 'none';
+    }
+    
     // Aplicar logo imagem se existir
     if (settings.logoUrl) {
         const logoImgs = document.querySelectorAll('.logo-img');

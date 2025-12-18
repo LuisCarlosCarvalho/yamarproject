@@ -50,7 +50,7 @@
                             SERVIÇOS DIGITAIS <i>▼</i>
                         </a>
                         <div class="dropdown-menu">
-                            <a href="produtos.html">Loja Online</a>
+                            <a href="produtos.html" class="shop-link">Loja Online</a>
                             <a href="blog.html">Blog</a>
                             <a href="workshops.html">Workshops Online</a>
                         </div>
@@ -68,7 +68,7 @@
                     <button class="search-toggle" id="searchToggle" aria-label="Pesquisar">
                         🔍
                     </button>
-                    <button class="cart-icon" onclick="toggleMiniCart()" aria-label="Carrinho">
+                    <button class="cart-icon" id="cartIconBtn" onclick="toggleMiniCart()" aria-label="Carrinho">
                         🛒
                         <span class="cart-badge" id="cartBadge" style="display: none;">0</span>
                     </button>
@@ -103,7 +103,7 @@
                 <a href="servicos.html">Maquilhagem Social</a>
                 <a href="workshops.html">Workshops</a>
             </div>
-            <a href="produtos.html">Produtos</a>
+            <a href="produtos.html" class="shop-link">Produtos</a>
             <a href="blog.html">Blog</a>
             <a href="eventos.html">Eventos</a>
             <a href="contacto.html">Contacto</a>
@@ -210,7 +210,7 @@
         </section>
 
         <!-- Products Section -->
-        <section class="section section-alt">
+        <section class="section section-alt" id="productsSection">
             <div class="container">
                 <div class="section-header">
                     <h2 class="section-title">Loja</h2>
@@ -220,7 +220,7 @@
                     <!-- Cards serão carregados via JS -->
                 </div>
                 <div class="text-center mt-3">
-                    <a href="produtos.html" class="btn btn-outline">Ver Todos os Produtos</a>
+                    <a href="produtos.html" class="btn btn-outline shop-link">Ver Todos os Produtos</a>
                 </div>
             </div>
         </section>
@@ -269,7 +269,7 @@
                     <a href="servicos.html">Maquilhagem Social</a>
                     <a href="servicos.html">Sessão Fotográfica</a>
                     <a href="workshops.html">Workshops</a>
-                    <a href="produtos.html">Loja Online</a>
+                    <a href="produtos.html" class="shop-link">Loja Online</a>
                 </div>
 
                 <!-- About Column -->
