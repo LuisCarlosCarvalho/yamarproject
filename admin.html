@@ -335,6 +335,32 @@
                     <h2 style="margin-bottom: 1.5rem;">Definições do Site</h2>
                     
                     <div class="settings-section">
+                        <h3>Nome do Site</h3>
+                        <form id="siteNameForm">
+                            <div class="form-group">
+                                <label for="siteTagline">Nome/Tagline do Site</label>
+                                <input type="text" id="siteTagline" value="Yemar Makeup Artist" placeholder="Ex: Yemar Makeup Artist">
+                                <small style="color: #666; font-size: 0.8rem;">Este nome aparece no cabeçalho do site</small>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Guardar Alterações</button>
+                        </form>
+                    </div>
+
+                    <div class="settings-section">
+                        <h3>Loja Online</h3>
+                        <form id="shopSettingsForm">
+                            <div class="form-group">
+                                <label>
+                                    <input type="checkbox" id="shopEnabled" checked>
+                                    Ativar Loja Online
+                                </label>
+                                <small style="color: #666; font-size: 0.8rem; display: block; margin-top: 0.5rem;">Quando desativada, a loja e produtos não aparecerão no site</small>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Guardar Alterações</button>
+                        </form>
+                    </div>
+
+                    <div class="settings-section">
                         <h3>Hero Banner</h3>
                         <form id="heroSettingsForm">
                             <div class="form-group">
@@ -400,6 +426,54 @@
                             </div>
                             <button type="submit" class="btn btn-primary">Guardar Alterações</button>
                         </form>
+                    </div>
+
+                    <div class="settings-section">
+                        <h3>Portfólio</h3>
+                        <p style="margin-bottom: 1rem; color: #666;">Gerir imagens do portfólio.</p>
+                        <div class="form-group">
+                            <label>Adicionar Imagem ao Portfólio</label>
+                            <input type="text" id="portfolioImageUrl" placeholder="URL da imagem">
+                            <input type="text" id="portfolioImageTitle" placeholder="Título (opcional)" style="margin-top: 0.5rem;">
+                            <textarea id="portfolioImageDesc" placeholder="Descrição (opcional)" rows="2" style="margin-top: 0.5rem;"></textarea>
+                            <button class="btn btn-primary" onclick="addPortfolioImageAdmin()" style="margin-top: 0.5rem;">Adicionar Imagem</button>
+                        </div>
+                        <div id="portfolioImagesGrid" class="admin-image-grid" style="margin-top: 1.5rem;">
+                            <!-- Portfolio images will be loaded here -->
+                        </div>
+                    </div>
+
+                    <div class="settings-section">
+                        <h3>Certificados</h3>
+                        <p style="margin-bottom: 1rem; color: #666;">Gerir certificados exibidos no rodapé do site.</p>
+                        <div class="form-group">
+                            <label>Adicionar Certificado</label>
+                            <input type="text" id="certificateImageUrl" placeholder="URL da imagem do certificado">
+                            <input type="text" id="certificateTitle" placeholder="Título do certificado" style="margin-top: 0.5rem;">
+                            <input type="text" id="certificateYear" placeholder="Ano (opcional)" style="margin-top: 0.5rem;">
+                            <button class="btn btn-primary" onclick="addCertificateAdmin()" style="margin-top: 0.5rem;">Adicionar Certificado</button>
+                        </div>
+                        <div id="certificatesGrid" class="admin-image-grid" style="margin-top: 1.5rem;">
+                            <!-- Certificates will be loaded here -->
+                        </div>
+                    </div>
+
+                    <div class="settings-section">
+                        <h3>Analytics e Visitas</h3>
+                        <div id="analyticsStats">
+                            <!-- Analytics stats will be loaded here -->
+                        </div>
+                        <div style="margin-top: 1.5rem;">
+                            <h4>Visitas por Página</h4>
+                            <div id="pageVisitsChart" style="margin-top: 1rem;">
+                                <!-- Page visits chart -->
+                            </div>
+                        </div>
+                        <div style="margin-top: 1.5rem;">
+                            <h4>Avaliações do Google</h4>
+                            <p style="color: #666; margin-top: 0.5rem;">Para integrar avaliações do Google, adicione o widget do Google My Business no seu site.</p>
+                            <a href="https://www.google.com/business/" target="_blank" class="btn btn-outline" style="margin-top: 0.5rem;">Acessar Google My Business</a>
+                        </div>
                     </div>
 
                     <div class="settings-section">

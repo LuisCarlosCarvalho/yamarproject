@@ -42,6 +42,7 @@
                             <a href="workshops.html">Workshops</a>
                         </div>
                     </div>
+                    <a href="portfolio.html">PORTFÓLIO</a>
                     <a href="contacto.html">CONTACTO</a>
                     <a href="sobre.html">SOBRE MIM</a>
                     <div class="dropdown">
@@ -83,7 +84,7 @@
                 <a href="index.html">
                     <img src="assets/images/logo.png" alt="Yemar Makeup Artist" class="logo-img" style="height: 80px;">
                 </a>
-                <p class="tagline">YEMAR MAKEUP ARTIST</p>
+                <p class="tagline" id="siteTagline">YEMAR MAKEUP ARTIST</p>
             </div>
         </div>
     </header>
@@ -240,6 +241,22 @@
             </div>
         </section>
     </main>
+
+    <!-- Certificates Carousel -->
+    <section class="certificates-section" id="certificatesSection" style="display: none;">
+        <div class="container">
+            <h2>Certificados e Formações</h2>
+            <div class="certificates-carousel">
+                <div class="certificates-track" id="certificatesTrack">
+                    <!-- Certificates will be loaded here -->
+                </div>
+            </div>
+            <div class="carousel-controls" id="carouselControls" style="display: none;">
+                <button class="carousel-btn" id="prevBtn" onclick="moveCertificatesCarousel(-1)">←</button>
+                <button class="carousel-btn" id="nextBtn" onclick="moveCertificatesCarousel(1)">→</button>
+            </div>
+        </div>
+    </section>
 
     <!-- Footer -->
     <footer class="footer">

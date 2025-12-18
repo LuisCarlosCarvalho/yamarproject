@@ -110,39 +110,9 @@ const SEED_SERVICES = [
         ativo: true,
         createdAt: getCurrentDateTime()
     },
-    {
-        id: generateUUID(),
-        nome: 'Masterclass para Marcas',
-        preco: 500,
-        duracao: '4 horas',
-        descricao: 'Formação exclusiva para equipas de marcas de cosmética. Técnicas avançadas de aplicação e tendências do mercado.',
-        imagemUrl: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=400',
-        categoria: 'Formação',
-        ativo: true,
-        createdAt: getCurrentDateTime()
-    },
-    {
-        id: generateUUID(),
-        nome: 'Maquilhagem Madrinhas',
-        preco: 70,
-        duracao: '1 hora',
-        descricao: 'Serviço de maquilhagem para madrinhas e convidadas especiais. Look harmonioso com a noiva.',
-        imagemUrl: 'https://images.unsplash.com/photo-1519699047748-de8e457a634e?w=400',
-        categoria: 'Noivas',
-        ativo: true,
-        createdAt: getCurrentDateTime()
-    },
-    {
-        id: generateUUID(),
-        nome: 'Consultoria de Imagem',
-        preco: 120,
-        duracao: '2 horas',
-        descricao: 'Análise personalizada do teu tipo de pele, cores que te favorecem e técnicas de automaquilhagem.',
-        imagemUrl: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=400',
-        categoria: 'Consultoria',
-        ativo: true,
-        createdAt: getCurrentDateTime()
-    }
+
+
+
 ];
 
 const SEED_WORKSHOPS = [
@@ -172,32 +142,8 @@ const SEED_WORKSHOPS = [
         ativo: true,
         createdAt: getCurrentDateTime()
     },
-    {
-        id: generateUUID(),
-        titulo: 'Workshop Online - Olhos Marcantes',
-        modalidade: 'Online',
-        duracao: '2 horas',
-        preco: 45,
-        descricao: 'Masterclass online focada em técnicas de maquilhagem de olhos: esfumados, cut crease e delineados.',
-        imagemUrl: 'https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=400',
-        vagas: 50,
-        observacoes: 'Acesso à gravação por 30 dias.',
-        ativo: true,
-        createdAt: getCurrentDateTime()
-    },
-    {
-        id: generateUUID(),
-        titulo: 'Reciclagem Profissional',
-        modalidade: 'Presencial',
-        duracao: '8 horas',
-        preco: 280,
-        descricao: 'Atualização de técnicas e tendências para maquilhadores profissionais que querem estar sempre à frente.',
-        imagemUrl: 'https://images.unsplash.com/photo-1526045478516-99145907023c?w=400',
-        vagas: 6,
-        observacoes: 'Pré-requisito: experiência prévia em maquilhagem profissional.',
-        ativo: true,
-        createdAt: getCurrentDateTime()
-    }
+
+
 ];
 
 const SEED_EVENTS = [
@@ -392,7 +338,7 @@ const SEED_POSTS = [
 const SEED_SITE_SETTINGS = {
     logoUrl: '',
     logoText: 'YEMAR MAKEUP ARTIST',
-    tagline: 'I AM BAFÓNICA',
+    tagline: 'Yemar Makeup Artist',
     bannerTitulo: 'Realça a Tua Beleza Natural',
     bannerSubtitulo: 'Maquilhagem profissional para todos os momentos especiais da tua vida',
     bannerImagemUrl: 'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=800',
@@ -400,13 +346,17 @@ const SEED_SITE_SETTINGS = {
     emailContacto: 'yemarmk@gmail.com',
     emailColaboracao: 'yemarmk@gmail.com',
     telefone: '(+351) 933758731',
+    whatsapp: '351933758731',
     endereco: 'Rua das Flores, 123 - Porto',
+    shopEnabled: true,
     redesSociais: {
         facebook: 'https://facebook.com/yemarmakeup',
         instagram: 'https://instagram.com/yemarmakeup',
         twitter: 'https://twitter.com/yemarmakeup',
         youtube: 'https://youtube.com/yemarmakeup'
-    }
+    },
+    certificates: [],
+    portfolioImages: []
 };
 
 // ============================================
@@ -867,7 +817,46 @@ function cancelBooking(id) {
 }
 
 function confirmBooking(id) {
-    return updateBookingStatus(id, 'Confirmada');
+    const booking = updateBookingStatus(id, 'Confirmada');
+    if (booking) {
+        sendWhatsAppConfirmation(booking);
+    }
+    return booking;
+}
+
+function sendWhatsAppConfirmation(booking) {
+    const settings = getSiteSettings();
+    const whatsappNumber = settings.whatsapp || '351933758731';
+    const user = getUserById(booking.userId);
+    
+    if (!user || !user.telefone) {
+        console.warn('Não foi possível enviar WhatsApp: utilizador sem telefone');
+        return;
+    }
+    
+    // Get service/workshop/event name
+    let serviceName = '';
+    if (booking.tipo === 'servico') {
+        const service = getServiceById(booking.servicoId);
+        serviceName = service ? service.nome : 'Serviço';
+    } else if (booking.tipo === 'workshop') {
+        const workshop = getWorkshopById(booking.workshopId);
+        serviceName = workshop ? workshop.titulo : 'Workshop';
+    } else if (booking.tipo === 'evento') {
+        const event = getEventById(booking.eventoId);
+        serviceName = event ? event.titulo : 'Evento';
+    }
+    
+    const message = `Olá ${user.nome}!\n\nA sua marcação foi confirmada:\n\n✅ ${serviceName}\n📅 ${booking.data} às ${booking.hora}\n\nObrigada por escolher Yemar Makeup Artist!\n\nQualquer dúvida, entre em contacto.`;
+    
+    const encodedMessage = encodeURIComponent(message);
+    const userPhone = user.telefone.replace(/\D/g, '');
+    const whatsappUrl = `https://wa.me/${userPhone}?text=${encodedMessage}`;
+    
+    // Open WhatsApp in new window
+    if (typeof window !== 'undefined') {
+        window.open(whatsappUrl, '_blank');
+    }
 }
 
 function completeBooking(id) {
@@ -1127,6 +1116,126 @@ function markMessageAsRead(id) {
         messages[index].lida = true;
         setData('messages', messages);
         return messages[index];
+    }
+    return null;
+}
+
+
+// ============================================
+// OPERAÇÕES DE ANALYTICS E VISITAS
+// ============================================
+
+function trackPageVisit(pageName) {
+    const visits = getData('pageVisits') || [];
+    const visit = {
+        id: generateUUID(),
+        page: pageName,
+        timestamp: getCurrentDateTime(),
+        date: new Date().toISOString().split('T')[0],
+        userAgent: navigator.userAgent
+    };
+    visits.push(visit);
+    setData('pageVisits', visits);
+    return visit;
+}
+
+function getPageVisits() {
+    return getData('pageVisits') || [];
+}
+
+function getVisitStats() {
+    const visits = getPageVisits();
+    const today = new Date().toISOString().split('T')[0];
+    const last7Days = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+    const last30Days = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+    
+    return {
+        total: visits.length,
+        today: visits.filter(v => v.date === today).length,
+        last7Days: visits.filter(v => v.date >= last7Days).length,
+        last30Days: visits.filter(v => v.date >= last30Days).length,
+        byPage: visits.reduce((acc, v) => {
+            acc[v.page] = (acc[v.page] || 0) + 1;
+            return acc;
+        }, {}),
+        byDate: visits.reduce((acc, v) => {
+            acc[v.date] = (acc[v.date] || 0) + 1;
+            return acc;
+        }, {})
+    };
+}
+
+// ============================================
+// OPERAÇÕES DE CERTIFICADOS
+// ============================================
+
+function getCertificates() {
+    const settings = getSiteSettings();
+    return settings.certificates || [];
+}
+
+function addCertificate(certificateData) {
+    const settings = getSiteSettings();
+    const certificates = settings.certificates || [];
+    const newCertificate = {
+        id: generateUUID(),
+        ...certificateData,
+        createdAt: getCurrentDateTime()
+    };
+    certificates.push(newCertificate);
+    settings.certificates = certificates;
+    setData('siteSettings', settings);
+    return newCertificate;
+}
+
+function removeCertificate(id) {
+    const settings = getSiteSettings();
+    const certificates = settings.certificates || [];
+    settings.certificates = certificates.filter(c => c.id !== id);
+    setData('siteSettings', settings);
+    return settings.certificates;
+}
+
+// ============================================
+// OPERAÇÕES DE PORTFÓLIO
+// ============================================
+
+function getPortfolioImages() {
+    const settings = getSiteSettings();
+    return settings.portfolioImages || [];
+}
+
+function addPortfolioImage(imageData) {
+    const settings = getSiteSettings();
+    const images = settings.portfolioImages || [];
+    const newImage = {
+        id: generateUUID(),
+        ...imageData,
+        createdAt: getCurrentDateTime()
+    };
+    images.push(newImage);
+    settings.portfolioImages = images;
+    setData('siteSettings', settings);
+    return newImage;
+}
+
+function removePortfolioImage(id) {
+    const settings = getSiteSettings();
+    const images = settings.portfolioImages || [];
+    settings.portfolioImages = images.filter(i => i.id !== id);
+    setData('siteSettings', settings);
+    return settings.portfolioImages;
+}
+
+function updatePortfolioImage(id, imageData) {
+    const settings = getSiteSettings();
+    const images = settings.portfolioImages || [];
+    const index = images.findIndex(i => i.id === id);
+    if (index !== -1) {
+        images[index] = { ...images[index], ...imageData, updatedAt: getCurrentDateTime() };
+        settings.portfolioImages = images;
+        setData('siteSettings', settings);
+        return images[index];
     }
     return null;
 }

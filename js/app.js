@@ -244,7 +244,7 @@ function applySiteSettings() {
     // Aplicar tagline
     const taglineElements = document.querySelectorAll('.tagline');
     taglineElements.forEach(el => {
-        el.textContent = settings.tagline || 'I AM BAFÓNICA';
+        el.textContent = settings.tagline || 'Yemar Makeup Artist';
     });
     
     // Aplicar logo imagem se existir
@@ -601,6 +601,9 @@ function loadHomeContent() {
         const posts = getActivePosts().slice(0, 4);
         postsContainer.innerHTML = posts.map(p => renderEditorialPostCard(p)).join('');
     }
+    
+    // Carregar carrossel de certificados
+    loadCertificatesCarousel();
     
     // Carregar slider de posts
     const sliderContainer = document.getElementById('featuredSlider');
@@ -2192,6 +2195,16 @@ function loadAdminPage() {
     
     // Inicializar navegação
     initAdminNav();
+    
+    // Inicializar formulários de configurações
+    initAdminSettingsForms();
+    
+    // Carregar portfólio e certificados
+    loadPortfolioImagesAdmin();
+    loadCertificatesAdmin();
+    
+    // Carregar analytics
+    loadAnalyticsStats();
 }
 
 function initAdminNav() {
@@ -2548,5 +2561,305 @@ function togglePasswordVisibility(inputId, button) {
         input.type = 'password';
         button.classList.remove('active');
         button.querySelector('.eye-icon').textContent = '👁';
+    }
+}
+
+
+// ============================================
+// ADMIN - PORTFOLIO MANAGEMENT
+// ============================================
+
+function addPortfolioImageAdmin() {
+    const imageUrl = document.getElementById('portfolioImageUrl').value.trim();
+    const title = document.getElementById('portfolioImageTitle').value.trim();
+    const description = document.getElementById('portfolioImageDesc').value.trim();
+    
+    if (!imageUrl) {
+        showToast('Por favor, insira a URL da imagem', 'error');
+        return;
+    }
+    
+    addPortfolioImage({
+        imageUrl,
+        title,
+        description
+    });
+    
+    document.getElementById('portfolioImageUrl').value = '';
+    document.getElementById('portfolioImageTitle').value = '';
+    document.getElementById('portfolioImageDesc').value = '';
+    
+    showToast('Imagem adicionada ao portfólio!', 'success');
+    loadPortfolioImagesAdmin();
+}
+
+function loadPortfolioImagesAdmin() {
+    const images = getPortfolioImages();
+    const grid = document.getElementById('portfolioImagesGrid');
+    
+    if (!grid) return;
+    
+    if (images.length === 0) {
+        grid.innerHTML = '<p style="color: #666; text-align: center; padding: 20px;">Nenhuma imagem no portfólio.</p>';
+        return;
+    }
+    
+    grid.innerHTML = images.map(img => `
+        <div class="admin-image-item">
+            <img src="${img.imageUrl}" alt="${img.title || 'Portfolio'}">
+            <div class="admin-image-actions">
+                <span style="font-size: 0.85rem;">${img.title || 'Sem título'}</span>
+                <button class="btn btn-sm btn-outline" onclick="removePortfolioImageAdmin('${img.id}')">Remover</button>
+            </div>
+        </div>
+    `).join('');
+}
+
+function removePortfolioImageAdmin(id) {
+    if (confirm('Tem certeza que deseja remover esta imagem?')) {
+        removePortfolioImage(id);
+        showToast('Imagem removida!', 'success');
+        loadPortfolioImagesAdmin();
+    }
+}
+
+// ============================================
+// ADMIN - CERTIFICATES MANAGEMENT
+// ============================================
+
+function addCertificateAdmin() {
+    const imageUrl = document.getElementById('certificateImageUrl').value.trim();
+    const title = document.getElementById('certificateTitle').value.trim();
+    const year = document.getElementById('certificateYear').value.trim();
+    
+    if (!imageUrl || !title) {
+        showToast('Por favor, preencha a URL e o título do certificado', 'error');
+        return;
+    }
+    
+    addCertificate({
+        imageUrl,
+        title,
+        year
+    });
+    
+    document.getElementById('certificateImageUrl').value = '';
+    document.getElementById('certificateTitle').value = '';
+    document.getElementById('certificateYear').value = '';
+    
+    showToast('Certificado adicionado!', 'success');
+    loadCertificatesAdmin();
+}
+
+function loadCertificatesAdmin() {
+    const certificates = getCertificates();
+    const grid = document.getElementById('certificatesGrid');
+    
+    if (!grid) return;
+    
+    if (certificates.length === 0) {
+        grid.innerHTML = '<p style="color: #666; text-align: center; padding: 20px;">Nenhum certificado cadastrado.</p>';
+        return;
+    }
+    
+    grid.innerHTML = certificates.map(cert => `
+        <div class="admin-image-item">
+            <img src="${cert.imageUrl}" alt="${cert.title}">
+            <div class="admin-image-actions">
+                <div>
+                    <strong style="font-size: 0.85rem;">${cert.title}</strong>
+                    ${cert.year ? `<br><small>${cert.year}</small>` : ''}
+                </div>
+                <button class="btn btn-sm btn-outline" onclick="removeCertificateAdmin('${cert.id}')">Remover</button>
+            </div>
+        </div>
+    `).join('');
+}
+
+function removeCertificateAdmin(id) {
+    if (confirm('Tem certeza que deseja remover este certificado?')) {
+        removeCertificate(id);
+        showToast('Certificado removido!', 'success');
+        loadCertificatesAdmin();
+    }
+}
+
+// ============================================
+// ADMIN - ANALYTICS
+// ============================================
+
+function loadAnalyticsStats() {
+    const stats = getVisitStats();
+    const container = document.getElementById('analyticsStats');
+    
+    if (!container) return;
+    
+    container.innerHTML = `
+        <div class="stats-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+            <div class="stat-card">
+                <div class="stat-value">${stats.total}</div>
+                <div class="stat-label">Total de Visitas</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">${stats.today}</div>
+                <div class="stat-label">Visitas Hoje</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">${stats.last7Days}</div>
+                <div class="stat-label">Últimos 7 Dias</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">${stats.last30Days}</div>
+                <div class="stat-label">Últimos 30 Dias</div>
+            </div>
+        </div>
+    `;
+    
+    loadPageVisitsChart(stats.byPage);
+}
+
+function loadPageVisitsChart(byPage) {
+    const container = document.getElementById('pageVisitsChart');
+    
+    if (!container) return;
+    
+    const sortedPages = Object.entries(byPage).sort((a, b) => b[1] - a[1]);
+    
+    if (sortedPages.length === 0) {
+        container.innerHTML = '<p style="color: #666;">Nenhuma visita registrada ainda.</p>';
+        return;
+    }
+    
+    const maxVisits = Math.max(...sortedPages.map(p => p[1]));
+    
+    container.innerHTML = `
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+            ${sortedPages.map(([page, visits]) => `
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <div style="min-width: 100px; font-size: 0.9rem;">${page}</div>
+                    <div style="flex: 1; background: #eee; border-radius: 4px; height: 24px; position: relative;">
+                        <div style="background: var(--color-red); height: 100%; width: ${(visits / maxVisits * 100)}%; border-radius: 4px;"></div>
+                    </div>
+                    <div style="min-width: 40px; text-align: right; font-weight: 600;">${visits}</div>
+                </div>
+            `).join('')}
+        </div>
+    `;
+}
+
+// ============================================
+// ADMIN - SETTINGS FORMS
+// ============================================
+
+function initAdminSettingsForms() {
+    // Site Name Form
+    const siteNameForm = document.getElementById('siteNameForm');
+    if (siteNameForm) {
+        siteNameForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const tagline = document.getElementById('siteTagline').value;
+            updateSiteSettings({ tagline });
+            showToast('Nome do site atualizado!', 'success');
+            applySiteSettings();
+        });
+    }
+    
+    // Shop Settings Form
+    const shopForm = document.getElementById('shopSettingsForm');
+    if (shopForm) {
+        shopForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const shopEnabled = document.getElementById('shopEnabled').checked;
+            updateSiteSettings({ shopEnabled });
+            showToast('Configurações da loja atualizadas!', 'success');
+        });
+    }
+    
+    // Load current settings
+    const settings = getSiteSettings();
+    if (settings) {
+        const taglineInput = document.getElementById('siteTagline');
+        const shopEnabledInput = document.getElementById('shopEnabled');
+        
+        if (taglineInput) taglineInput.value = settings.tagline || 'Yemar Makeup Artist';
+        if (shopEnabledInput) shopEnabledInput.checked = settings.shopEnabled !== false;
+    }
+}
+
+
+// ============================================
+// CERTIFICATES CAROUSEL
+// ============================================
+
+let currentCertificateIndex = 0;
+
+function loadCertificatesCarousel() {
+    const certificates = getCertificates();
+    const section = document.getElementById('certificatesSection');
+    const track = document.getElementById('certificatesTrack');
+    const controls = document.getElementById('carouselControls');
+    
+    if (!section || !track) return;
+    
+    if (certificates.length === 0) {
+        section.style.display = 'none';
+        return;
+    }
+    
+    section.style.display = 'block';
+    
+    track.innerHTML = certificates.map(cert => `
+        <div class="certificate-item">
+            <img src="${cert.imageUrl}" alt="${cert.title}">
+            <div class="certificate-info">
+                <h3>${cert.title}</h3>
+                ${cert.year ? `<p>${cert.year}</p>` : ''}
+            </div>
+        </div>
+    `).join('');
+    
+    // Show controls only if more than 3 certificates
+    if (controls) {
+        controls.style.display = certificates.length > 3 ? 'flex' : 'none';
+    }
+    
+    currentCertificateIndex = 0;
+    updateCertificatesCarousel();
+}
+
+function moveCertificatesCarousel(direction) {
+    const certificates = getCertificates();
+    const maxIndex = Math.max(0, certificates.length - 3);
+    
+    currentCertificateIndex += direction;
+    
+    if (currentCertificateIndex < 0) {
+        currentCertificateIndex = 0;
+    } else if (currentCertificateIndex > maxIndex) {
+        currentCertificateIndex = maxIndex;
+    }
+    
+    updateCertificatesCarousel();
+}
+
+function updateCertificatesCarousel() {
+    const track = document.getElementById('certificatesTrack');
+    if (!track) return;
+    
+    const offset = currentCertificateIndex * -320; // 300px width + 20px gap
+    track.style.transform = `translateX(${offset}px)`;
+    
+    // Update button states
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const certificates = getCertificates();
+    const maxIndex = Math.max(0, certificates.length - 3);
+    
+    if (prevBtn) {
+        prevBtn.disabled = currentCertificateIndex === 0;
+    }
+    
+    if (nextBtn) {
+        nextBtn.disabled = currentCertificateIndex >= maxIndex;
     }
 }
