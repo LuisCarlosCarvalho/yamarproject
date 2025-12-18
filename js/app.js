@@ -277,10 +277,11 @@ function applySiteSettings() {
         });
     }
     
-    // Sincronizar foto do rodapé com foto do Sobre Mim
+    // Aplicar foto do rodapé
     const footerAvatar = document.getElementById('footerAvatar');
-    if (footerAvatar && settings.aboutAvatarUrl) {
-        footerAvatar.src = settings.aboutAvatarUrl;
+    if (footerAvatar) {
+        // Usa footerAvatarUrl se existir, senão usa aboutImageUrl, senão usa padrão
+        footerAvatar.src = settings.footerAvatarUrl || settings.aboutImageUrl || 'assets/images/capa.png';
     }
 }
 
@@ -2486,9 +2487,11 @@ function loadAdminSettingsPage() {
     // Carregar imagens existentes
     const welcomeAvatarUrl = document.getElementById('welcomeAvatarUrl');
     const aboutImageUrl = document.getElementById('aboutImageUrl');
+    const footerAvatarUrl = document.getElementById('footerAvatarUrl');
     
     if (welcomeAvatarUrl) welcomeAvatarUrl.value = settings.welcomeAvatarUrl || 'assets/images/logo_name.png';
     if (aboutImageUrl) aboutImageUrl.value = settings.aboutImageUrl || 'assets/images/capa.png';
+    if (footerAvatarUrl) footerAvatarUrl.value = settings.footerAvatarUrl || 'assets/images/capa.png';
     
     // Form handler para imagens
     const imagesForm = document.getElementById('imagesSettingsForm');
@@ -2500,7 +2503,8 @@ function loadAdminSettingsPage() {
             updateSiteSettings({
                 ...currentSettings,
                 welcomeAvatarUrl: document.getElementById('welcomeAvatarUrl').value,
-                aboutImageUrl: document.getElementById('aboutImageUrl').value
+                aboutImageUrl: document.getElementById('aboutImageUrl').value,
+                footerAvatarUrl: document.getElementById('footerAvatarUrl').value
             });
             
             showToast('Imagens guardadas! Recarregue a página para ver as alterações.', 'success');
