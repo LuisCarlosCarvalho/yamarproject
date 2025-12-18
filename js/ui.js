@@ -352,10 +352,18 @@ function renderBookingRow(booking) {
             <td class="actions-cell">
                 ${booking.status === 'Pendente' ? `
                     <button class="btn-action btn-confirm" onclick="adminConfirmBooking('${booking.id}')" title="Confirmar">✓</button>
+                    <button class="btn-action" onclick="adminEditBooking('${booking.id}')" title="Editar">✏️</button>
                     <button class="btn-action btn-cancel" onclick="adminCancelBooking('${booking.id}')" title="Cancelar">✕</button>
+                    <button class="btn-action" onclick="adminSendWhatsAppToClient('${booking.id}')" title="Enviar Msg">📱</button>
                 ` : ''}
                 ${booking.status === 'Confirmada' ? `
                     <button class="btn-action btn-complete" onclick="adminCompleteBooking('${booking.id}')" title="Concluir">✓✓</button>
+                    <button class="btn-action" onclick="adminEditBooking('${booking.id}')" title="Editar">✏️</button>
+                    <button class="btn-action btn-cancel" onclick="adminCancelBooking('${booking.id}')" title="Cancelar">✕</button>
+                    <button class="btn-action" onclick="adminSendWhatsAppToClient('${booking.id}')" title="Enviar Msg">📱</button>
+                ` : ''}
+                ${(booking.status === 'Concluída' || booking.status === 'Cancelada') ? `
+                    <button class="btn-action" onclick="adminSendWhatsAppToClient('${booking.id}')" title="Enviar Msg">📱</button>
                 ` : ''}
             </td>
         </tr>

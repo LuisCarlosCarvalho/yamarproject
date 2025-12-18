@@ -3783,3 +3783,249 @@ function exportReportExcel() {
     
     showToast('Relatório CSV exportado! Abra com Excel ou Google Sheets.', 'success');
 }
+
+// ============================================
+// FUNÇÕES ADMIN - MARCAÇÕES
+// ============================================
+
+/**
+ * Editar marcação
+ */
+function adminEditBooking(bookingId) {
+    const booking = getBookingById(bookingId);
+    if (!booking) {
+        showToast('Marcação não encontrada', 'error');
+        return;
+    }
+    
+    const user = getUserById(booking.userId);
+    
+    const content = `
+        <form id="editBookingForm" onsubmit="saveEditedBooking(event, '${bookingId}')">
+            <div class="form-group">
+                <label>Cliente</label>
+                <input type="text" value="${user ? user.nome : 'N/A'}" disabled>
+            </div>
+            
+            <div class="form-group">
+                <label>Tipo</label>
+                <input type="text" value="${booking.tipo}" disabled>
+            </div>
+            
+            <div class="form-group">
+                <label>Serviço/Workshop/Evento</label>
+                <input type="text" value="${booking.itemTitulo}" disabled>
+            </div>
+            
+            <div class="form-group">
+                <label for="editDataHora">Data e Hora *</label>
+                <input type="datetime-local" id="editDataHora" name="dataHora" value="${convertToDateTimeLocal(booking.dataHoraOuPreferencia)}" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="editObservacoes">Observações</label>
+                <textarea id="editObservacoes" name="observacoes" rows="3">${booking.observacoes || ''}</textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="editStatus">Estado *</label>
+                <select id="editStatus" name="status" required>
+                    <option value="Pendente" ${booking.status === 'Pendente' ? 'selected' : ''}>Pendente</option>
+                    <option value="Confirmada" ${booking.status === 'Confirmada' ? 'selected' : ''}>Confirmada</option>
+                    <option value="Concluída" ${booking.status === 'Concluída' ? 'selected' : ''}>Concluída</option>
+                    <option value="Cancelada" ${booking.status === 'Cancelada' ? 'selected' : ''}>Cancelada</option>
+                </select>
+            </div>
+            
+            <button type="submit" class="btn btn-primary btn-block">Guardar Alterações</button>
+        </form>
+    `;
+    
+    openModal('Editar Marcação', content);
+}
+
+/**
+ * Salvar marcação editada
+ */
+function saveEditedBooking(event, bookingId) {
+    event.preventDefault();
+    
+    const form = event.target;
+    const dataHora = form.dataHora.value;
+    const observacoes = form.observacoes.value;
+    const status = form.status.value;
+    
+    // Atualizar marcação
+    const bookings = getBookings();
+    const index = bookings.findIndex(b => b.id === bookingId);
+    
+    if (index === -1) {
+        showToast('Erro ao atualizar marcação', 'error');
+        return;
+    }
+    
+    bookings[index] = {
+        ...bookings[index],
+        dataHoraOuPreferencia: formatDateTimeForDisplay(dataHora),
+        observacoes: observacoes,
+        status: status
+    };
+    
+    localStorage.setItem('bookings', JSON.stringify(bookings));
+    
+    showToast('Marcação atualizada com sucesso!', 'success');
+    closeModal();
+    loadAdminBookings();
+}
+
+/**
+ * Converter data para formato datetime-local
+ */
+function convertToDateTimeLocal(dateString) {
+    if (!dateString) return '';
+    
+    // Tentar parsear diferentes formatos
+    try {
+        // Formato: "15/01/2025 às 14:00"
+        const match = dateString.match(/(\d{2})\/(\d{2})\/(\d{4})\s+às\s+(\d{2}):(\d{2})/);
+        if (match) {
+            const [_, day, month, year, hour, minute] = match;
+            return `${year}-${month}-${day}T${hour}:${minute}`;
+        }
+        
+        // Formato ISO
+        const date = new Date(dateString);
+        if (!isNaN(date.getTime())) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            const hours = String(date.getHours()).padStart(2, '0');
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+            return `${year}-${month}-${day}T${hours}:${minutes}`;
+        }
+    } catch (e) {
+        console.error('Erro ao converter data:', e);
+    }
+    
+    return '';
+}
+
+/**
+ * Formatar datetime-local para exibição
+ */
+function formatDateTimeForDisplay(dateTimeLocal) {
+    if (!dateTimeLocal) return '';
+    
+    const date = new Date(dateTimeLocal);
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    
+    return `${day}/${month}/${year} às ${hours}:${minutes}`;
+}
+
+/**
+ * Enviar mensagem WhatsApp ao cliente
+ */
+function adminSendWhatsAppToClient(bookingId) {
+    const booking = getBookingById(bookingId);
+    if (!booking) {
+        showToast('Marcação não encontrada', 'error');
+        return;
+    }
+    
+    const user = getUserById(booking.userId);
+    if (!user) {
+        showToast('Cliente não encontrado', 'error');
+        return;
+    }
+    
+    const settings = getSiteSettings();
+    
+    // Mensagem padrão personalizável
+    const content = `
+        <form id="whatsappClientForm" onsubmit="sendWhatsAppToClient(event, '${bookingId}')">
+            <div class="form-group">
+                <label>Cliente</label>
+                <input type="text" value="${user.nome}" disabled>
+            </div>
+            
+            <div class="form-group">
+                <label>Telefone do Cliente</label>
+                <input type="text" id="clientPhone" value="${user.telefone || ''}" placeholder="Ex: 351912345678">
+                <small>Formato: código do país + número (sem espaços ou símbolos)</small>
+            </div>
+            
+            <div class="form-group">
+                <label for="whatsappMessage">Mensagem *</label>
+                <textarea id="whatsappMessage" name="message" rows="10" required>${getClientWhatsAppTemplate(booking, user)}</textarea>
+                <small>Personalize a mensagem conforme necessário</small>
+            </div>
+            
+            <button type="submit" class="btn btn-primary btn-block">📱 Abrir WhatsApp</button>
+        </form>
+    `;
+    
+    openModal('Enviar Mensagem ao Cliente', content);
+}
+
+/**
+ * Template de mensagem WhatsApp para cliente
+ */
+function getClientWhatsAppTemplate(booking, user) {
+    const settings = getSiteSettings();
+    const statusMessages = {
+        'Pendente': 'Recebemos a sua marcação e estamos a processar o seu pedido.',
+        'Confirmada': 'A sua marcação foi confirmada! Aguardamos por si.',
+        'Concluída': 'Obrigado por escolher os nossos serviços!',
+        'Cancelada': 'A sua marcação foi cancelada conforme solicitado.'
+    };
+    
+    return `Olá ${user.nome}! 👋
+
+${statusMessages[booking.status] || 'Informação sobre a sua marcação:'}
+
+*Detalhes da Marcação:*
+📅 Serviço: ${booking.itemTitulo}
+📆 Data/Hora: ${booking.dataHoraOuPreferencia || 'A confirmar'}
+📍 Estado: ${booking.status}
+
+${booking.observacoes ? `📝 Observações: ${booking.observacoes}\n\n` : ''}${booking.status === 'Confirmada' ? 'Por favor, chegue 10 minutos antes do horário marcado.\n\n' : ''}Qualquer dúvida, estamos à disposição!
+
+_${settings.tagline || 'Yemar Makeup Artist'}_`;
+}
+
+/**
+ * Enviar WhatsApp ao cliente
+ */
+function sendWhatsAppToClient(event, bookingId) {
+    event.preventDefault();
+    
+    const form = event.target;
+    const phone = form.querySelector('#clientPhone').value.trim();
+    const message = form.querySelector('#whatsappMessage').value.trim();
+    
+    if (!phone) {
+        showToast('Por favor, insira o telefone do cliente', 'error');
+        return;
+    }
+    
+    if (!message) {
+        showToast('Por favor, escreva uma mensagem', 'error');
+        return;
+    }
+    
+    // Limpar telefone (remover espaços, parênteses, hífens)
+    const cleanPhone = phone.replace(/[\s\-\(\)]/g, '');
+    
+    // Criar URL do WhatsApp
+    const whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`;
+    
+    // Abrir WhatsApp
+    window.open(whatsappUrl, '_blank');
+    
+    showToast('WhatsApp aberto! Envie a mensagem.', 'success');
+    closeModal();
+}
