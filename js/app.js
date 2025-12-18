@@ -174,7 +174,10 @@ function updateAuthUI() {
     if (session) {
         // Usuário logado
         authLinks.forEach(el => {
-            el.innerHTML = `<a href="conta.html">${session.nome}</a>`;
+            el.innerHTML = `
+                <a href="conta.html" style="margin-right: 10px;">${session.nome}</a>
+                <a href="#" onclick="logout(); return false;" style="color: #c9a227; font-size: 0.9em;">Sair</a>
+            `;
         });
         
         userLinks.forEach(el => el.style.display = '');
@@ -2007,66 +2010,53 @@ function loadUserSettings() {
     const user = getUserById(session.id);
     if (!user) return;
     
-    // Aguardar o DOM estar pronto
-    setTimeout(() => {
-        const nameInput = document.getElementById('settingsName');
-        const phoneInput = document.getElementById('settingsPhone');
-        const emailInput = document.getElementById('settingsEmail');
+    // Preencher campos
+    const nameInput = document.getElementById('settingsName');
+    const phoneInput = document.getElementById('settingsPhone');
+    const emailInput = document.getElementById('settingsEmail');
+    
+    if (nameInput) nameInput.value = user.nome || '';
+    if (phoneInput) phoneInput.value = user.telefone || '';
+    if (emailInput) emailInput.value = user.email || '';
+    
+    // Configurar formulário apenas uma vez
+    const settingsForm = document.getElementById('settingsForm');
+    if (settingsForm && !settingsForm.dataset.initialized) {
+        settingsForm.dataset.initialized = 'true';
         
-        if (nameInput) nameInput.value = user.nome || '';
-        if (phoneInput) phoneInput.value = user.telefone || '';
-        if (emailInput) emailInput.value = user.email || '';
-        
-        const settingsForm = document.getElementById('settingsForm');
-        if (settingsForm) {
-            // Remover event listeners anteriores
-            const newForm = settingsForm.cloneNode(true);
-            settingsForm.parentNode.replaceChild(newForm, settingsForm);
+        settingsForm.addEventListener('submit', function(e) {
+            e.preventDefault();
             
-            newForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                const nome = document.getElementById('settingsName').value.trim();
-                const telefone = document.getElementById('settingsPhone').value.trim();
-                const email = document.getElementById('settingsEmail').value.trim();
-                
-                if (!nome || !email) {
-                    showToast('Nome e email são obrigatórios!', 'error');
-                    return;
-                }
-                
-                // Atualizar usuário
-                updateUser(session.id, { nome, telefone, email });
-                
-                // Atualizar sessão
-                const updatedUser = getUserById(session.id);
-                setCurrentSession(updatedUser);
-                
-                showToast('Dados atualizados com sucesso!', 'success');
-                
-                // Recarregar dados para confirmar
-                setTimeout(() => {
-                    const reloadedUser = getUserById(session.id);
-                    const nameInputReload = document.getElementById('settingsName');
-                    const phoneInputReload = document.getElementById('settingsPhone');
-                    const emailInputReload = document.getElementById('settingsEmail');
-                    
-                    if (nameInputReload) nameInputReload.value = reloadedUser.nome || '';
-                    if (phoneInputReload) phoneInputReload.value = reloadedUser.telefone || '';
-                    if (emailInputReload) emailInputReload.value = reloadedUser.email || '';
-                }, 100);
-                
-                // Atualizar UI
-                document.getElementById('userName').textContent = nome;
-                document.getElementById('userEmail').textContent = email;
-                if (telefone) {
-                    // Atualizar telefone se houver campo na UI
-                    const userPhoneEl = document.getElementById('userPhone');
-                    if (userPhoneEl) userPhoneEl.textContent = telefone;
-                }
-            });
-        }
-    }, 100);
+            const nome = document.getElementById('settingsName').value.trim();
+            const telefone = document.getElementById('settingsPhone').value.trim();
+            const email = document.getElementById('settingsEmail').value.trim();
+            
+            if (!nome || !email) {
+                showToast('Nome e email são obrigatórios!', 'error');
+                return;
+            }
+            
+            console.log('Salvando dados:', { nome, telefone, email });
+            
+            // Atualizar usuário
+            const result = updateUser(session.id, { nome, telefone, email });
+            console.log('Resultado updateUser:', result);
+            
+            // Atualizar sessão
+            const updatedUser = getUserById(session.id);
+            console.log('Usuário após update:', updatedUser);
+            setCurrentSession(updatedUser);
+            
+            showToast('Dados atualizados com sucesso!', 'success');
+            
+            // Atualizar UI
+            document.getElementById('userName').textContent = nome;
+            document.getElementById('userEmail').textContent = email;
+            
+            // Atualizar auth UI
+            updateAuthUI();
+        });
+    }
 }
 
 function logout() {

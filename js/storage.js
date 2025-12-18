@@ -1143,13 +1143,19 @@ function getUserOrders(userId) {
 }
 
 function updateUser(id, userData) {
+    console.log('updateUser chamada:', { id, userData });
     const users = getUsers();
+    console.log('Usuários antes:', users);
     const index = users.findIndex(u => u.id === id);
+    console.log('Index encontrado:', index);
     if (index !== -1) {
         users[index] = { ...users[index], ...userData, updatedAt: getCurrentDateTime() };
+        console.log('Usuário atualizado:', users[index]);
         setData('users', users);
+        console.log('Dados salvos no localStorage');
         return users[index];
     }
+    console.log('Usuário não encontrado');
     return null;
 }
 
