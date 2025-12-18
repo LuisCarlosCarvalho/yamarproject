@@ -2005,58 +2005,123 @@ function loadUserOrders() {
 
 function loadUserSettings() {
     const session = getCurrentSession();
-    if (!session) return;
+    if (!session) {
+        console.log('loadUserSettings: Sem sessão');
+        return;
+    }
     
     const user = getUserById(session.id);
-    if (!user) return;
-    
-    // Preencher campos
-    const nameInput = document.getElementById('settingsName');
-    const phoneInput = document.getElementById('settingsPhone');
-    const emailInput = document.getElementById('settingsEmail');
-    
-    if (nameInput) nameInput.value = user.nome || '';
-    if (phoneInput) phoneInput.value = user.telefone || '';
-    if (emailInput) emailInput.value = user.email || '';
-    
-    // Configurar formulário apenas uma vez
-    const settingsForm = document.getElementById('settingsForm');
-    if (settingsForm && !settingsForm.dataset.initialized) {
-        settingsForm.dataset.initialized = 'true';
-        
-        settingsForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const nome = document.getElementById('settingsName').value.trim();
-            const telefone = document.getElementById('settingsPhone').value.trim();
-            const email = document.getElementById('settingsEmail').value.trim();
-            
-            if (!nome || !email) {
-                showToast('Nome e email são obrigatórios!', 'error');
-                return;
-            }
-            
-            console.log('Salvando dados:', { nome, telefone, email });
-            
-            // Atualizar usuário
-            const result = updateUser(session.id, { nome, telefone, email });
-            console.log('Resultado updateUser:', result);
-            
-            // Atualizar sessão
-            const updatedUser = getUserById(session.id);
-            console.log('Usuário após update:', updatedUser);
-            setCurrentSession(updatedUser);
-            
-            showToast('Dados atualizados com sucesso!', 'success');
-            
-            // Atualizar UI
-            document.getElementById('userName').textContent = nome;
-            document.getElementById('userEmail').textContent = email;
-            
-            // Atualizar auth UI
-            updateAuthUI();
-        });
+    if (!user) {
+        console.log('loadUserSettings: Usuário não encontrado');
+        return;
     }
+    
+    console.log('loadUserSettings: Carregando dados do usuário', user);
+    
+    // Aguardar DOM estar pronto
+    setTimeout(() => {
+        // Preencher campos
+        const nameInput = document.getElementById('settingsName');
+        const phoneInput = document.getElementById('settingsPhone');
+        const emailInput = document.getElementById('settingsEmail');
+        
+        if (nameInput) nameInput.value = user.nome || '';
+        if (phoneInput) phoneInput.value = user.telefone || '';
+        if (emailInput) emailInput.value = user.email || '';
+        
+        console.log('Campos preenchidos:', {
+            nome: nameInput?.value,
+            telefone: phoneInput?.value,
+            email: emailInput?.value
+        });
+        
+        // Configurar formulário
+        const settingsForm = document.getElementById('settingsForm');
+        if (!settingsForm) {
+            console.error('Formulário settingsForm não encontrado!');
+            return;
+        }
+        
+        // Remover listeners antigos
+        if (settingsForm.dataset.initialized === 'true') {
+            console.log('Formulário já inicializado, pulando...');
+            return;
+        }
+        
+        settingsForm.dataset.initialized = 'true';
+        console.log('Inicializando formulário de settings');
+        
+        // Event listener no formulário
+        settingsForm.addEventListener('submit', handleSettingsSubmit);
+        
+        // Event listener direto no botão como fallback
+        const submitBtn = settingsForm.querySelector('button[type="submit"]');
+        if (submitBtn) {
+            submitBtn.addEventListener('click', function(e) {
+                console.log('Botão clicado diretamente');
+                if (!settingsForm.checkValidity()) {
+                    return; // Deixa validação HTML5 funcionar
+                }
+                e.preventDefault();
+                handleSettingsSubmit(e);
+            });
+        }
+    }, 200);
+}
+
+function handleSettingsSubmit(e) {
+    e.preventDefault();
+    console.log('handleSettingsSubmit chamado');
+    
+    const session = getCurrentSession();
+    if (!session) {
+        console.error('Sem sessão ao salvar');
+        showToast('Erro: Sessão expirada', 'error');
+        return;
+    }
+    
+    const nome = document.getElementById('settingsName').value.trim();
+    const telefone = document.getElementById('settingsPhone').value.trim();
+    const email = document.getElementById('settingsEmail').value.trim();
+    
+    console.log('Dados do formulário:', { nome, telefone, email });
+    
+    if (!nome || !email) {
+        console.log('Validação falhou: nome ou email vazio');
+        showToast('Nome e email são obrigatórios!', 'error');
+        return;
+    }
+    
+    console.log('Chamando updateUser...');
+    
+    // Atualizar usuário
+    const result = updateUser(session.id, { nome, telefone, email });
+    console.log('Resultado updateUser:', result);
+    
+    if (!result) {
+        console.error('updateUser retornou null');
+        showToast('Erro ao atualizar dados', 'error');
+        return;
+    }
+    
+    // Atualizar sessão
+    const updatedUser = getUserById(session.id);
+    console.log('Usuário após update:', updatedUser);
+    setCurrentSession(updatedUser);
+    
+    showToast('Dados atualizados com sucesso!', 'success');
+    
+    // Atualizar UI
+    const userNameEl = document.getElementById('userName');
+    const userEmailEl = document.getElementById('userEmail');
+    
+    if (userNameEl) userNameEl.textContent = nome;
+    if (userEmailEl) userEmailEl.textContent = email;
+    
+    // Atualizar auth UI
+    updateAuthUI();
+    
+    console.log('Salvamento concluído com sucesso!');
 }
 
 function logout() {
