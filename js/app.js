@@ -174,10 +174,7 @@ function updateAuthUI() {
     if (session) {
         // Usuário logado
         authLinks.forEach(el => {
-            el.innerHTML = `
-                <a href="conta.html" style="margin-right: 10px;">${session.nome}</a>
-                <a href="#" onclick="logout(); return false;" style="color: #c9a227; font-size: 0.9em;">Sair</a>
-            `;
+            el.innerHTML = `<a href="conta.html">${session.nome}</a>`;
         });
         
         userLinks.forEach(el => el.style.display = '');
