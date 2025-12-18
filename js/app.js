@@ -210,7 +210,7 @@ function checkRouteProtection() {
     const session = getCurrentSession();
     
     // Páginas que requerem login
-    const protectedPages = ['conta.html'];
+    const protectedPages = [];
     
     // Páginas que requerem admin
     const adminPages = ['admin.html'];
