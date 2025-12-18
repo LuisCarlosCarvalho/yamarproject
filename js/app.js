@@ -3023,6 +3023,7 @@ function initAdminSettingsForms() {
 // ============================================
 
 let currentCertificateIndex = 0;
+let certificatesAutoplayInterval = null;
 
 function loadCertificatesCarousel() {
     const certificates = getCertificates();
@@ -3056,11 +3057,19 @@ function loadCertificatesCarousel() {
     
     currentCertificateIndex = 0;
     updateCertificatesCarousel();
+    
+    // Iniciar autoplay se houver mais de 1 certificado
+    if (certificates.length > 1) {
+        startCertificatesAutoplay();
+    }
 }
 
 function moveCertificatesCarousel(direction) {
     const certificates = getCertificates();
     const maxIndex = Math.max(0, certificates.length - 1);
+    
+    // Parar autoplay quando usuário interage manualmente
+    stopCertificatesAutoplay();
     
     currentCertificateIndex += direction;
     
@@ -3071,6 +3080,13 @@ function moveCertificatesCarousel(direction) {
     }
     
     updateCertificatesCarousel();
+    
+    // Reiniciar autoplay após 2 segundos de inatividade
+    setTimeout(() => {
+        if (certificates.length > 1) {
+            startCertificatesAutoplay();
+        }
+    }, 2000);
 }
 
 function updateCertificatesCarousel() {
@@ -3079,7 +3095,7 @@ function updateCertificatesCarousel() {
     
     // Calcula offset baseado no container width para centralizar
     const containerWidth = track.parentElement.offsetWidth;
-    const itemWidth = 300;
+    const itemWidth = 600;
     const offset = (containerWidth / 2) - (itemWidth / 2) - (currentCertificateIndex * (itemWidth + 20));
     track.style.transform = `translateX(${offset}px)`;
     
@@ -3095,6 +3111,35 @@ function updateCertificatesCarousel() {
     
     if (nextBtn) {
         nextBtn.disabled = currentCertificateIndex >= maxIndex;
+    }
+}
+
+function startCertificatesAutoplay() {
+    // Limpar intervalo existente
+    if (certificatesAutoplayInterval) {
+        clearInterval(certificatesAutoplayInterval);
+    }
+    
+    // Iniciar novo intervalo (troca a cada 4 segundos)
+    certificatesAutoplayInterval = setInterval(() => {
+        const certificates = getCertificates();
+        const maxIndex = Math.max(0, certificates.length - 1);
+        
+        currentCertificateIndex++;
+        
+        // Voltar ao início quando chegar ao fim
+        if (currentCertificateIndex > maxIndex) {
+            currentCertificateIndex = 0;
+        }
+        
+        updateCertificatesCarousel();
+    }, 4000);
+}
+
+function stopCertificatesAutoplay() {
+    if (certificatesAutoplayInterval) {
+        clearInterval(certificatesAutoplayInterval);
+        certificatesAutoplayInterval = null;
     }
 }
 
