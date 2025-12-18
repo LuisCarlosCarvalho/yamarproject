@@ -356,7 +356,71 @@ const SEED_SITE_SETTINGS = {
         youtube: 'https://youtube.com/yemarmakeup'
     },
     certificates: [],
-    portfolioImages: []
+    portfolioImages: [
+        {
+            id: generateUUID(),
+            imageUrl: 'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=800',
+            title: 'Maquilhagem de Noiva',
+            description: 'Look natural e elegante para o dia especial',
+            createdAt: getCurrentDateTime()
+        },
+        {
+            id: generateUUID(),
+            imageUrl: 'https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?w=800',
+            title: 'Maquilhagem Social',
+            description: 'Maquilhagem sofisticada para eventos',
+            createdAt: getCurrentDateTime()
+        },
+        {
+            id: generateUUID(),
+            imageUrl: 'https://images.unsplash.com/photo-1516975080664-ed2fc6a32937?w=800',
+            title: 'Editorial Fashion',
+            description: 'Sessão fotográfica editorial',
+            createdAt: getCurrentDateTime()
+        },
+        {
+            id: generateUUID(),
+            imageUrl: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=800',
+            title: 'Maquilhagem Artística',
+            description: 'Criação artística para ensaio',
+            createdAt: getCurrentDateTime()
+        },
+        {
+            id: generateUUID(),
+            imageUrl: 'https://images.unsplash.com/photo-1519699047748-de8e457a634e?w=800',
+            title: 'Madrinhas',
+            description: 'Maquilhagem harmoniosa para madrinhas',
+            createdAt: getCurrentDateTime()
+        },
+        {
+            id: generateUUID(),
+            imageUrl: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=800',
+            title: 'Maquilhagem Natural',
+            description: 'Beleza natural realçada',
+            createdAt: getCurrentDateTime()
+        },
+        {
+            id: generateUUID(),
+            imageUrl: 'https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=800',
+            title: 'Olhos Marcantes',
+            description: 'Esfumado clássico em tons terrosos',
+            createdAt: getCurrentDateTime()
+        },
+        {
+            id: generateUUID(),
+            imageUrl: 'https://images.unsplash.com/photo-1457972729786-0411a3b2b626?w=800',
+            title: 'Glam Night',
+            description: 'Maquilhagem glamourosa para noite',
+            createdAt: getCurrentDateTime()
+        },
+        {
+            id: generateUUID(),
+            imageUrl: 'https://images.unsplash.com/photo-1526045478516-99145907023c?w=800',
+            title: 'Pele Radiante',
+            description: 'Foco em pele iluminada e saudável',
+            createdAt: getCurrentDateTime()
+        }
+    ]
 };
 
 // ============================================
