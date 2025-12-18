@@ -1187,8 +1187,9 @@ function openAddServiceModal() {
                 <input type="text" id="serviceCategory" name="categoria" placeholder="Ex: Noivas, Social">
             </div>
             <div class="form-group">
-                <label for="serviceImage">URL da Imagem</label>
-                <input type="url" id="serviceImage" name="imagemUrl">
+                <label for="serviceImage">📸 URL da Imagem do Serviço</label>
+                <input type="url" id="serviceImage" name="imagemUrl" placeholder="https://exemplo.com/imagem.jpg">
+                <small style="color: #666; font-size: 0.85rem;">Esta imagem aparecerá no card do serviço e na página de detalhes</small>
             </div>
             <div class="form-group">
                 <label for="serviceDesc">Descrição *</label>
@@ -1256,8 +1257,9 @@ function editService(id) {
                 <input type="text" id="serviceCategory" name="categoria" value="${service.categoria || ''}">
             </div>
             <div class="form-group">
-                <label for="serviceImage">URL da Imagem</label>
-                <input type="url" id="serviceImage" name="imagemUrl" value="${service.imagemUrl || ''}">
+                <label for="serviceImage">📸 URL da Imagem do Serviço</label>
+                <input type="url" id="serviceImage" name="imagemUrl" value="${service.imagemUrl || ''}" placeholder="https://exemplo.com/imagem.jpg">
+                <small style="color: #666; font-size: 0.85rem;">Esta imagem aparecerá no card do serviço e na página de detalhes</small>
             </div>
             <div class="form-group">
                 <label for="serviceDesc">Descrição *</label>
@@ -1314,8 +1316,9 @@ function openAddWorkshopModal() {
                 </div>
             </div>
             <div class="form-group">
-                <label for="workshopImage">URL da Imagem</label>
-                <input type="url" id="workshopImage" name="imagemUrl">
+                <label for="workshopImage">🎯 URL da Imagem do Workshop</label>
+                <input type="url" id="workshopImage" name="imagemUrl" placeholder="https://exemplo.com/imagem.jpg">
+                <small style="color: #666; font-size: 0.85rem;">Esta imagem aparecerá no card do workshop e na página de detalhes</small>
             </div>
             <div class="form-group">
                 <label for="workshopDesc">Descrição *</label>
@@ -1398,8 +1401,9 @@ function editWorkshop(id) {
                 </div>
             </div>
             <div class="form-group">
-                <label for="workshopImage">URL da Imagem</label>
-                <input type="url" id="workshopImage" name="imagemUrl" value="${workshop.imagemUrl || ''}">
+                <label for="workshopImage">🎯 URL da Imagem do Workshop</label>
+                <input type="url" id="workshopImage" name="imagemUrl" value="${workshop.imagemUrl || ''}" placeholder="https://exemplo.com/imagem.jpg">
+                <small style="color: #666; font-size: 0.85rem;">Esta imagem aparecerá no card do workshop e na página de detalhes</small>
             </div>
             <div class="form-group">
                 <label for="workshopDesc">Descrição *</label>
@@ -1457,8 +1461,9 @@ function openAddEventModal() {
                 </div>
             </div>
             <div class="form-group">
-                <label for="eventImage">URL da Imagem</label>
-                <input type="url" id="eventImage" name="imagemUrl">
+                <label for="eventImage">🎉 URL da Imagem do Evento</label>
+                <input type="url" id="eventImage" name="imagemUrl" placeholder="https://exemplo.com/imagem.jpg">
+                <small style="color: #666; font-size: 0.85rem;">Esta imagem aparecerá no card do evento e na página de detalhes</small>
             </div>
             <div class="form-group">
                 <label for="eventDesc">Descrição *</label>
@@ -1533,8 +1538,9 @@ function editEvent(id) {
                 </div>
             </div>
             <div class="form-group">
-                <label for="eventImage">URL da Imagem</label>
-                <input type="url" id="eventImage" name="imagemUrl" value="${evt.imagemUrl || ''}">
+                <label for="eventImage">🎉 URL da Imagem do Evento</label>
+                <input type="url" id="eventImage" name="imagemUrl" value="${evt.imagemUrl || ''}" placeholder="https://exemplo.com/imagem.jpg">
+                <small style="color: #666; font-size: 0.85rem;">Esta imagem aparecerá no card do evento e na página de detalhes</small>
             </div>
             <div class="form-group">
                 <label for="eventDesc">Descrição *</label>
@@ -1582,8 +1588,9 @@ function openAddProductModal() {
                 <input type="text" id="productCategory" name="categoria" required placeholder="Ex: Pincéis, Olhos, Rosto">
             </div>
             <div class="form-group">
-                <label for="productImage">URL da Imagem</label>
-                <input type="url" id="productImage" name="imagemUrl">
+                <label for="productImage">🛍️ URL da Imagem do Produto</label>
+                <input type="url" id="productImage" name="imagemUrl" placeholder="https://exemplo.com/imagem.jpg">
+                <small style="color: #666; font-size: 0.85rem;">Esta imagem aparecerá no card do produto e na página de detalhes</small>
             </div>
             <div class="form-group">
                 <label for="productDesc">Descrição *</label>
@@ -1651,8 +1658,9 @@ function editProduct(id) {
                 <input type="text" id="productCategory" name="categoria" value="${product.categoria}" required>
             </div>
             <div class="form-group">
-                <label for="productImage">URL da Imagem</label>
-                <input type="url" id="productImage" name="imagemUrl" value="${product.imagemUrl || ''}">
+                <label for="productImage">🛍️ URL da Imagem do Produto</label>
+                <input type="url" id="productImage" name="imagemUrl" value="${product.imagemUrl || ''}" placeholder="https://exemplo.com/imagem.jpg">
+                <small style="color: #666; font-size: 0.85rem;">Esta imagem aparecerá no card do produto e na página de detalhes</small>
             </div>
             <div class="form-group">
                 <label for="productDesc">Descrição *</label>
@@ -1696,8 +1704,9 @@ function openAddPostModal() {
                 </div>
             </div>
             <div class="form-group">
-                <label for="postImage">URL da Imagem</label>
-                <input type="url" id="postImage" name="imagemUrl">
+                <label for="postImage">📰 URL da Imagem do Post (Blog)</label>
+                <input type="url" id="postImage" name="imagemUrl" placeholder="https://exemplo.com/imagem.jpg">
+                <small style="color: #666; font-size: 0.85rem;">Esta imagem aparecerá no carrossel "Novidades" e nos posts do blog</small>
             </div>
             <div class="form-group">
                 <label for="postExcerpt">Resumo *</label>
@@ -1766,8 +1775,9 @@ function editPost(id) {
                 </div>
             </div>
             <div class="form-group">
-                <label for="postImage">URL da Imagem</label>
-                <input type="url" id="postImage" name="imagemUrl" value="${post.imagemUrl || ''}">
+                <label for="postImage">📰 URL da Imagem do Post (Blog)</label>
+                <input type="url" id="postImage" name="imagemUrl" value="${post.imagemUrl || ''}" placeholder="https://exemplo.com/imagem.jpg">
+                <small style="color: #666; font-size: 0.85rem;">Esta imagem aparecerá no carrossel "Novidades" e nos posts do blog</small>
             </div>
             <div class="form-group">
                 <label for="postExcerpt">Resumo *</label>
