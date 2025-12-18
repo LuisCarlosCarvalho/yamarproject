@@ -473,6 +473,18 @@ _Yemar Makeup Artist_`,
             description: 'Foco em pele iluminada e saudável',
             createdAt: getCurrentDateTime()
         }
+    ],
+    formacaoAcademica: [
+        'Curso Profissional de Maquilhagem - Escola de Moda de Lisboa',
+        'Especialização em Maquilhagem de Noivas - Academia Internacional',
+        'Curso de Maquilhagem Editorial - Paris Fashion Academy',
+        'Workshop de Efeitos Especiais - London Makeup School'
+    ],
+    certificacoesTextuais: [
+        'Maquilhadora Profissional Certificada',
+        'Especialista em Airbrush Makeup',
+        'Certificação em Colorimetria',
+        'Formadora Certificada pelo IEFP'
     ]
 };
 
@@ -540,6 +552,14 @@ function initializeSeed() {
         }
         if (currentSettings.shopEnabled === undefined) {
             currentSettings.shopEnabled = SEED_SITE_SETTINGS.shopEnabled;
+            setData('siteSettings', currentSettings);
+        }
+        if (!currentSettings.formacaoAcademica) {
+            currentSettings.formacaoAcademica = SEED_SITE_SETTINGS.formacaoAcademica || [];
+            setData('siteSettings', currentSettings);
+        }
+        if (!currentSettings.certificacoesTextuais) {
+            currentSettings.certificacoesTextuais = SEED_SITE_SETTINGS.certificacoesTextuais || [];
             setData('siteSettings', currentSettings);
         }
     }

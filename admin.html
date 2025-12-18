@@ -611,6 +611,39 @@
                     </div>
 
                     <div class="settings-section">
+                        <h3>Formação & Certificações</h3>
+                        <p style="margin-bottom: 1.5rem; color: #666;">Gerir formação académica e certificações profissionais exibidas no site.</p>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem;">
+                            <!-- Formação Académica -->
+                            <div>
+                                <h4 style="margin-bottom: 1rem; color: #0b0b0d;">Formação Académica</h4>
+                                <div class="form-group">
+                                    <label>Adicionar Formação</label>
+                                    <input type="text" id="newFormacao" placeholder="Ex: Curso Profissional de Maquilhagem - Escola de Moda de Lisboa">
+                                    <button class="btn btn-sm btn-primary" onclick="addFormacao()" style="margin-top: 0.5rem;">Adicionar</button>
+                                </div>
+                                <div id="formacaoList" style="margin-top: 1rem;">
+                                    <!-- Lista de formações -->
+                                </div>
+                            </div>
+                            
+                            <!-- Certificações -->
+                            <div>
+                                <h4 style="margin-bottom: 1rem; color: #0b0b0d;">Certificações</h4>
+                                <div class="form-group">
+                                    <label>Adicionar Certificação</label>
+                                    <input type="text" id="newCertificacao" placeholder="Ex: Maquilhadora Profissional Certificada">
+                                    <button class="btn btn-sm btn-primary" onclick="addCertificacao()" style="margin-top: 0.5rem;">Adicionar</button>
+                                </div>
+                                <div id="certificacaoList" style="margin-top: 1rem;">
+                                    <!-- Lista de certificações -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="settings-section">
                         <h3>Analytics e Visitas</h3>
                         <div id="analyticsStats">
                             <!-- Analytics stats will be loaded here -->

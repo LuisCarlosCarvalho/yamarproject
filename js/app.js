@@ -247,6 +247,10 @@ function applySiteSettings() {
         el.textContent = settings.tagline || 'Yemar Makeup Artist';
     });
     
+    // Carregar formação e certificações na página Sobre
+    loadFormacaoSobrePage();
+    loadCertificacoesSobrePage();
+    
     // Controlar visibilidade da loja
     const shopEnabled = settings.shopEnabled !== false;
     
@@ -2366,6 +2370,10 @@ function loadAdminPage() {
     loadPortfolioImagesAdmin();
     loadCertificatesAdmin();
     
+    // Carregar formação e certificações textuais
+    loadFormacaoList();
+    loadCertificacaoList();
+    
     // Carregar analytics
     loadAnalyticsStats();
 }
@@ -4025,4 +4033,147 @@ function sendWhatsAppToClient(event, bookingId) {
     
     showToast('WhatsApp aberto! Envie a mensagem.', 'success');
     closeModal();
+}
+
+/**
+ * FORMAÇÃO & CERTIFICAÇÕES
+ */
+
+function loadFormacaoList() {
+    const settings = getSiteSettings();
+    const formacaoList = document.getElementById('formacaoList');
+    if (!formacaoList) return;
+    
+    const formacoes = settings.formacaoAcademica || [];
+    
+    if (formacoes.length === 0) {
+        formacaoList.innerHTML = '<p style="color: #999; font-size: 0.9rem;">Nenhuma formação adicionada</p>';
+        return;
+    }
+    
+    formacaoList.innerHTML = formacoes.map((formacao, index) => `
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; background: #f9f9f9; border-radius: 4px; margin-bottom: 0.5rem;">
+            <span style="font-size: 0.9rem;">${formacao}</span>
+            <button class="btn btn-sm btn-outline" onclick="removeFormacao(${index})" style="padding: 0.25rem 0.5rem;">✕</button>
+        </div>
+    `).join('');
+}
+
+function addFormacao() {
+    const input = document.getElementById('newFormacao');
+    const value = input.value.trim();
+    
+    if (!value) {
+        showToast('Por favor, insira a formação', 'error');
+        return;
+    }
+    
+    const settings = getSiteSettings();
+    if (!settings.formacaoAcademica) {
+        settings.formacaoAcademica = [];
+    }
+    
+    settings.formacaoAcademica.push(value);
+    setData('siteSettings', settings);
+    
+    input.value = '';
+    loadFormacaoList();
+    showToast('Formação adicionada com sucesso!', 'success');
+}
+
+function removeFormacao(index) {
+    if (!confirm('Deseja remover esta formação?')) return;
+    
+    const settings = getSiteSettings();
+    settings.formacaoAcademica.splice(index, 1);
+    setData('siteSettings', settings);
+    
+    loadFormacaoList();
+    showToast('Formação removida com sucesso!', 'success');
+}
+
+function loadCertificacaoList() {
+    const settings = getSiteSettings();
+    const certificacaoList = document.getElementById('certificacaoList');
+    if (!certificacaoList) return;
+    
+    const certificacoes = settings.certificacoesTextuais || [];
+    
+    if (certificacoes.length === 0) {
+        certificacaoList.innerHTML = '<p style="color: #999; font-size: 0.9rem;">Nenhuma certificação adicionada</p>';
+        return;
+    }
+    
+    certificacaoList.innerHTML = certificacoes.map((cert, index) => `
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; background: #f9f9f9; border-radius: 4px; margin-bottom: 0.5rem;">
+            <span style="font-size: 0.9rem;">${cert}</span>
+            <button class="btn btn-sm btn-outline" onclick="removeCertificacao(${index})" style="padding: 0.25rem 0.5rem;">✕</button>
+        </div>
+    `).join('');
+}
+
+function addCertificacao() {
+    const input = document.getElementById('newCertificacao');
+    const value = input.value.trim();
+    
+    if (!value) {
+        showToast('Por favor, insira a certificação', 'error');
+        return;
+    }
+    
+    const settings = getSiteSettings();
+    if (!settings.certificacoesTextuais) {
+        settings.certificacoesTextuais = [];
+    }
+    
+    settings.certificacoesTextuais.push(value);
+    setData('siteSettings', settings);
+    
+    input.value = '';
+    loadCertificacaoList();
+    showToast('Certificação adicionada com sucesso!', 'success');
+}
+
+function removeCertificacao(index) {
+    if (!confirm('Deseja remover esta certificação?')) return;
+    
+    const settings = getSiteSettings();
+    settings.certificacoesTextuais.splice(index, 1);
+    setData('siteSettings', settings);
+    
+    loadCertificacaoList();
+    showToast('Certificação removida com sucesso!', 'success');
+}
+
+/**
+ * Carregar formação e certificações na página Sobre
+ */
+function loadFormacaoSobrePage() {
+    const list = document.getElementById('formacaoAcademicaList');
+    if (!list) return;
+    
+    const settings = getSiteSettings();
+    const formacoes = settings.formacaoAcademica || [];
+    
+    if (formacoes.length === 0) {
+        list.innerHTML = '<li>Informação em breve</li>';
+        return;
+    }
+    
+    list.innerHTML = formacoes.map(f => `<li>${f}</li>`).join('');
+}
+
+function loadCertificacoesSobrePage() {
+    const list = document.getElementById('certificacoesTextuaisList');
+    if (!list) return;
+    
+    const settings = getSiteSettings();
+    const certificacoes = settings.certificacoesTextuais || [];
+    
+    if (certificacoes.length === 0) {
+        list.innerHTML = '<li>Informação em breve</li>';
+        return;
+    }
+    
+    list.innerHTML = certificacoes.map(c => `<li>${c}</li>`).join('');
 }
