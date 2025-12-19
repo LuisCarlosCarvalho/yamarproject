@@ -4473,14 +4473,28 @@ function loadImagesEvents() {
 }
 
 function editImageUrl(type, id, title, currentUrl) {
-    const newUrl = prompt(`Editar URL da imagem de "${title}":\n\nURL atual:\n${currentUrl}\n\nNova URL:`, currentUrl);
+    const newTitle = prompt(`Editar NOME de "${title}":\n\nNome atual:\n${title}\n\nNovo Nome:`, title);
     
-    if (newUrl === null || newUrl === currentUrl) {
-        return; // Cancelado ou sem alteração
+    if (newTitle === null) {
+        return; // Cancelado
     }
     
-    if (!newUrl.trim()) {
-        showToast('URL não pode estar vazia!', 'error');
+    const newUrl = prompt(`Editar URL da imagem de "${newTitle}":\n\nURL atual:\n${currentUrl}\n\nNova URL:`, currentUrl);
+    
+    if (newUrl === null) {
+        return; // Cancelado
+    }
+    
+    const trimmedTitle = newTitle.trim();
+    const trimmedUrl = newUrl.trim();
+    
+    if (!trimmedTitle) {
+        showToast('O nome não pode estar vazio!', 'error');
+        return;
+    }
+    
+    if (!trimmedUrl) {
+        showToast('A URL não pode estar vazia!', 'error');
         return;
     }
     
@@ -4489,27 +4503,30 @@ function editImageUrl(type, id, title, currentUrl) {
         case 'service':
             const service = getServiceById(id);
             if (service) {
-                service.imagemUrl = newUrl.trim();
+                service.nome = trimmedTitle;
+                service.imagemUrl = trimmedUrl;
                 updateService(service);
-                showToast('Imagem do serviço atualizada!', 'success');
+                showToast('Serviço e Imagem atualizados!', 'success');
                 loadImagesServices();
             }
             break;
         case 'workshop':
             const workshop = getWorkshopById(id);
             if (workshop) {
-                workshop.imagemUrl = newUrl.trim();
+                workshop.nome = trimmedTitle;
+                workshop.imagemUrl = trimmedUrl;
                 updateWorkshop(workshop);
-                showToast('Imagem do workshop atualizada!', 'success');
+                showToast('Workshop e Imagem atualizados!', 'success');
                 loadImagesWorkshops();
             }
             break;
         case 'post':
             const post = getPostById(id);
             if (post) {
-                post.imagemUrl = newUrl.trim();
+                post.titulo = trimmedTitle;
+                post.imagemUrl = trimmedUrl;
                 updatePost(post);
-                showToast('Imagem do post atualizada!', 'success');
+                showToast('Post e Imagem atualizados!', 'success');
                 loadImagesPosts();
                 loadImagesTrend();
                 loadImagesBride();
@@ -4520,18 +4537,20 @@ function editImageUrl(type, id, title, currentUrl) {
         case 'product':
             const product = getProductById(id);
             if (product) {
-                product.imagemUrl = newUrl.trim();
+                product.nome = trimmedTitle;
+                product.imagemUrl = trimmedUrl;
                 updateProduct(product);
-                showToast('Imagem do produto atualizada!', 'success');
+                showToast('Produto e Imagem atualizados!', 'success');
                 loadImagesProducts();
             }
             break;
         case 'event':
             const event = getEventById(id);
             if (event) {
-                event.imagemUrl = newUrl.trim();
+                event.nome = trimmedTitle;
+                event.imagemUrl = trimmedUrl;
                 updateEvent(event);
-                showToast('Imagem do evento atualizada!', 'success');
+                showToast('Evento e Imagem atualizados!', 'success');
                 loadImagesEvents();
             }
             break;
