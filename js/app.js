@@ -7,30 +7,30 @@
 // INICIALIZAÇÃO
 // ============================================
 
-document.addEventListener('DOMContentLoaded', function() {
-    // Inicializar storage/seed
-    initializeSeed();
-    
-    // Atualizar UI baseado na sessão
-    updateAuthUI();
-    
-    // Atualizar badge do carrinho
-    updateCartBadge();
-    
-    // Inicializar menu mobile
-    initMobileMenu();
-    
-    // Inicializar dropdowns
-    initDropdowns();
-    
-    // Inicializar pesquisa
-    initSearch();
-    
-    // Aplicar configurações do site
-    applySiteSettings();
-    
-    // Verificar proteção de rotas
-    checkRouteProtection();
+document.addEventListener("DOMContentLoaded", function () {
+  // Inicializar storage/seed
+  initializeSeed();
+
+  // Atualizar UI baseado na sessão
+  updateAuthUI();
+
+  // Atualizar badge do carrinho
+  updateCartBadge();
+
+  // Inicializar menu mobile
+  initMobileMenu();
+
+  // Inicializar dropdowns
+  initDropdowns();
+
+  // Inicializar pesquisa
+  initSearch();
+
+  // Aplicar configurações do site
+  applySiteSettings();
+
+  // Verificar proteção de rotas
+  checkRouteProtection();
 });
 
 // ============================================
@@ -38,34 +38,34 @@ document.addEventListener('DOMContentLoaded', function() {
 // ============================================
 
 function initMobileMenu() {
-    const hamburger = document.getElementById('hamburger');
-    const mobileMenu = document.getElementById('mobileMenu');
-    const closeMenu = document.getElementById('closeMenu');
-    
-    if (hamburger && mobileMenu) {
-        hamburger.addEventListener('click', () => {
-            mobileMenu.classList.add('open');
-            document.body.style.overflow = 'hidden';
-        });
-    }
-    
-    if (closeMenu && mobileMenu) {
-        closeMenu.addEventListener('click', () => {
-            mobileMenu.classList.remove('open');
-            document.body.style.overflow = '';
-        });
-    }
-    
-    // Fechar ao clicar em link
-    const mobileLinks = document.querySelectorAll('.mobile-nav a');
-    mobileLinks.forEach(link => {
-        link.addEventListener('click', () => {
-            if (mobileMenu) {
-                mobileMenu.classList.remove('open');
-                document.body.style.overflow = '';
-            }
-        });
+  const hamburger = document.getElementById("hamburger");
+  const mobileMenu = document.getElementById("mobileMenu");
+  const closeMenu = document.getElementById("closeMenu");
+
+  if (hamburger && mobileMenu) {
+    hamburger.addEventListener("click", () => {
+      mobileMenu.classList.add("open");
+      document.body.style.overflow = "hidden";
     });
+  }
+
+  if (closeMenu && mobileMenu) {
+    closeMenu.addEventListener("click", () => {
+      mobileMenu.classList.remove("open");
+      document.body.style.overflow = "";
+    });
+  }
+
+  // Fechar ao clicar em link
+  const mobileLinks = document.querySelectorAll(".mobile-nav a");
+  mobileLinks.forEach((link) => {
+    link.addEventListener("click", () => {
+      if (mobileMenu) {
+        mobileMenu.classList.remove("open");
+        document.body.style.overflow = "";
+      }
+    });
+  });
 }
 
 // ============================================
@@ -73,44 +73,44 @@ function initMobileMenu() {
 // ============================================
 
 function initDropdowns() {
-    const dropdowns = document.querySelectorAll('.dropdown');
-    
-    dropdowns.forEach(dropdown => {
-        const toggle = dropdown.querySelector('.dropdown-toggle');
-        const menu = dropdown.querySelector('.dropdown-menu');
-        
-        if (toggle && menu) {
-            // Desktop: hover
-            dropdown.addEventListener('mouseenter', () => {
-                if (window.innerWidth > 768) {
-                    menu.classList.add('show');
-                }
-            });
-            
-            dropdown.addEventListener('mouseleave', () => {
-                if (window.innerWidth > 768) {
-                    menu.classList.remove('show');
-                }
-            });
-            
-            // Mobile: click
-            toggle.addEventListener('click', (e) => {
-                if (window.innerWidth <= 768) {
-                    e.preventDefault();
-                    menu.classList.toggle('show');
-                }
-            });
+  const dropdowns = document.querySelectorAll(".dropdown");
+
+  dropdowns.forEach((dropdown) => {
+    const toggle = dropdown.querySelector(".dropdown-toggle");
+    const menu = dropdown.querySelector(".dropdown-menu");
+
+    if (toggle && menu) {
+      // Desktop: hover
+      dropdown.addEventListener("mouseenter", () => {
+        if (window.innerWidth > 768) {
+          menu.classList.add("show");
         }
-    });
-    
-    // Fechar dropdowns ao clicar fora
-    document.addEventListener('click', (e) => {
-        if (!e.target.closest('.dropdown')) {
-            document.querySelectorAll('.dropdown-menu.show').forEach(menu => {
-                menu.classList.remove('show');
-            });
+      });
+
+      dropdown.addEventListener("mouseleave", () => {
+        if (window.innerWidth > 768) {
+          menu.classList.remove("show");
         }
-    });
+      });
+
+      // Mobile: click
+      toggle.addEventListener("click", (e) => {
+        if (window.innerWidth <= 768) {
+          e.preventDefault();
+          menu.classList.toggle("show");
+        }
+      });
+    }
+  });
+
+  // Fechar dropdowns ao clicar fora
+  document.addEventListener("click", (e) => {
+    if (!e.target.closest(".dropdown")) {
+      document.querySelectorAll(".dropdown-menu.show").forEach((menu) => {
+        menu.classList.remove("show");
+      });
+    }
+  });
 }
 
 // ============================================
@@ -118,46 +118,50 @@ function initDropdowns() {
 // ============================================
 
 function initSearch() {
-    const searchToggle = document.getElementById('searchToggle');
-    const searchOverlay = document.getElementById('searchOverlay');
-    const searchClose = document.getElementById('searchClose');
-    const searchInput = document.getElementById('searchInput');
-    const searchResults = document.getElementById('searchResults');
-    
-    if (searchToggle && searchOverlay) {
-        searchToggle.addEventListener('click', () => {
-            searchOverlay.classList.add('open');
-            if (searchInput) searchInput.focus();
-        });
-    }
-    
-    if (searchClose && searchOverlay) {
-        searchClose.addEventListener('click', () => {
-            searchOverlay.classList.remove('open');
-        });
-    }
-    
-    if (searchInput && searchResults) {
-        const debouncedSearch = debounce((query) => {
-            if (query.length >= 2) {
-                const results = searchAll(query);
-                searchResults.innerHTML = renderSearchResults(results);
-            } else {
-                searchResults.innerHTML = '';
-            }
-        }, 300);
-        
-        searchInput.addEventListener('input', (e) => {
-            debouncedSearch(e.target.value);
-        });
-    }
-    
-    // Fechar com ESC
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && searchOverlay && searchOverlay.classList.contains('open')) {
-            searchOverlay.classList.remove('open');
-        }
+  const searchToggle = document.getElementById("searchToggle");
+  const searchOverlay = document.getElementById("searchOverlay");
+  const searchClose = document.getElementById("searchClose");
+  const searchInput = document.getElementById("searchInput");
+  const searchResults = document.getElementById("searchResults");
+
+  if (searchToggle && searchOverlay) {
+    searchToggle.addEventListener("click", () => {
+      searchOverlay.classList.add("open");
+      if (searchInput) searchInput.focus();
     });
+  }
+
+  if (searchClose && searchOverlay) {
+    searchClose.addEventListener("click", () => {
+      searchOverlay.classList.remove("open");
+    });
+  }
+
+  if (searchInput && searchResults) {
+    const debouncedSearch = debounce((query) => {
+      if (query.length >= 2) {
+        const results = searchAll(query);
+        searchResults.innerHTML = renderSearchResults(results);
+      } else {
+        searchResults.innerHTML = "";
+      }
+    }, 300);
+
+    searchInput.addEventListener("input", (e) => {
+      debouncedSearch(e.target.value);
+    });
+  }
+
+  // Fechar com ESC
+  document.addEventListener("keydown", (e) => {
+    if (
+      e.key === "Escape" &&
+      searchOverlay &&
+      searchOverlay.classList.contains("open")
+    ) {
+      searchOverlay.classList.remove("open");
+    }
+  });
 }
 
 // ============================================
@@ -165,37 +169,37 @@ function initSearch() {
 // ============================================
 
 function updateAuthUI() {
-    const session = getCurrentSession();
-    const authLinks = document.querySelectorAll('.auth-link');
-    const adminLinks = document.querySelectorAll('.admin-link');
-    const userLinks = document.querySelectorAll('.user-link');
-    const guestLinks = document.querySelectorAll('.guest-link');
-    
-    if (session) {
-        // Usuário logado
-        authLinks.forEach(el => {
-            el.innerHTML = `<a href="conta.html">${session.nome}</a>`;
-        });
-        
-        userLinks.forEach(el => el.style.display = '');
-        guestLinks.forEach(el => el.style.display = 'none');
-        
-        // Mostrar link admin se for admin
-        if (session.role === 'admin') {
-            adminLinks.forEach(el => el.style.display = '');
-        } else {
-            adminLinks.forEach(el => el.style.display = 'none');
-        }
+  const session = getCurrentSession();
+  const authLinks = document.querySelectorAll(".auth-link");
+  const adminLinks = document.querySelectorAll(".admin-link");
+  const userLinks = document.querySelectorAll(".user-link");
+  const guestLinks = document.querySelectorAll(".guest-link");
+
+  if (session) {
+    // Usuário logado
+    authLinks.forEach((el) => {
+      el.innerHTML = `<a href="conta.html">${session.nome}</a>`;
+    });
+
+    userLinks.forEach((el) => (el.style.display = ""));
+    guestLinks.forEach((el) => (el.style.display = "none"));
+
+    // Mostrar link admin se for admin
+    if (session.role === "admin") {
+      adminLinks.forEach((el) => (el.style.display = ""));
     } else {
-        // Visitante
-        authLinks.forEach(el => {
-            el.innerHTML = '<a href="conta.html">Entrar</a>';
-        });
-        
-        userLinks.forEach(el => el.style.display = 'none');
-        guestLinks.forEach(el => el.style.display = '');
-        adminLinks.forEach(el => el.style.display = 'none');
+      adminLinks.forEach((el) => (el.style.display = "none"));
     }
+  } else {
+    // Visitante
+    authLinks.forEach((el) => {
+      el.innerHTML = '<a href="conta.html">Entrar</a>';
+    });
+
+    userLinks.forEach((el) => (el.style.display = "none"));
+    guestLinks.forEach((el) => (el.style.display = ""));
+    adminLinks.forEach((el) => (el.style.display = "none"));
+  }
 }
 
 // ============================================
@@ -203,29 +207,29 @@ function updateAuthUI() {
 // ============================================
 
 function checkRouteProtection() {
-    const currentPage = window.location.pathname.split('/').pop();
-    const session = getCurrentSession();
-    
-    // Páginas que requerem login
-    const protectedPages = [];
-    
-    // Páginas que requerem admin
-    const adminPages = ['admin.html'];
-    
-    if (protectedPages.includes(currentPage)) {
-        if (!session) {
-            window.location.href = 'conta.html';
-            return;
-        }
+  const currentPage = window.location.pathname.split("/").pop();
+  const session = getCurrentSession();
+
+  // Páginas que requerem login
+  const protectedPages = [];
+
+  // Páginas que requerem admin
+  const adminPages = ["admin.html"];
+
+  if (protectedPages.includes(currentPage)) {
+    if (!session) {
+      window.location.href = "conta.html";
+      return;
     }
-    
-    if (adminPages.includes(currentPage)) {
-        if (!session || session.role !== 'admin') {
-            showToast('Acesso restrito a administradores', 'error');
-            window.location.href = 'conta.html';
-            return;
-        }
+  }
+
+  if (adminPages.includes(currentPage)) {
+    if (!session || session.role !== "admin") {
+      showToast("Acesso restrito a administradores", "error");
+      window.location.href = "conta.html";
+      return;
     }
+  }
 }
 
 // ============================================
@@ -233,65 +237,68 @@ function checkRouteProtection() {
 // ============================================
 
 function applySiteSettings() {
-    const settings = getSiteSettings();
-    
-    // Aplicar logo
-    const logoElements = document.querySelectorAll('.logo-text');
-    logoElements.forEach(el => {
-        el.textContent = settings.logoText || 'YEMAR MAKEUP ARTIST';
+  const settings = getSiteSettings();
+
+  // Aplicar logo
+  const logoElements = document.querySelectorAll(".logo-text");
+  logoElements.forEach((el) => {
+    el.textContent = settings.logoText || "YEMAR MAKEUP ARTIST";
+  });
+
+  // Aplicar tagline
+  const taglineElements = document.querySelectorAll(".tagline");
+  taglineElements.forEach((el) => {
+    el.textContent = settings.tagline || "Yemar Makeup Artist";
+  });
+
+  // Carregar formação e certificações na página Sobre
+  loadFormacaoSobrePage();
+  loadCertificacoesSobrePage();
+
+  // Controlar visibilidade da loja
+  const shopEnabled = settings.shopEnabled !== false;
+
+  // Ocultar ícone do carrinho
+  const cartIcon = document.getElementById("cartIconBtn");
+  if (cartIcon) {
+    cartIcon.style.display = shopEnabled ? "flex" : "none";
+  }
+
+  // Ocultar links e elementos da loja
+  const shopLinks = document.querySelectorAll(".shop-link");
+  shopLinks.forEach((link) => {
+    link.style.display = shopEnabled ? "" : "none";
+  });
+
+  const shopElements = document.querySelectorAll(".shop-element");
+  shopElements.forEach((element) => {
+    element.style.display = shopEnabled ? "" : "none";
+  });
+
+  // Ocultar seção de produtos na homepage
+  const productsSection = document.getElementById("productsSection");
+  if (productsSection) {
+    productsSection.style.display = shopEnabled ? "block" : "none";
+  }
+
+  // Aplicar logo imagem se existir
+  if (settings.logoUrl) {
+    const logoImgs = document.querySelectorAll(".logo-img");
+    logoImgs.forEach((img) => {
+      img.src = settings.logoUrl;
+      img.style.display = "block";
     });
-    
-    // Aplicar tagline
-    const taglineElements = document.querySelectorAll('.tagline');
-    taglineElements.forEach(el => {
-        el.textContent = settings.tagline || 'Yemar Makeup Artist';
-    });
-    
-    // Carregar formação e certificações na página Sobre
-    loadFormacaoSobrePage();
-    loadCertificacoesSobrePage();
-    
-    // Controlar visibilidade da loja
-    const shopEnabled = settings.shopEnabled !== false;
-    
-    // Ocultar ícone do carrinho
-    const cartIcon = document.getElementById('cartIconBtn');
-    if (cartIcon) {
-        cartIcon.style.display = shopEnabled ? 'flex' : 'none';
-    }
-    
-    // Ocultar links e elementos da loja
-    const shopLinks = document.querySelectorAll('.shop-link');
-    shopLinks.forEach(link => {
-        link.style.display = shopEnabled ? '' : 'none';
-    });
-    
-    const shopElements = document.querySelectorAll('.shop-element');
-    shopElements.forEach(element => {
-        element.style.display = shopEnabled ? '' : 'none';
-    });
-    
-    // Ocultar seção de produtos na homepage
-    const productsSection = document.getElementById('productsSection');
-    if (productsSection) {
-        productsSection.style.display = shopEnabled ? 'block' : 'none';
-    }
-    
-    // Aplicar logo imagem se existir
-    if (settings.logoUrl) {
-        const logoImgs = document.querySelectorAll('.logo-img');
-        logoImgs.forEach(img => {
-            img.src = settings.logoUrl;
-            img.style.display = 'block';
-        });
-    }
-    
-    // Aplicar foto do rodapé
-    const footerAvatar = document.getElementById('footerAvatar');
-    if (footerAvatar) {
-        // Usa footerAvatarUrl se existir, senão usa aboutImageUrl, senão usa padrão
-        footerAvatar.src = settings.footerAvatarUrl || settings.aboutImageUrl || 'assets/images/capa.png';
-    }
+  }
+
+  // Aplicar foto do rodapé
+  const footerAvatar = document.getElementById("footerAvatar");
+  if (footerAvatar) {
+    // Usa footerAvatarUrl se existir, senão usa aboutImageUrl, senão usa padrão
+    footerAvatar.src =
+      settings.footerAvatarUrl ||
+      settings.aboutImageUrl ||
+      "assets/images/capa.png";
+  }
 }
 
 // ============================================
@@ -299,72 +306,72 @@ function applySiteSettings() {
 // ============================================
 
 function handleLogin(event) {
-    event.preventDefault();
-    
-    const form = event.target;
-    const email = form.email.value.trim();
-    const senha = form.senha.value;
-    
-    const user = validateLogin(email, senha);
-    
-    if (user) {
-        setCurrentSession(user);
-        showToast('Login efetuado com sucesso!', 'success');
-        
-        setTimeout(() => {
-            if (user.role === 'admin') {
-                window.location.href = 'admin.html';
-            } else {
-                window.location.href = 'conta.html';
-            }
-        }, 1000);
-    } else {
-        showToast('Email ou senha incorretos', 'error');
-    }
+  event.preventDefault();
+
+  const form = event.target;
+  const email = form.email.value.trim();
+  const senha = form.senha.value;
+
+  const user = validateLogin(email, senha);
+
+  if (user) {
+    setCurrentSession(user);
+    showToast("Login efetuado com sucesso!", "success");
+
+    setTimeout(() => {
+      if (user.role === "admin") {
+        window.location.href = "admin.html";
+      } else {
+        window.location.href = "conta.html";
+      }
+    }, 1000);
+  } else {
+    showToast("Email ou senha incorretos", "error");
+  }
 }
 
 function handleRegister(event) {
-    event.preventDefault();
-    
-    const form = event.target;
-    const nome = form.nome.value.trim();
-    const email = form.email.value.trim();
-    const telefone = form.telefone.value.trim();
-    const senha = form.senha.value;
-    const confirmarSenha = form.confirmarSenha.value;
-    
-    // Validações
-    if (senha !== confirmarSenha) {
-        showToast('As senhas não coincidem', 'error');
-        return;
-    }
-    
-    if (senha.length < 6) {
-        showToast('A senha deve ter pelo menos 6 caracteres', 'error');
-        return;
-    }
-    
-    if (getUserByEmail(email)) {
-        showToast('Este email já está registado', 'error');
-        return;
-    }
-    
-    // Criar usuário
-    const newUser = createUser({ nome, email, telefone, senha });
-    
-    // Login automático
-    setCurrentSession(newUser);
-    showToast('Conta criada com sucesso!', 'success');
-    
-    setTimeout(() => {
-        window.location.href = 'conta.html';
-    }, 1000);
+  event.preventDefault();
+
+  const form = event.target;
+  const nome = form.nome.value.trim();
+  const email = form.email.value.trim();
+  const telefone = form.telefone.value.trim();
+  const senha = form.senha.value;
+  const confirmarSenha = form.confirmarSenha.value;
+
+  // Validações
+  if (senha !== confirmarSenha) {
+    showToast("As senhas não coincidem", "error");
+    return;
+  }
+
+  if (senha.length < 6) {
+    showToast("A senha deve ter pelo menos 6 caracteres", "error");
+    return;
+  }
+
+  if (getUserByEmail(email)) {
+    showToast("Este email já está registado", "error");
+    return;
+  }
+
+  // Criar usuário
+  const newUser = createUser({ nome, email, telefone, senha });
+
+  // Login automático
+  setCurrentSession(newUser);
+  showToast("Conta criada com sucesso!", "success");
+
+  setTimeout(() => {
+    window.location.href = "conta.html";
+  }, 1000);
 }
 
 function handleLogout() {
-    clearSession();
-    showToast('Sessão terminada', 'info');
-    window.location.href = 'index.html';
+  clearSession();
+  showToast("Sessão terminada", "info");
+  window.location.href = "index.html";
 }
 
 // ============================================
@@ -372,72 +379,75 @@ function handleLogout() {
 // ============================================
 
 function handleBookingSubmit(event, tipo, itemId, itemTitulo) {
-    event.preventDefault();
-    
-    const session = getCurrentSession();
-    if (!session) {
-        showToast('Precisas de estar logado para fazer marcações', 'error');
-        return;
-    }
-    
-    const form = event.target;
-    const data = form.data.value;
-    const hora = form.hora.value;
-    const observacoes = form.observacoes?.value || '';
-    
-    // Validar data não é no passado
-    const selectedDate = new Date(data + 'T' + hora);
-    if (selectedDate < new Date()) {
-        showToast('Não é possível marcar para datas passadas', 'error');
-        return;
-    }
-    
-    const booking = createBooking({
-        userId: session.userId,
-        tipo: tipo,
-        itemId: itemId,
-        itemTitulo: itemTitulo,
-        dataHoraOuPreferencia: `${data} às ${hora}`,
-        observacoes: observacoes
-    });
-    
-    closeModal();
-    showToast('Marcação criada com sucesso! Aguarda confirmação.', 'success');
-    
-    // Redirecionar para minha conta
-    setTimeout(() => {
-        window.location.href = 'conta.html';
-    }, 2000);
+  event.preventDefault();
+
+  const session = getCurrentSession();
+  if (!session) {
+    showToast("Precisas de estar logado para fazer marcações", "error");
+    return;
+  }
+
+  const form = event.target;
+  const data = form.data.value;
+  const hora = form.hora.value;
+  const observacoes = form.observacoes?.value || "";
+
+  // Validar data não é no passado
+  const selectedDate = new Date(data + "T" + hora);
+  if (selectedDate < new Date()) {
+    showToast("Não é possível marcar para datas passadas", "error");
+    return;
+  }
+
+  const booking = createBooking({
+    userId: session.userId,
+    tipo: tipo,
+    itemId: itemId,
+    itemTitulo: itemTitulo,
+    dataHoraOuPreferencia: `${data} às ${hora}`,
+    observacoes: observacoes,
+  });
+
+  closeModal();
+  showToast("Marcação criada com sucesso! Aguarda confirmação.", "success");
+
+  // Redirecionar para minha conta
+  setTimeout(() => {
+    window.location.href = "conta.html";
+  }, 2000);
 }
 
 function openBookingModal(tipo, item) {
-    const content = renderBookingForm(tipo, item);
-    openModal(`Marcar ${item.nome || item.titulo}`, content);
+  const content = renderBookingForm(tipo, item);
+  openModal(`Marcar ${item.nome || item.titulo}`, content);
 }
 
 function openEventBookingModal(eventId) {
-    const event = getEventById(eventId);
-    if (!event) return;
-    
-    const session = getCurrentSession();
-    
-    if (!session) {
-        openModal('Inscrição no Evento', `
+  const event = getEventById(eventId);
+  if (!event) return;
+
+  const session = getCurrentSession();
+
+  if (!session) {
+    openModal(
+      "Inscrição no Evento",
+      `
             <div class="booking-login-required">
                 <p>Para te inscreveres neste evento, precisas de ter conta.</p>
                 <a href="conta.html" class="btn btn-primary">Entrar / Registar</a>
             </div>
-        `);
-        return;
-    }
-    
-    const content = `
+        `,
+    );
+    return;
+  }
+
+  const content = `
         <div class="event-booking-info">
             <h4>${event.titulo}</h4>
             <p><strong>Data:</strong> ${formatDateTime(new Date(event.data))}</p>
             <p><strong>Local:</strong> ${event.local}</p>
             <p><strong>Vagas disponíveis:</strong> ${event.vagas}</p>
-            ${event.preco > 0 ? `<p><strong>Preço:</strong> ${event.preco}€</p>` : '<p><strong>Entrada:</strong> Gratuita</p>'}
+            ${event.preco > 0 ? `<p><strong>Preço:</strong> ${event.preco}€</p>` : "<p><strong>Entrada:</strong> Gratuita</p>"}
         </div>
         <form id="eventBookingForm" onsubmit="handleEventBooking(event, '${event.id}', '${event.titulo}')">
             <div class="form-group">
@@ -447,38 +457,38 @@ function openEventBookingModal(eventId) {
             <button type="submit" class="btn btn-primary btn-block">Confirmar Inscrição</button>
         </form>
     `;
-    
-    openModal('Inscrição no Evento', content);
+
+  openModal("Inscrição no Evento", content);
 }
 
 function handleEventBooking(e, eventId, eventTitulo) {
-    e.preventDefault();
-    
-    const session = getCurrentSession();
-    if (!session) return;
-    
-    const event = getEventById(eventId);
-    const observacoes = document.getElementById('eventNotes')?.value || '';
-    
-    const booking = createBooking({
-        userId: session.userId,
-        tipo: 'Evento',
-        itemId: eventId,
-        itemTitulo: eventTitulo,
-        dataHoraOuPreferencia: formatDateTime(new Date(event.data)),
-        observacoes: observacoes
-    });
-    
-    closeModal();
-    showToast('Inscrição realizada com sucesso!', 'success');
+  e.preventDefault();
+
+  const session = getCurrentSession();
+  if (!session) return;
+
+  const event = getEventById(eventId);
+  const observacoes = document.getElementById("eventNotes")?.value || "";
+
+  const booking = createBooking({
+    userId: session.userId,
+    tipo: "Evento",
+    itemId: eventId,
+    itemTitulo: eventTitulo,
+    dataHoraOuPreferencia: formatDateTime(new Date(event.data)),
+    observacoes: observacoes,
+  });
+
+  closeModal();
+  showToast("Inscrição realizada com sucesso!", "success");
 }
 
 function cancelUserBooking(bookingId) {
-    if (confirm('Tens a certeza que queres cancelar esta marcação?')) {
-        cancelBooking(bookingId);
-        showToast('Marcação cancelada', 'info');
-        loadUserBookings(); // Recarregar lista
-    }
+  if (confirm("Tens a certeza que queres cancelar esta marcação?")) {
+    cancelBooking(bookingId);
+    showToast("Marcação cancelada", "info");
+    loadUserBookings(); // Recarregar lista
+  }
 }
 
 // ============================================
@@ -486,17 +496,20 @@ function cancelUserBooking(bookingId) {
 // ============================================
 
 function handleContactSubmit(event) {
-    event.preventDefault();
-    
-    const form = event.target;
-    const nome = form.nome.value.trim();
-    const email = form.email.value.trim();
-    const assunto = form.assunto.value.trim();
-    const mensagem = form.mensagem.value.trim();
-    
-    // Simular envio
-    showToast('Mensagem enviada com sucesso! Entraremos em contacto em breve.', 'success');
-    form.reset();
+  event.preventDefault();
+
+  const form = event.target;
+  const nome = form.nome.value.trim();
+  const email = form.email.value.trim();
+  const assunto = form.assunto.value.trim();
+  const mensagem = form.mensagem.value.trim();
+
+  // Simular envio
+  showToast(
+    "Mensagem enviada com sucesso! Entraremos em contacto em breve.",
+    "success",
+  );
+  form.reset();
 }
 
 // ============================================
@@ -504,38 +517,38 @@ function handleContactSubmit(event) {
 // ============================================
 
 function addProductToCart(productId) {
-    addToCart(productId, 1);
-    updateCartBadge();
-    showToast('Produto adicionado ao carrinho!', 'success');
+  addToCart(productId, 1);
+  updateCartBadge();
+  showToast("Produto adicionado ao carrinho!", "success");
 }
 
 function removeProductFromCart(productId) {
-    removeFromCart(productId);
-    updateCartBadge();
-    updateMiniCartDisplay();
-    showToast('Produto removido do carrinho', 'info');
+  removeFromCart(productId);
+  updateCartBadge();
+  updateMiniCartDisplay();
+  showToast("Produto removido do carrinho", "info");
 }
 
 function clearCartItems() {
-    clearCart();
-    updateCartBadge();
-    updateMiniCartDisplay();
-    showToast('Carrinho limpo', 'info');
+  clearCart();
+  updateCartBadge();
+  updateMiniCartDisplay();
+  showToast("Carrinho limpo", "info");
 }
 
 function updateMiniCartDisplay() {
-    const miniCartContent = document.getElementById('miniCartContent');
-    if (miniCartContent) {
-        miniCartContent.innerHTML = renderMiniCart();
-    }
+  const miniCartContent = document.getElementById("miniCartContent");
+  if (miniCartContent) {
+    miniCartContent.innerHTML = renderMiniCart();
+  }
 }
 
 function toggleMiniCart() {
-    const miniCart = document.getElementById('miniCart');
-    if (miniCart) {
-        miniCart.classList.toggle('open');
-        updateMiniCartDisplay();
-    }
+  const miniCart = document.getElementById("miniCart");
+  if (miniCart) {
+    miniCart.classList.toggle("open");
+    updateMiniCartDisplay();
+  }
 }
 
 // ============================================
@@ -543,36 +556,38 @@ function toggleMiniCart() {
 // ============================================
 
 function handleLikePost(postId) {
-    likePost(postId);
-    // Atualizar UI
-    const post = getPostById(postId);
-    if (post) {
-        const likeElements = document.querySelectorAll(`[data-post-id="${postId}"] .action-likes, .post-likes[data-id="${postId}"]`);
-        likeElements.forEach(el => {
-            el.textContent = `❤ ${post.likes}`;
-        });
-    }
-    showToast('Gostaste deste post!', 'success');
+  likePost(postId);
+  // Atualizar UI
+  const post = getPostById(postId);
+  if (post) {
+    const likeElements = document.querySelectorAll(
+      `[data-post-id="${postId}"] .action-likes, .post-likes[data-id="${postId}"]`,
+    );
+    likeElements.forEach((el) => {
+      el.textContent = `❤ ${post.likes}`;
+    });
+  }
+  showToast("Gostaste deste post!", "success");
 }
 
 function handleCommentSubmit(event, postId) {
-    event.preventDefault();
-    
-    const form = event.target;
-    const nome = form.nome.value.trim();
-    const mensagem = form.mensagem.value.trim();
-    
-    if (!nome || !mensagem) {
-        showToast('Preenche todos os campos', 'error');
-        return;
-    }
-    
-    addComment(postId, { nome, mensagem });
-    showToast('Comentário adicionado!', 'success');
-    form.reset();
-    
-    // Recarregar comentários
-    loadPostComments(postId);
+  event.preventDefault();
+
+  const form = event.target;
+  const nome = form.nome.value.trim();
+  const mensagem = form.mensagem.value.trim();
+
+  if (!nome || !mensagem) {
+    showToast("Preenche todos os campos", "error");
+    return;
+  }
+
+  addComment(postId, { nome, mensagem });
+  showToast("Comentário adicionado!", "success");
+  form.reset();
+
+  // Recarregar comentários
+  loadPostComments(postId);
 }
 
 // ============================================
@@ -580,23 +595,23 @@ function handleCommentSubmit(event, postId) {
 // ============================================
 
 function adminConfirmBooking(bookingId) {
-    confirmBooking(bookingId);
-    showToast('Marcação confirmada!', 'success');
-    loadAdminBookings();
+  confirmBooking(bookingId);
+  showToast("Marcação confirmada!", "success");
+  loadAdminBookings();
 }
 
 function adminCancelBooking(bookingId) {
-    if (confirm('Tens a certeza que queres cancelar esta marcação?')) {
-        cancelBooking(bookingId);
-        showToast('Marcação cancelada', 'info');
-        loadAdminBookings();
-    }
+  if (confirm("Tens a certeza que queres cancelar esta marcação?")) {
+    cancelBooking(bookingId);
+    showToast("Marcação cancelada", "info");
+    loadAdminBookings();
+  }
 }
 
 function adminCompleteBooking(bookingId) {
-    completeBooking(bookingId);
-    showToast('Marcação concluída!', 'success');
-    loadAdminBookings();
+  completeBooking(bookingId);
+  showToast("Marcação concluída!", "success");
+  loadAdminBookings();
 }
 
 // ============================================
@@ -604,50 +619,60 @@ function adminCompleteBooking(bookingId) {
 // ============================================
 
 function loadHomeContent() {
-    // Carregar imagem do perfil das configurações
-    const settings = getSiteSettings();
-    const welcomeAvatar = document.getElementById('welcomeAvatar');
-    if (welcomeAvatar && settings.welcomeAvatarUrl) {
-        welcomeAvatar.src = settings.welcomeAvatarUrl;
-    }
-    
-    // Carregar serviços
-    const servicesContainer = document.getElementById('servicesGrid');
-    if (servicesContainer) {
-        const services = getActiveServices().slice(0, 6);
-        servicesContainer.innerHTML = services.map(s => renderServiceCard(s)).join('');
-    }
-    
-    // Carregar workshops
-    const workshopsContainer = document.getElementById('workshopsGrid');
-    if (workshopsContainer) {
-        const workshops = getActiveWorkshops().slice(0, 4);
-        workshopsContainer.innerHTML = workshops.map(w => renderWorkshopCard(w)).join('');
-    }
-    
-    // Carregar produtos
-    const productsContainer = document.getElementById('productsGrid');
-    if (productsContainer) {
-        const products = getActiveProducts().slice(0, 8);
-        productsContainer.innerHTML = products.map(p => renderProductCard(p)).join('');
-    }
-    
-    // Carregar posts
-    const postsContainer = document.getElementById('postsGrid');
-    if (postsContainer) {
-        const posts = getActivePosts().slice(0, 4);
-        postsContainer.innerHTML = posts.map(p => renderEditorialPostCard(p)).join('');
-    }
-    
-    // Carregar carrossel de certificados
-    loadCertificatesCarousel();
-    
-    // Carregar slider de posts
-    const sliderContainer = document.getElementById('featuredSlider');
-    if (sliderContainer) {
-        const posts = getActivePosts().slice(0, 3);
-        sliderContainer.innerHTML = posts.map((p, i) => `
-            <div class="slide ${i === 0 ? 'active' : ''}">
+  // Carregar imagem do perfil das configurações
+  const settings = getSiteSettings();
+  const welcomeAvatar = document.getElementById("welcomeAvatar");
+  if (welcomeAvatar && settings.welcomeAvatarUrl) {
+    welcomeAvatar.src = settings.welcomeAvatarUrl;
+  }
+
+  // Carregar serviços
+  const servicesContainer = document.getElementById("servicesGrid");
+  if (servicesContainer) {
+    const services = getActiveServices().slice(0, 6);
+    servicesContainer.innerHTML = services
+      .map((s) => renderServiceCard(s))
+      .join("");
+  }
+
+  // Carregar workshops
+  const workshopsContainer = document.getElementById("workshopsGrid");
+  if (workshopsContainer) {
+    const workshops = getActiveWorkshops().slice(0, 4);
+    workshopsContainer.innerHTML = workshops
+      .map((w) => renderWorkshopCard(w))
+      .join("");
+  }
+
+  // Carregar produtos
+  const productsContainer = document.getElementById("productsGrid");
+  if (productsContainer) {
+    const products = getActiveProducts().slice(0, 8);
+    productsContainer.innerHTML = products
+      .map((p) => renderProductCard(p))
+      .join("");
+  }
+
+  // Carregar posts
+  const postsContainer = document.getElementById("postsGrid");
+  if (postsContainer) {
+    const posts = getActivePosts().slice(0, 4);
+    postsContainer.innerHTML = posts
+      .map((p) => renderEditorialPostCard(p))
+      .join("");
+  }
+
+  // Carregar carrossel de certificados
+  loadCertificatesCarousel();
+
+  // Carregar slider de posts
+  const sliderContainer = document.getElementById("featuredSlider");
+  if (sliderContainer) {
+    const posts = getActivePosts().slice(0, 3);
+    sliderContainer.innerHTML = posts
+      .map(
+        (p, i) => `
+            <div class="slide ${i === 0 ? "active" : ""}">
                 <a href="post.html?id=${p.id}" class="slide-link">
                     <img src="${p.imagemUrl}" alt="${p.titulo}" loading="lazy">
                     <div class="slide-content">
@@ -657,251 +682,267 @@ function loadHomeContent() {
                     </div>
                 </a>
             </div>
-        `).join('');
-        
-        // Inicializar slider
-        new Slider(sliderContainer, { autoplay: true, interval: 5000 });
-    }
-    
-    // Aplicar banner (settings já declarado acima)
-    const heroBanner = document.getElementById('heroBanner');
-    if (heroBanner && settings.bannerImagemUrl) {
-        heroBanner.style.backgroundImage = `url(${settings.bannerImagemUrl})`;
-    }
-    
-    const heroTitle = document.getElementById('heroTitle');
-    if (heroTitle) heroTitle.textContent = settings.bannerTitulo;
-    
-    const heroSubtitle = document.getElementById('heroSubtitle');
-    if (heroSubtitle) heroSubtitle.textContent = settings.bannerSubtitulo;
-    
-    const heroCta = document.getElementById('heroCta');
-    if (heroCta) heroCta.textContent = settings.bannerCta;
+        `,
+      )
+      .join("");
+
+    // Inicializar slider
+    new Slider(sliderContainer, { autoplay: true, interval: 5000 });
+  }
+
+  // Aplicar banner (settings já declarado acima)
+  const heroBanner = document.getElementById("heroBanner");
+  if (heroBanner && settings.bannerImagemUrl) {
+    heroBanner.style.backgroundImage = `url(${settings.bannerImagemUrl})`;
+  }
+
+  const heroTitle = document.getElementById("heroTitle");
+  if (heroTitle) heroTitle.textContent = settings.bannerTitulo;
+
+  const heroSubtitle = document.getElementById("heroSubtitle");
+  if (heroSubtitle) heroSubtitle.textContent = settings.bannerSubtitulo;
+
+  const heroCta = document.getElementById("heroCta");
+  if (heroCta) heroCta.textContent = settings.bannerCta;
 }
 
 function loadServicesPage() {
-    const container = document.getElementById('servicesContainer');
-    if (container) {
-        const services = getActiveServices();
-        container.innerHTML = services.map(s => renderServiceCard(s)).join('');
-    }
+  const container = document.getElementById("servicesContainer");
+  if (container) {
+    const services = getActiveServices();
+    container.innerHTML = services.map((s) => renderServiceCard(s)).join("");
+  }
 }
 
 function loadServiceDetail() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const id = urlParams.get('id');
-    
-    if (!id) {
-        window.location.href = 'servicos.html';
-        return;
-    }
-    
-    const service = getServiceById(id);
-    if (!service) {
-        showToast('Serviço não encontrado', 'error');
-        window.location.href = 'servicos.html';
-        return;
-    }
-    
-    // Preencher página
-    document.getElementById('serviceImage').src = service.imagemUrl;
-    document.getElementById('serviceImage').alt = service.nome;
-    document.getElementById('serviceCategory').textContent = service.categoria || 'SERVIÇO';
-    document.getElementById('serviceTitle').textContent = service.nome;
-    document.getElementById('servicePrice').textContent = `${service.preco}€`;
-    document.getElementById('serviceDuration').textContent = service.duracao;
-    document.getElementById('serviceDescription').innerHTML = service.descricao.replace(/\n/g, '<br>');
-    
-    // Botão de marcação
-    const bookBtn = document.getElementById('bookServiceBtn');
-    if (bookBtn) {
-        bookBtn.onclick = () => openBookingModal('Serviço', service);
-    }
-    
-    document.title = `${service.nome} - Yemar Makeup Artist`;
+  const urlParams = new URLSearchParams(window.location.search);
+  const id = urlParams.get("id");
+
+  if (!id) {
+    window.location.href = "servicos.html";
+    return;
+  }
+
+  const service = getServiceById(id);
+  if (!service) {
+    showToast("Serviço não encontrado", "error");
+    window.location.href = "servicos.html";
+    return;
+  }
+
+  // Preencher página
+  document.getElementById("serviceImage").src = service.imagemUrl;
+  document.getElementById("serviceImage").alt = service.nome;
+  document.getElementById("serviceCategory").textContent =
+    service.categoria || "SERVIÇO";
+  document.getElementById("serviceTitle").textContent = service.nome;
+  document.getElementById("servicePrice").textContent = `${service.preco}€`;
+  document.getElementById("serviceDuration").textContent = service.duracao;
+  document.getElementById("serviceDescription").innerHTML =
+    service.descricao.replace(/\n/g, "<br>");
+
+  // Botão de marcação
+  const bookBtn = document.getElementById("bookServiceBtn");
+  if (bookBtn) {
+    bookBtn.onclick = () => openBookingModal("Serviço", service);
+  }
+
+  document.title = `${service.nome} - Yemar Makeup Artist`;
 }
 
 function loadWorkshopsPage() {
-    const container = document.getElementById('workshopsContainer');
-    if (container) {
-        const workshops = getActiveWorkshops();
-        container.innerHTML = workshops.map(w => renderWorkshopCard(w)).join('');
-    }
+  const container = document.getElementById("workshopsContainer");
+  if (container) {
+    const workshops = getActiveWorkshops();
+    container.innerHTML = workshops.map((w) => renderWorkshopCard(w)).join("");
+  }
 }
 
 function loadWorkshopDetail() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const id = urlParams.get('id');
-    
-    if (!id) {
-        window.location.href = 'workshops.html';
-        return;
-    }
-    
-    const workshop = getWorkshopById(id);
-    if (!workshop) {
-        showToast('Workshop não encontrado', 'error');
-        window.location.href = 'workshops.html';
-        return;
-    }
-    
-    // Preencher página
-    document.getElementById('workshopImage').src = workshop.imagemUrl;
-    document.getElementById('workshopImage').alt = workshop.titulo;
-    document.getElementById('workshopModality').textContent = workshop.modalidade;
-    document.getElementById('workshopTitle').textContent = workshop.titulo;
-    document.getElementById('workshopPrice').textContent = `${workshop.preco}€`;
-    document.getElementById('workshopDuration').textContent = workshop.duracao;
-    document.getElementById('workshopVagas').textContent = `${workshop.vagas} vagas`;
-    document.getElementById('workshopDescription').innerHTML = workshop.descricao.replace(/\n/g, '<br>');
-    if (workshop.observacoes) {
-        document.getElementById('workshopNotes').innerHTML = workshop.observacoes.replace(/\n/g, '<br>');
-    }
-    
-    // Botão de marcação
-    const bookBtn = document.getElementById('bookWorkshopBtn');
-    if (bookBtn) {
-        bookBtn.onclick = () => openBookingModal('Workshop', workshop);
-    }
-    
-    document.title = `${workshop.titulo} - Yemar Makeup Artist`;
+  const urlParams = new URLSearchParams(window.location.search);
+  const id = urlParams.get("id");
+
+  if (!id) {
+    window.location.href = "workshops.html";
+    return;
+  }
+
+  const workshop = getWorkshopById(id);
+  if (!workshop) {
+    showToast("Workshop não encontrado", "error");
+    window.location.href = "workshops.html";
+    return;
+  }
+
+  // Preencher página
+  document.getElementById("workshopImage").src = workshop.imagemUrl;
+  document.getElementById("workshopImage").alt = workshop.titulo;
+  document.getElementById("workshopModality").textContent = workshop.modalidade;
+  document.getElementById("workshopTitle").textContent = workshop.titulo;
+  document.getElementById("workshopPrice").textContent = `${workshop.preco}€`;
+  document.getElementById("workshopDuration").textContent = workshop.duracao;
+  document.getElementById("workshopVagas").textContent =
+    `${workshop.vagas} vagas`;
+  document.getElementById("workshopDescription").innerHTML =
+    workshop.descricao.replace(/\n/g, "<br>");
+  if (workshop.observacoes) {
+    document.getElementById("workshopNotes").innerHTML =
+      workshop.observacoes.replace(/\n/g, "<br>");
+  }
+
+  // Botão de marcação
+  const bookBtn = document.getElementById("bookWorkshopBtn");
+  if (bookBtn) {
+    bookBtn.onclick = () => openBookingModal("Workshop", workshop);
+  }
+
+  document.title = `${workshop.titulo} - Yemar Makeup Artist`;
 }
 
 function loadEventsPage() {
-    const container = document.getElementById('eventsContainer');
-    if (container) {
-        const events = getUpcomingEvents();
-        if (events.length === 0) {
-            container.innerHTML = '<p class="no-items">Não há eventos agendados de momento.</p>';
-        } else {
-            container.innerHTML = events.map(e => renderEventCard(e)).join('');
-        }
+  const container = document.getElementById("eventsContainer");
+  if (container) {
+    const events = getUpcomingEvents();
+    if (events.length === 0) {
+      container.innerHTML =
+        '<p class="no-items">Não há eventos agendados de momento.</p>';
+    } else {
+      container.innerHTML = events.map((e) => renderEventCard(e)).join("");
     }
+  }
 }
 
 function loadProductsPage() {
-    const container = document.getElementById('productsContainer');
-    const categoryFilter = document.getElementById('categoryFilter');
-    const sortFilter = document.getElementById('sortFilter');
-    
-    if (container) {
-        let products = getActiveProducts();
-        
-        // Preencher filtro de categorias
-        if (categoryFilter && categoryFilter.options.length <= 1) {
-            const categories = getProductCategories();
-            categories.forEach(cat => {
-                const option = document.createElement('option');
-                option.value = cat;
-                option.textContent = cat;
-                categoryFilter.appendChild(option);
-            });
-        }
-        
-        // Aplicar filtros
-        const selectedCategory = categoryFilter?.value;
-        const selectedSort = sortFilter?.value;
-        
-        if (selectedCategory) {
-            products = products.filter(p => p.categoria === selectedCategory);
-        }
-        
-        if (selectedSort === 'price-asc') {
-            products.sort((a, b) => a.preco - b.preco);
-        } else if (selectedSort === 'price-desc') {
-            products.sort((a, b) => b.preco - a.preco);
-        } else if (selectedSort === 'name') {
-            products.sort((a, b) => a.nome.localeCompare(b.nome));
-        }
-        
-        container.innerHTML = products.map(p => renderProductCard(p)).join('');
+  const container = document.getElementById("productsContainer");
+  const categoryFilter = document.getElementById("categoryFilter");
+  const sortFilter = document.getElementById("sortFilter");
+
+  if (container) {
+    let products = getActiveProducts();
+
+    // Preencher filtro de categorias
+    if (categoryFilter && categoryFilter.options.length <= 1) {
+      const categories = getProductCategories();
+      categories.forEach((cat) => {
+        const option = document.createElement("option");
+        option.value = cat;
+        option.textContent = cat;
+        categoryFilter.appendChild(option);
+      });
     }
+
+    // Aplicar filtros
+    const selectedCategory = categoryFilter?.value;
+    const selectedSort = sortFilter?.value;
+
+    if (selectedCategory) {
+      products = products.filter((p) => p.categoria === selectedCategory);
+    }
+
+    if (selectedSort === "price-asc") {
+      products.sort((a, b) => a.preco - b.preco);
+    } else if (selectedSort === "price-desc") {
+      products.sort((a, b) => b.preco - a.preco);
+    } else if (selectedSort === "name") {
+      products.sort((a, b) => a.nome.localeCompare(b.nome));
+    }
+
+    container.innerHTML = products.map((p) => renderProductCard(p)).join("");
+  }
 }
 
 function loadProductDetail() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const id = urlParams.get('id');
-    
-    if (!id) {
-        window.location.href = 'produtos.html';
-        return;
-    }
-    
-    const product = getProductById(id);
-    if (!product) {
-        showToast('Produto não encontrado', 'error');
-        window.location.href = 'produtos.html';
-        return;
-    }
-    
-    // Preencher página
-    document.getElementById('productImage').src = product.imagemUrl;
-    document.getElementById('productImage').alt = product.nome;
-    document.getElementById('productCategory').textContent = product.categoria;
-    document.getElementById('productTitle').textContent = product.nome;
-    document.getElementById('productPrice').textContent = `${product.preco}€`;
-    document.getElementById('productDescription').innerHTML = product.descricao.replace(/\n/g, '<br>');
-    
-    // Botão de adicionar ao carrinho
-    const addBtn = document.getElementById('addToCartBtn');
-    if (addBtn) {
-        addBtn.onclick = () => addProductToCart(product.id);
-    }
-    
-    document.title = `${product.nome} - Yemar Makeup Artist`;
+  const urlParams = new URLSearchParams(window.location.search);
+  const id = urlParams.get("id");
+
+  if (!id) {
+    window.location.href = "produtos.html";
+    return;
+  }
+
+  const product = getProductById(id);
+  if (!product) {
+    showToast("Produto não encontrado", "error");
+    window.location.href = "produtos.html";
+    return;
+  }
+
+  // Preencher página
+  document.getElementById("productImage").src = product.imagemUrl;
+  document.getElementById("productImage").alt = product.nome;
+  document.getElementById("productCategory").textContent = product.categoria;
+  document.getElementById("productTitle").textContent = product.nome;
+  document.getElementById("productPrice").textContent = `${product.preco}€`;
+  document.getElementById("productDescription").innerHTML =
+    product.descricao.replace(/\n/g, "<br>");
+
+  // Botão de adicionar ao carrinho
+  const addBtn = document.getElementById("addToCartBtn");
+  if (addBtn) {
+    addBtn.onclick = () => addProductToCart(product.id);
+  }
+
+  document.title = `${product.nome} - Yemar Makeup Artist`;
 }
 
 function loadBlogPage() {
-    const container = document.getElementById('postsContainer');
-    if (container) {
-        const posts = getActivePosts();
-        container.innerHTML = posts.map(p => renderEditorialPostCard(p)).join('');
-    }
+  const container = document.getElementById("postsContainer");
+  if (container) {
+    const posts = getActivePosts();
+    container.innerHTML = posts.map((p) => renderEditorialPostCard(p)).join("");
+  }
 }
 
 function loadPostDetail() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const id = urlParams.get('id');
-    
-    if (!id) {
-        window.location.href = 'blog.html';
-        return;
-    }
-    
-    const post = getPostById(id);
-    if (!post) {
-        showToast('Post não encontrado', 'error');
-        window.location.href = 'blog.html';
-        return;
-    }
-    
-    // Preencher página
-    document.getElementById('postCategory').textContent = post.categoria;
-    document.getElementById('postTitle').textContent = post.titulo;
-    document.getElementById('postDate').textContent = `Posted on ${formatDate(new Date(post.dataPublicacao))}`;
-    document.getElementById('postImage').src = post.imagemUrl;
-    document.getElementById('postImage').alt = post.titulo;
-    document.getElementById('postContent').innerHTML = post.conteudo.replace(/\n/g, '<br>');
-    document.getElementById('postLikes').textContent = `❤ ${post.likes || 0}`;
-    document.getElementById('postLikes').onclick = () => handleLikePost(post.id);
-    
-    // Carregar comentários
-    loadPostComments(id);
-    
-    document.title = `${post.titulo} - Yemar Makeup Artist`;
+  const urlParams = new URLSearchParams(window.location.search);
+  const id = urlParams.get("id");
+
+  if (!id) {
+    window.location.href = "blog.html";
+    return;
+  }
+
+  const post = getPostById(id);
+  if (!post) {
+    showToast("Post não encontrado", "error");
+    window.location.href = "blog.html";
+    return;
+  }
+
+  // Preencher página
+  document.getElementById("postCategory").textContent = post.categoria;
+  document.getElementById("postTitle").textContent = post.titulo;
+  document.getElementById("postDate").textContent =
+    `Posted on ${formatDate(new Date(post.dataPublicacao))}`;
+  document.getElementById("postImage").src = post.imagemUrl;
+  document.getElementById("postImage").alt = post.titulo;
+  document.getElementById("postContent").innerHTML = post.conteudo.replace(
+    /\n/g,
+    "<br>",
+  );
+  document.getElementById("postLikes").textContent = `❤ ${post.likes || 0}`;
+  document.getElementById("postLikes").onclick = () => handleLikePost(post.id);
+
+  // Carregar comentários
+  loadPostComments(id);
+
+  document.title = `${post.titulo} - Yemar Makeup Artist`;
 }
 
 function loadPostComments(postId) {
-    const container = document.getElementById('commentsContainer');
-    const post = getPostById(postId);
-    
-    if (container && post) {
-        const comments = post.comentarios || [];
-        
-        if (comments.length === 0) {
-            container.innerHTML = '<p class="no-comments">Ainda não há comentários. Sê o primeiro a comentar!</p>';
-        } else {
-            container.innerHTML = comments.map(c => `
+  const container = document.getElementById("commentsContainer");
+  const post = getPostById(postId);
+
+  if (container && post) {
+    const comments = post.comentarios || [];
+
+    if (comments.length === 0) {
+      container.innerHTML =
+        '<p class="no-comments">Ainda não há comentários. Sê o primeiro a comentar!</p>';
+    } else {
+      container.innerHTML = comments
+        .map(
+          (c) => `
                 <div class="comment">
                     <div class="comment-header">
                         <strong>${c.nome}</strong>
@@ -909,42 +950,45 @@ function loadPostComments(postId) {
                     </div>
                     <p class="comment-text">${c.mensagem}</p>
                 </div>
-            `).join('');
-        }
+            `,
+        )
+        .join("");
     }
+  }
 }
 
 function loadUserBookings() {
-    const container = document.getElementById('bookingsContainer');
-    const session = getCurrentSession();
-    
-    if (container && session) {
-        const bookings = getBookingsByUser(session.userId);
-        
-        if (bookings.length === 0) {
-            container.innerHTML = '<p class="no-items">Ainda não tens marcações.</p>';
-        } else {
-            // Ordenar por data de criação (mais recentes primeiro)
-            bookings.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-            container.innerHTML = bookings.map(b => renderBookingCard(b)).join('');
-        }
+  const container = document.getElementById("bookingsContainer");
+  const session = getCurrentSession();
+
+  if (container && session) {
+    const bookings = getBookingsByUser(session.userId);
+
+    if (bookings.length === 0) {
+      container.innerHTML = '<p class="no-items">Ainda não tens marcações.</p>';
+    } else {
+      // Ordenar por data de criação (mais recentes primeiro)
+      bookings.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+      container.innerHTML = bookings.map((b) => renderBookingCard(b)).join("");
     }
+  }
 }
 
 function loadContactPage() {
-    const settings = getSiteSettings();
-    
-    const emailContacto = document.getElementById('emailContacto');
-    if (emailContacto) emailContacto.textContent = settings.emailContacto;
-    
-    const emailColaboracao = document.getElementById('emailColaboracao');
-    if (emailColaboracao) emailColaboracao.textContent = settings.emailColaboracao;
-    
-    const telefone = document.getElementById('telefoneContacto');
-    if (telefone) telefone.textContent = settings.telefone;
-    
-    const endereco = document.getElementById('enderecoContacto');
-    if (endereco) endereco.textContent = settings.endereco;
+  const settings = getSiteSettings();
+
+  const emailContacto = document.getElementById("emailContacto");
+  if (emailContacto) emailContacto.textContent = settings.emailContacto;
+
+  const emailColaboracao = document.getElementById("emailColaboracao");
+  if (emailColaboracao)
+    emailColaboracao.textContent = settings.emailColaboracao;
+
+  const telefone = document.getElementById("telefoneContacto");
+  if (telefone) telefone.textContent = settings.telefone;
+
+  const endereco = document.getElementById("enderecoContacto");
+  if (endereco) endereco.textContent = settings.endereco;
 }
 
 // ============================================
@@ -952,213 +996,244 @@ function loadContactPage() {
 // ============================================
 
 function loadAdminDashboard() {
-    const stats = getDashboardStats();
-    
-    document.getElementById('statPendentes').textContent = stats.pendentes;
-    document.getElementById('statConfirmadas').textContent = stats.confirmadas;
-    document.getElementById('statUsers').textContent = stats.totalUsers;
-    document.getElementById('statProducts').textContent = stats.totalProducts;
-    document.getElementById('statServices').textContent = stats.totalServices;
-    document.getElementById('statEvents').textContent = stats.upcomingEvents;
+  const stats = getDashboardStats();
+
+  document.getElementById("statPendentes").textContent = stats.pendentes;
+  document.getElementById("statConfirmadas").textContent = stats.confirmadas;
+  document.getElementById("statUsers").textContent = stats.totalUsers;
+  document.getElementById("statProducts").textContent = stats.totalProducts;
+  document.getElementById("statServices").textContent = stats.totalServices;
+  document.getElementById("statEvents").textContent = stats.upcomingEvents;
 }
 
 function loadAdminBookings() {
-    const container = document.getElementById('bookingsTableBody');
-    if (container) {
-        const bookings = getBookings();
-        bookings.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-        container.innerHTML = bookings.map(b => renderBookingRow(b)).join('');
-    }
+  const container = document.getElementById("bookingsTableBody");
+  if (container) {
+    const bookings = getBookings();
+    bookings.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    container.innerHTML = bookings.map((b) => renderBookingRow(b)).join("");
+  }
 }
 
 function loadAdminSection(section) {
-    // Esconder todas as seções
-    document.querySelectorAll('.admin-section').forEach(s => s.style.display = 'none');
-    
-    // Mostrar seção selecionada
-    const targetSection = document.getElementById(`section-${section}`);
-    if (targetSection) targetSection.style.display = 'block';
-    
-    // Atualizar menu ativo
-    document.querySelectorAll('.admin-menu-item').forEach(item => {
-        item.classList.toggle('active', item.dataset.section === section);
-    });
-    
-    // Carregar dados da seção
-    switch(section) {
-        case 'dashboard':
-            loadAdminDashboard();
-            break;
-        case 'bookings':
-            loadAdminBookings();
-            break;
-        case 'services':
-            loadAdminServices();
-            break;
-        case 'workshops':
-            loadAdminWorkshops();
-            break;
-        case 'events':
-            loadAdminEvents();
-            break;
-        case 'products':
-            loadAdminProducts();
-            break;
-        case 'posts':
-            loadAdminPosts();
-            break;
-        case 'settings':
-            loadAdminSettings();
-            break;
-    }
+  // Esconder todas as seções
+  document
+    .querySelectorAll(".admin-section")
+    .forEach((s) => (s.style.display = "none"));
+
+  // Mostrar seção selecionada
+  const targetSection = document.getElementById(`section-${section}`);
+  if (targetSection) targetSection.style.display = "block";
+
+  // Atualizar menu ativo
+  document.querySelectorAll(".admin-menu-item").forEach((item) => {
+    item.classList.toggle("active", item.dataset.section === section);
+  });
+
+  // Carregar dados da seção
+  switch (section) {
+    case "dashboard":
+      loadAdminDashboard();
+      break;
+    case "bookings":
+      loadAdminBookings();
+      break;
+    case "services":
+      loadAdminServices();
+      break;
+    case "workshops":
+      loadAdminWorkshops();
+      break;
+    case "events":
+      loadAdminEvents();
+      break;
+    case "products":
+      loadAdminProducts();
+      break;
+    case "posts":
+      loadAdminPosts();
+      break;
+    case "settings":
+      loadAdminSettings();
+      break;
+  }
 }
 
 function loadAdminServices() {
-    const container = document.getElementById('servicesTableBody');
-    if (container) {
-        const services = getServices();
-        container.innerHTML = services.map(s => `
+  const container = document.getElementById("servicesTableBody");
+  if (container) {
+    const services = getServices();
+    container.innerHTML = services
+      .map(
+        (s) => `
             <tr>
                 <td>${s.nome}</td>
-                <td>${s.categoria || '-'}</td>
+                <td>${s.categoria || "-"}</td>
                 <td>${s.preco}€</td>
                 <td>${s.duracao}</td>
-                <td><span class="status-badge ${s.ativo ? 'status-confirmed' : 'status-cancelled'}">${s.ativo ? 'Ativo' : 'Inativo'}</span></td>
+                <td><span class="status-badge ${s.ativo ? "status-confirmed" : "status-cancelled"}">${s.ativo ? "Ativo" : "Inativo"}</span></td>
                 <td>
                     <button class="btn-action" onclick="editService('${s.id}')" title="Editar">✎</button>
                     <button class="btn-action btn-cancel" onclick="deleteServiceItem('${s.id}')" title="Eliminar">✕</button>
                 </td>
             </tr>
-        `).join('');
-    }
+        `,
+      )
+      .join("");
+  }
 }
 
 function loadAdminWorkshops() {
-    const container = document.getElementById('workshopsTableBody');
-    if (container) {
-        const workshops = getWorkshops();
-        container.innerHTML = workshops.map(w => `
+  const container = document.getElementById("workshopsTableBody");
+  if (container) {
+    const workshops = getWorkshops();
+    container.innerHTML = workshops
+      .map(
+        (w) => `
             <tr>
                 <td>${w.titulo}</td>
                 <td>${w.modalidade}</td>
                 <td>${w.preco}€</td>
                 <td>${w.duracao}</td>
-                <td><span class="status-badge ${w.ativo ? 'status-confirmed' : 'status-cancelled'}">${w.ativo ? 'Ativo' : 'Inativo'}</span></td>
+                <td><span class="status-badge ${w.ativo ? "status-confirmed" : "status-cancelled"}">${w.ativo ? "Ativo" : "Inativo"}</span></td>
                 <td>
                     <button class="btn-action" onclick="editWorkshop('${w.id}')" title="Editar">✎</button>
                     <button class="btn-action btn-cancel" onclick="deleteWorkshopItem('${w.id}')" title="Eliminar">✕</button>
                 </td>
             </tr>
-        `).join('');
-    }
+        `,
+      )
+      .join("");
+  }
 }
 
 function loadAdminEvents() {
-    const container = document.getElementById('eventsTableBody');
-    if (container) {
-        const events = getEvents();
-        container.innerHTML = events.map(e => `
+  const container = document.getElementById("eventsTableBody");
+  if (container) {
+    const events = getEvents();
+    container.innerHTML = events
+      .map(
+        (e) => `
             <tr>
                 <td>${e.titulo}</td>
                 <td>${formatDateTime(new Date(e.data))}</td>
                 <td>${e.local}</td>
                 <td>${e.vagas}</td>
-                <td><span class="status-badge ${e.ativo ? 'status-confirmed' : 'status-cancelled'}">${e.ativo ? 'Ativo' : 'Inativo'}</span></td>
+                <td><span class="status-badge ${e.ativo ? "status-confirmed" : "status-cancelled"}">${e.ativo ? "Ativo" : "Inativo"}</span></td>
                 <td>
                     <button class="btn-action" onclick="editEvent('${e.id}')" title="Editar">✎</button>
                     <button class="btn-action btn-cancel" onclick="deleteEventItem('${e.id}')" title="Eliminar">✕</button>
                 </td>
             </tr>
-        `).join('');
-    }
+        `,
+      )
+      .join("");
+  }
 }
 
 function loadAdminProducts() {
-    const container = document.getElementById('productsTableBody');
-    if (container) {
-        const products = getProducts();
-        container.innerHTML = products.map(p => `
+  const container = document.getElementById("productsTableBody");
+  if (container) {
+    const products = getProducts();
+    container.innerHTML = products
+      .map(
+        (p) => `
             <tr>
                 <td>${p.nome}</td>
                 <td>${p.categoria}</td>
                 <td>${p.preco}€</td>
                 <td>${p.estoque || 0}</td>
-                <td><span class="status-badge ${p.ativo ? 'status-confirmed' : 'status-cancelled'}">${p.ativo ? 'Ativo' : 'Inativo'}</span></td>
+                <td><span class="status-badge ${p.ativo ? "status-confirmed" : "status-cancelled"}">${p.ativo ? "Ativo" : "Inativo"}</span></td>
                 <td>
                     <button class="btn-action" onclick="editProduct('${p.id}')" title="Editar">✎</button>
                     <button class="btn-action btn-cancel" onclick="deleteProductItem('${p.id}')" title="Eliminar">✕</button>
                 </td>
             </tr>
-        `).join('');
-    }
+        `,
+      )
+      .join("");
+  }
 }
 
 function loadAdminPosts() {
-    const container = document.getElementById('postsTableBody');
-    if (container) {
-        const posts = getPosts();
-        container.innerHTML = posts.map(p => `
+  const container = document.getElementById("postsTableBody");
+  if (container) {
+    const posts = getPosts();
+    container.innerHTML = posts
+      .map(
+        (p) => `
             <tr>
                 <td>${p.titulo}</td>
                 <td>${p.categoria}</td>
                 <td>${formatDate(new Date(p.dataPublicacao))}</td>
                 <td>${p.likes || 0}</td>
-                <td><span class="status-badge ${p.ativo ? 'status-confirmed' : 'status-cancelled'}">${p.ativo ? 'Ativo' : 'Inativo'}</span></td>
+                <td><span class="status-badge ${p.ativo ? "status-confirmed" : "status-cancelled"}">${p.ativo ? "Ativo" : "Inativo"}</span></td>
                 <td>
                     <button class="btn-action" onclick="editPost('${p.id}')" title="Editar">✎</button>
                     <button class="btn-action btn-cancel" onclick="deletePostItem('${p.id}')" title="Eliminar">✕</button>
                 </td>
             </tr>
-        `).join('');
-    }
+        `,
+      )
+      .join("");
+  }
 }
 
 function loadAdminSettings() {
-    const settings = getSiteSettings();
-    
-    document.getElementById('settingsLogoText').value = settings.logoText || '';
-    document.getElementById('settingsTagline').value = settings.tagline || '';
-    document.getElementById('settingsLogoUrl').value = settings.logoUrl || '';
-    document.getElementById('settingsBannerTitle').value = settings.bannerTitulo || '';
-    document.getElementById('settingsBannerSubtitle').value = settings.bannerSubtitulo || '';
-    document.getElementById('settingsBannerImage').value = settings.bannerImagemUrl || '';
-    document.getElementById('settingsBannerCta').value = settings.bannerCta || '';
-    document.getElementById('settingsEmailContacto').value = settings.emailContacto || '';
-    document.getElementById('settingsEmailColaboracao').value = settings.emailColaboracao || '';
-    document.getElementById('settingsTelefone').value = settings.telefone || '';
-    document.getElementById('settingsEndereco').value = settings.endereco || '';
-    document.getElementById('settingsFacebook').value = settings.redesSociais?.facebook || '';
-    document.getElementById('settingsInstagram').value = settings.redesSociais?.instagram || '';
-    document.getElementById('settingsTwitter').value = settings.redesSociais?.twitter || '';
-    document.getElementById('settingsYoutube').value = settings.redesSociais?.youtube || '';
+  const settings = getSiteSettings();
+
+  document.getElementById("settingsLogoText").value = settings.logoText || "";
+  document.getElementById("settingsTagline").value = settings.tagline || "";
+  document.getElementById("settingsLogoUrl").value = settings.logoUrl || "";
+  document.getElementById("settingsBannerTitle").value =
+    settings.bannerTitulo || "";
+  document.getElementById("settingsBannerSubtitle").value =
+    settings.bannerSubtitulo || "";
+  document.getElementById("settingsBannerImage").value =
+    settings.bannerImagemUrl || "";
+  document.getElementById("settingsBannerCta").value = settings.bannerCta || "";
+  document.getElementById("settingsEmailContacto").value =
+    settings.emailContacto || "";
+  document.getElementById("settingsEmailColaboracao").value =
+    settings.emailColaboracao || "";
+  document.getElementById("settingsTelefone").value = settings.telefone || "";
+  document.getElementById("settingsEndereco").value = settings.endereco || "";
+  document.getElementById("settingsFacebook").value =
+    settings.redesSociais?.facebook || "";
+  document.getElementById("settingsInstagram").value =
+    settings.redesSociais?.instagram || "";
+  document.getElementById("settingsTwitter").value =
+    settings.redesSociais?.twitter || "";
+  document.getElementById("settingsYoutube").value =
+    settings.redesSociais?.youtube || "";
 }
 
 function saveAdminSettings(event) {
-    event.preventDefault();
-    
-    const settings = {
-        logoText: document.getElementById('settingsLogoText').value,
-        tagline: document.getElementById('settingsTagline').value,
-        logoUrl: document.getElementById('settingsLogoUrl').value,
-        bannerTitulo: document.getElementById('settingsBannerTitle').value,
-        bannerSubtitulo: document.getElementById('settingsBannerSubtitle').value,
-        bannerImagemUrl: document.getElementById('settingsBannerImage').value,
-        bannerCta: document.getElementById('settingsBannerCta').value,
-        emailContacto: document.getElementById('settingsEmailContacto').value,
-        emailColaboracao: document.getElementById('settingsEmailColaboracao').value,
-        telefone: document.getElementById('settingsTelefone').value,
-        endereco: document.getElementById('settingsEndereco').value,
-        redesSociais: {
-            facebook: document.getElementById('settingsFacebook').value,
-            instagram: document.getElementById('settingsInstagram').value,
-            twitter: document.getElementById('settingsTwitter').value,
-            youtube: document.getElementById('settingsYoutube').value
-        }
-    };
-    
-    updateSiteSettings(settings);
-    showToast('Configurações guardadas com sucesso!', 'success');
-    applySiteSettings();
+  event.preventDefault();
+
+  const settings = {
+    logoText: document.getElementById("settingsLogoText").value,
+    tagline: document.getElementById("settingsTagline").value,
+    logoUrl: document.getElementById("settingsLogoUrl").value,
+    bannerTitulo: document.getElementById("settingsBannerTitle").value,
+    bannerSubtitulo: document.getElementById("settingsBannerSubtitle").value,
+    bannerImagemUrl: document.getElementById("settingsBannerImage").value,
+    bannerCta: document.getElementById("settingsBannerCta").value,
+    emailContacto: document.getElementById("settingsEmailContacto").value,
+    emailColaboracao: document.getElementById("settingsEmailColaboracao").value,
+    telefone: document.getElementById("settingsTelefone").value,
+    endereco: document.getElementById("settingsEndereco").value,
+    redesSociais: {
+      facebook: document.getElementById("settingsFacebook").value,
+      instagram: document.getElementById("settingsInstagram").value,
+      twitter: document.getElementById("settingsTwitter").value,
+      youtube: document.getElementById("settingsYoutube").value,
+    },
+  };
+
+  updateSiteSettings(settings);
+  showToast("Configurações guardadas com sucesso!", "success");
+  applySiteSettings();
 }
 
 // ============================================
@@ -1166,7 +1241,7 @@ function saveAdminSettings(event) {
 // ============================================
 
 function openAddServiceModal() {
-    const content = `
+  const content = `
         <form id="serviceForm" onsubmit="handleServiceSubmit(event)">
             <div class="form-group">
                 <label for="serviceName">Nome *</label>
@@ -1203,40 +1278,42 @@ function openAddServiceModal() {
             <button type="submit" class="btn btn-primary btn-block">Guardar</button>
         </form>
     `;
-    openModal('Adicionar Serviço', content);
+  openModal("Adicionar Serviço", content);
 }
 
 function handleServiceSubmit(event, editId = null) {
-    event.preventDefault();
-    
-    const form = event.target;
-    const data = {
-        nome: form.nome.value,
-        preco: parseFloat(form.preco.value),
-        duracao: form.duracao.value,
-        categoria: form.categoria.value,
-        imagemUrl: form.imagemUrl.value || 'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=800',
-        descricao: form.descricao.value,
-        ativo: form.ativo.checked
-    };
-    
-    if (editId) {
-        updateService(editId, data);
-        showToast('Serviço atualizado!', 'success');
-    } else {
-        createService(data);
-        showToast('Serviço criado!', 'success');
-    }
-    
-    closeModal();
-    loadAdminServices();
+  event.preventDefault();
+
+  const form = event.target;
+  const data = {
+    nome: form.nome.value,
+    preco: parseFloat(form.preco.value),
+    duracao: form.duracao.value,
+    categoria: form.categoria.value,
+    imagemUrl:
+      form.imagemUrl.value ||
+      "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=800",
+    descricao: form.descricao.value,
+    ativo: form.ativo.checked,
+  };
+
+  if (editId) {
+    updateService(editId, data);
+    showToast("Serviço atualizado!", "success");
+  } else {
+    createService(data);
+    showToast("Serviço criado!", "success");
+  }
+
+  closeModal();
+  loadAdminServices();
 }
 
 function editService(id) {
-    const service = getServiceById(id);
-    if (!service) return;
-    
-    const content = `
+  const service = getServiceById(id);
+  if (!service) return;
+
+  const content = `
         <form id="serviceForm" onsubmit="handleServiceSubmit(event, '${id}')">
             <div class="form-group">
                 <label for="serviceName">Nome *</label>
@@ -1254,11 +1331,11 @@ function editService(id) {
             </div>
             <div class="form-group">
                 <label for="serviceCategory">Categoria</label>
-                <input type="text" id="serviceCategory" name="categoria" value="${service.categoria || ''}">
+                <input type="text" id="serviceCategory" name="categoria" value="${service.categoria || ""}">
             </div>
             <div class="form-group">
                 <label for="serviceImage">📸 URL da Imagem do Serviço</label>
-                <input type="url" id="serviceImage" name="imagemUrl" value="${service.imagemUrl || ''}" placeholder="https://exemplo.com/imagem.jpg">
+                <input type="url" id="serviceImage" name="imagemUrl" value="${service.imagemUrl || ""}" placeholder="https://exemplo.com/imagem.jpg">
                 <small style="color: #666; font-size: 0.85rem;">Esta imagem aparecerá no card do serviço e na página de detalhes</small>
             </div>
             <div class="form-group">
@@ -1267,26 +1344,26 @@ function editService(id) {
             </div>
             <div class="form-group">
                 <label>
-                    <input type="checkbox" id="serviceActive" name="ativo" ${service.ativo ? 'checked' : ''}> Ativo
+                    <input type="checkbox" id="serviceActive" name="ativo" ${service.ativo ? "checked" : ""}> Ativo
                 </label>
             </div>
             <button type="submit" class="btn btn-primary btn-block">Guardar</button>
         </form>
     `;
-    openModal('Editar Serviço', content);
+  openModal("Editar Serviço", content);
 }
 
 function deleteServiceItem(id) {
-    if (confirm('Tens a certeza que queres eliminar este serviço?')) {
-        deleteService(id);
-        showToast('Serviço eliminado', 'info');
-        loadAdminServices();
-    }
+  if (confirm("Tens a certeza que queres eliminar este serviço?")) {
+    deleteService(id);
+    showToast("Serviço eliminado", "info");
+    loadAdminServices();
+  }
 }
 
 // Similar functions for workshops, events, products, posts...
 function openAddWorkshopModal() {
-    const content = `
+  const content = `
         <form id="workshopForm" onsubmit="handleWorkshopSubmit(event)">
             <div class="form-group">
                 <label for="workshopTitle">Título *</label>
@@ -1336,42 +1413,44 @@ function openAddWorkshopModal() {
             <button type="submit" class="btn btn-primary btn-block">Guardar</button>
         </form>
     `;
-    openModal('Adicionar Workshop', content);
+  openModal("Adicionar Workshop", content);
 }
 
 function handleWorkshopSubmit(event, editId = null) {
-    event.preventDefault();
-    
-    const form = event.target;
-    const data = {
-        titulo: form.titulo.value,
-        preco: parseFloat(form.preco.value),
-        duracao: form.duracao.value,
-        modalidade: form.modalidade.value,
-        vagas: parseInt(form.vagas.value),
-        imagemUrl: form.imagemUrl.value || 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=800',
-        descricao: form.descricao.value,
-        observacoes: form.observacoes.value,
-        ativo: form.ativo.checked
-    };
-    
-    if (editId) {
-        updateWorkshop(editId, data);
-        showToast('Workshop atualizado!', 'success');
-    } else {
-        createWorkshop(data);
-        showToast('Workshop criado!', 'success');
-    }
-    
-    closeModal();
-    loadAdminWorkshops();
+  event.preventDefault();
+
+  const form = event.target;
+  const data = {
+    titulo: form.titulo.value,
+    preco: parseFloat(form.preco.value),
+    duracao: form.duracao.value,
+    modalidade: form.modalidade.value,
+    vagas: parseInt(form.vagas.value),
+    imagemUrl:
+      form.imagemUrl.value ||
+      "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=800",
+    descricao: form.descricao.value,
+    observacoes: form.observacoes.value,
+    ativo: form.ativo.checked,
+  };
+
+  if (editId) {
+    updateWorkshop(editId, data);
+    showToast("Workshop atualizado!", "success");
+  } else {
+    createWorkshop(data);
+    showToast("Workshop criado!", "success");
+  }
+
+  closeModal();
+  loadAdminWorkshops();
 }
 
 function editWorkshop(id) {
-    const workshop = getWorkshopById(id);
-    if (!workshop) return;
-    
-    const content = `
+  const workshop = getWorkshopById(id);
+  if (!workshop) return;
+
+  const content = `
         <form id="workshopForm" onsubmit="handleWorkshopSubmit(event, '${id}')">
             <div class="form-group">
                 <label for="workshopTitle">Título *</label>
@@ -1391,8 +1470,8 @@ function editWorkshop(id) {
                 <div class="form-group">
                     <label for="workshopModality">Modalidade *</label>
                     <select id="workshopModality" name="modalidade" required>
-                        <option value="Presencial" ${workshop.modalidade === 'Presencial' ? 'selected' : ''}>Presencial</option>
-                        <option value="Online" ${workshop.modalidade === 'Online' ? 'selected' : ''}>Online</option>
+                        <option value="Presencial" ${workshop.modalidade === "Presencial" ? "selected" : ""}>Presencial</option>
+                        <option value="Online" ${workshop.modalidade === "Online" ? "selected" : ""}>Online</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -1402,7 +1481,7 @@ function editWorkshop(id) {
             </div>
             <div class="form-group">
                 <label for="workshopImage">🎯 URL da Imagem do Workshop</label>
-                <input type="url" id="workshopImage" name="imagemUrl" value="${workshop.imagemUrl || ''}" placeholder="https://exemplo.com/imagem.jpg">
+                <input type="url" id="workshopImage" name="imagemUrl" value="${workshop.imagemUrl || ""}" placeholder="https://exemplo.com/imagem.jpg">
                 <small style="color: #666; font-size: 0.85rem;">Esta imagem aparecerá no card do workshop e na página de detalhes</small>
             </div>
             <div class="form-group">
@@ -1411,30 +1490,30 @@ function editWorkshop(id) {
             </div>
             <div class="form-group">
                 <label for="workshopNotes">Observações</label>
-                <textarea id="workshopNotes" name="observacoes" rows="2">${workshop.observacoes || ''}</textarea>
+                <textarea id="workshopNotes" name="observacoes" rows="2">${workshop.observacoes || ""}</textarea>
             </div>
             <div class="form-group">
                 <label>
-                    <input type="checkbox" id="workshopActive" name="ativo" ${workshop.ativo ? 'checked' : ''}> Ativo
+                    <input type="checkbox" id="workshopActive" name="ativo" ${workshop.ativo ? "checked" : ""}> Ativo
                 </label>
             </div>
             <button type="submit" class="btn btn-primary btn-block">Guardar</button>
         </form>
     `;
-    openModal('Editar Workshop', content);
+  openModal("Editar Workshop", content);
 }
 
 function deleteWorkshopItem(id) {
-    if (confirm('Tens a certeza que queres eliminar este workshop?')) {
-        deleteWorkshop(id);
-        showToast('Workshop eliminado', 'info');
-        loadAdminWorkshops();
-    }
+  if (confirm("Tens a certeza que queres eliminar este workshop?")) {
+    deleteWorkshop(id);
+    showToast("Workshop eliminado", "info");
+    loadAdminWorkshops();
+  }
 }
 
 // Events CRUD
 function openAddEventModal() {
-    const content = `
+  const content = `
         <form id="eventForm" onsubmit="handleEventSubmit(event)">
             <div class="form-group">
                 <label for="eventTitle">Título *</label>
@@ -1477,41 +1556,43 @@ function openAddEventModal() {
             <button type="submit" class="btn btn-primary btn-block">Guardar</button>
         </form>
     `;
-    openModal('Adicionar Evento', content);
+  openModal("Adicionar Evento", content);
 }
 
 function handleEventSubmit(event, editId = null) {
-    event.preventDefault();
-    
-    const form = event.target;
-    const data = {
-        titulo: form.titulo.value,
-        data: form.data.value,
-        local: form.local.value,
-        vagas: parseInt(form.vagas.value),
-        preco: parseFloat(form.preco.value) || 0,
-        imagemUrl: form.imagemUrl.value || 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=800',
-        descricao: form.descricao.value,
-        ativo: form.ativo.checked
-    };
-    
-    if (editId) {
-        updateEvent(editId, data);
-        showToast('Evento atualizado!', 'success');
-    } else {
-        createEvent(data);
-        showToast('Evento criado!', 'success');
-    }
-    
-    closeModal();
-    loadAdminEvents();
+  event.preventDefault();
+
+  const form = event.target;
+  const data = {
+    titulo: form.titulo.value,
+    data: form.data.value,
+    local: form.local.value,
+    vagas: parseInt(form.vagas.value),
+    preco: parseFloat(form.preco.value) || 0,
+    imagemUrl:
+      form.imagemUrl.value ||
+      "https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=800",
+    descricao: form.descricao.value,
+    ativo: form.ativo.checked,
+  };
+
+  if (editId) {
+    updateEvent(editId, data);
+    showToast("Evento atualizado!", "success");
+  } else {
+    createEvent(data);
+    showToast("Evento criado!", "success");
+  }
+
+  closeModal();
+  loadAdminEvents();
 }
 
 function editEvent(id) {
-    const evt = getEventById(id);
-    if (!evt) return;
-    
-    const content = `
+  const evt = getEventById(id);
+  if (!evt) return;
+
+  const content = `
         <form id="eventForm" onsubmit="handleEventSubmit(event, '${id}')">
             <div class="form-group">
                 <label for="eventTitle">Título *</label>
@@ -1539,7 +1620,7 @@ function editEvent(id) {
             </div>
             <div class="form-group">
                 <label for="eventImage">🎉 URL da Imagem do Evento</label>
-                <input type="url" id="eventImage" name="imagemUrl" value="${evt.imagemUrl || ''}" placeholder="https://exemplo.com/imagem.jpg">
+                <input type="url" id="eventImage" name="imagemUrl" value="${evt.imagemUrl || ""}" placeholder="https://exemplo.com/imagem.jpg">
                 <small style="color: #666; font-size: 0.85rem;">Esta imagem aparecerá no card do evento e na página de detalhes</small>
             </div>
             <div class="form-group">
@@ -1548,26 +1629,26 @@ function editEvent(id) {
             </div>
             <div class="form-group">
                 <label>
-                    <input type="checkbox" id="eventActive" name="ativo" ${evt.ativo ? 'checked' : ''}> Ativo
+                    <input type="checkbox" id="eventActive" name="ativo" ${evt.ativo ? "checked" : ""}> Ativo
                 </label>
             </div>
             <button type="submit" class="btn btn-primary btn-block">Guardar</button>
         </form>
     `;
-    openModal('Editar Evento', content);
+  openModal("Editar Evento", content);
 }
 
 function deleteEventItem(id) {
-    if (confirm('Tens a certeza que queres eliminar este evento?')) {
-        deleteEvent(id);
-        showToast('Evento eliminado', 'info');
-        loadAdminEvents();
-    }
+  if (confirm("Tens a certeza que queres eliminar este evento?")) {
+    deleteEvent(id);
+    showToast("Evento eliminado", "info");
+    loadAdminEvents();
+  }
 }
 
 // Products CRUD
 function openAddProductModal() {
-    const content = `
+  const content = `
         <form id="productForm" onsubmit="handleProductSubmit(event)">
             <div class="form-group">
                 <label for="productName">Nome *</label>
@@ -1604,40 +1685,42 @@ function openAddProductModal() {
             <button type="submit" class="btn btn-primary btn-block">Guardar</button>
         </form>
     `;
-    openModal('Adicionar Produto', content);
+  openModal("Adicionar Produto", content);
 }
 
 function handleProductSubmit(event, editId = null) {
-    event.preventDefault();
-    
-    const form = event.target;
-    const data = {
-        nome: form.nome.value,
-        preco: parseFloat(form.preco.value),
-        estoque: parseInt(form.estoque.value) || 0,
-        categoria: form.categoria.value,
-        imagemUrl: form.imagemUrl.value || 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=800',
-        descricao: form.descricao.value,
-        ativo: form.ativo.checked
-    };
-    
-    if (editId) {
-        updateProduct(editId, data);
-        showToast('Produto atualizado!', 'success');
-    } else {
-        createProduct(data);
-        showToast('Produto criado!', 'success');
-    }
-    
-    closeModal();
-    loadAdminProducts();
+  event.preventDefault();
+
+  const form = event.target;
+  const data = {
+    nome: form.nome.value,
+    preco: parseFloat(form.preco.value),
+    estoque: parseInt(form.estoque.value) || 0,
+    categoria: form.categoria.value,
+    imagemUrl:
+      form.imagemUrl.value ||
+      "https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=800",
+    descricao: form.descricao.value,
+    ativo: form.ativo.checked,
+  };
+
+  if (editId) {
+    updateProduct(editId, data);
+    showToast("Produto atualizado!", "success");
+  } else {
+    createProduct(data);
+    showToast("Produto criado!", "success");
+  }
+
+  closeModal();
+  loadAdminProducts();
 }
 
 function editProduct(id) {
-    const product = getProductById(id);
-    if (!product) return;
-    
-    const content = `
+  const product = getProductById(id);
+  if (!product) return;
+
+  const content = `
         <form id="productForm" onsubmit="handleProductSubmit(event, '${id}')">
             <div class="form-group">
                 <label for="productName">Nome *</label>
@@ -1659,7 +1742,7 @@ function editProduct(id) {
             </div>
             <div class="form-group">
                 <label for="productImage">🛍️ URL da Imagem do Produto</label>
-                <input type="url" id="productImage" name="imagemUrl" value="${product.imagemUrl || ''}" placeholder="https://exemplo.com/imagem.jpg">
+                <input type="url" id="productImage" name="imagemUrl" value="${product.imagemUrl || ""}" placeholder="https://exemplo.com/imagem.jpg">
                 <small style="color: #666; font-size: 0.85rem;">Esta imagem aparecerá no card do produto e na página de detalhes</small>
             </div>
             <div class="form-group">
@@ -1668,26 +1751,26 @@ function editProduct(id) {
             </div>
             <div class="form-group">
                 <label>
-                    <input type="checkbox" id="productActive" name="ativo" ${product.ativo ? 'checked' : ''}> Ativo
+                    <input type="checkbox" id="productActive" name="ativo" ${product.ativo ? "checked" : ""}> Ativo
                 </label>
             </div>
             <button type="submit" class="btn btn-primary btn-block">Guardar</button>
         </form>
     `;
-    openModal('Editar Produto', content);
+  openModal("Editar Produto", content);
 }
 
 function deleteProductItem(id) {
-    if (confirm('Tens a certeza que queres eliminar este produto?')) {
-        deleteProduct(id);
-        showToast('Produto eliminado', 'info');
-        loadAdminProducts();
-    }
+  if (confirm("Tens a certeza que queres eliminar este produto?")) {
+    deleteProduct(id);
+    showToast("Produto eliminado", "info");
+    loadAdminProducts();
+  }
 }
 
 // Posts CRUD
 function openAddPostModal() {
-    const content = `
+  const content = `
         <form id="postForm" onsubmit="handlePostSubmit(event)">
             <div class="form-group">
                 <label for="postTitle">Título *</label>
@@ -1724,41 +1807,43 @@ function openAddPostModal() {
             <button type="submit" class="btn btn-primary btn-block">Guardar</button>
         </form>
     `;
-    openModal('Adicionar Post', content, { size: 'large' });
+  openModal("Adicionar Post", content, { size: "large" });
 }
 
 function handlePostSubmit(event, editId = null) {
-    event.preventDefault();
-    
-    const form = event.target;
-    const data = {
-        titulo: form.titulo.value,
-        categoria: form.categoria.value,
-        dataPublicacao: form.dataPublicacao.value,
-        imagemUrl: form.imagemUrl.value || 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=800',
-        excerpt: form.excerpt.value,
-        conteudo: form.conteudo.value,
-        autor: 'Yemar Makeup Artist',
-        ativo: form.ativo.checked
-    };
-    
-    if (editId) {
-        updatePost(editId, data);
-        showToast('Post atualizado!', 'success');
-    } else {
-        createPost(data);
-        showToast('Post criado!', 'success');
-    }
-    
-    closeModal();
-    loadAdminPosts();
+  event.preventDefault();
+
+  const form = event.target;
+  const data = {
+    titulo: form.titulo.value,
+    categoria: form.categoria.value,
+    dataPublicacao: form.dataPublicacao.value,
+    imagemUrl:
+      form.imagemUrl.value ||
+      "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=800",
+    excerpt: form.excerpt.value,
+    conteudo: form.conteudo.value,
+    autor: "Yemar Makeup Artist",
+    ativo: form.ativo.checked,
+  };
+
+  if (editId) {
+    updatePost(editId, data);
+    showToast("Post atualizado!", "success");
+  } else {
+    createPost(data);
+    showToast("Post criado!", "success");
+  }
+
+  closeModal();
+  loadAdminPosts();
 }
 
 function editPost(id) {
-    const post = getPostById(id);
-    if (!post) return;
-    
-    const content = `
+  const post = getPostById(id);
+  if (!post) return;
+
+  const content = `
         <form id="postForm" onsubmit="handlePostSubmit(event, '${id}')">
             <div class="form-group">
                 <label for="postTitle">Título *</label>
@@ -1776,7 +1861,7 @@ function editPost(id) {
             </div>
             <div class="form-group">
                 <label for="postImage">📰 URL da Imagem do Post (Blog)</label>
-                <input type="url" id="postImage" name="imagemUrl" value="${post.imagemUrl || ''}" placeholder="https://exemplo.com/imagem.jpg">
+                <input type="url" id="postImage" name="imagemUrl" value="${post.imagemUrl || ""}" placeholder="https://exemplo.com/imagem.jpg">
                 <small style="color: #666; font-size: 0.85rem;">Esta imagem aparecerá no carrossel "Novidades" e nos posts do blog</small>
             </div>
             <div class="form-group">
@@ -1789,193 +1874,196 @@ function editPost(id) {
             </div>
             <div class="form-group">
                 <label>
-                    <input type="checkbox" id="postActive" name="ativo" ${post.ativo ? 'checked' : ''}> Ativo
+                    <input type="checkbox" id="postActive" name="ativo" ${post.ativo ? "checked" : ""}> Ativo
                 </label>
             </div>
             <button type="submit" class="btn btn-primary btn-block">Guardar</button>
         </form>
     `;
-    openModal('Editar Post', content, { size: 'large' });
+  openModal("Editar Post", content, { size: "large" });
 }
 
 function deletePostItem(id) {
-    if (confirm('Tens a certeza que queres eliminar este post?')) {
-        deletePost(id);
-        showToast('Post eliminado', 'info');
-        loadAdminPosts();
-    }
+  if (confirm("Tens a certeza que queres eliminar este post?")) {
+    deletePost(id);
+    showToast("Post eliminado", "info");
+    loadAdminPosts();
+  }
 }
-
 
 // ============================================
 // PÁGINA DE CONTA
 // ============================================
 
 function loadAccountPage() {
-    const session = getCurrentSession();
-    const authArea = document.getElementById('authArea');
-    const profileArea = document.getElementById('profileArea');
-    
-    if (session) {
-        // Usuário logado - mostrar perfil
-        if (authArea) authArea.style.display = 'none';
-        if (profileArea) profileArea.style.display = 'block';
-        
-        // Preencher dados do usuário
-        document.getElementById('userName').textContent = session.nome;
-        document.getElementById('userEmail').textContent = session.email;
-        
-        // Carregar marcações e encomendas
-        loadUserBookings();
-        loadUserOrders();
-        loadUserSettings();
-        
-        // Inicializar tabs do perfil
-        initProfileTabs();
-    } else {
-        // Visitante - mostrar login/registo
-        if (authArea) authArea.style.display = 'block';
-        if (profileArea) profileArea.style.display = 'none';
-        
-        // Inicializar tabs de auth
-        initAuthTabs();
-        
-        // Inicializar forms
-        initAuthForms();
-    }
+  const session = getCurrentSession();
+  const authArea = document.getElementById("authArea");
+  const profileArea = document.getElementById("profileArea");
+
+  if (session) {
+    // Usuário logado - mostrar perfil
+    if (authArea) authArea.style.display = "none";
+    if (profileArea) profileArea.style.display = "block";
+
+    // Preencher dados do usuário
+    document.getElementById("userName").textContent = session.nome;
+    document.getElementById("userEmail").textContent = session.email;
+
+    // Carregar marcações e encomendas
+    loadUserBookings();
+    loadUserOrders();
+    loadUserSettings();
+
+    // Inicializar tabs do perfil
+    initProfileTabs();
+  } else {
+    // Visitante - mostrar login/registo
+    if (authArea) authArea.style.display = "block";
+    if (profileArea) profileArea.style.display = "none";
+
+    // Inicializar tabs de auth
+    initAuthTabs();
+
+    // Inicializar forms
+    initAuthForms();
+  }
 }
 
 function initAuthTabs() {
-    const tabs = document.querySelectorAll('.auth-tab[data-tab]');
-    const loginForm = document.getElementById('loginForm');
-    const registerForm = document.getElementById('registerForm');
-    
-    tabs.forEach(tab => {
-        tab.addEventListener('click', () => {
-            tabs.forEach(t => t.classList.remove('active'));
-            tab.classList.add('active');
-            
-            if (tab.dataset.tab === 'login') {
-                loginForm.classList.add('active');
-                loginForm.style.display = 'block';
-                registerForm.classList.remove('active');
-                registerForm.style.display = 'none';
-            } else {
-                registerForm.classList.add('active');
-                registerForm.style.display = 'block';
-                loginForm.classList.remove('active');
-                loginForm.style.display = 'none';
-            }
-        });
+  const tabs = document.querySelectorAll(".auth-tab[data-tab]");
+  const loginForm = document.getElementById("loginForm");
+  const registerForm = document.getElementById("registerForm");
+
+  tabs.forEach((tab) => {
+    tab.addEventListener("click", () => {
+      tabs.forEach((t) => t.classList.remove("active"));
+      tab.classList.add("active");
+
+      if (tab.dataset.tab === "login") {
+        loginForm.classList.add("active");
+        loginForm.style.display = "block";
+        registerForm.classList.remove("active");
+        registerForm.style.display = "none";
+      } else {
+        registerForm.classList.add("active");
+        registerForm.style.display = "block";
+        loginForm.classList.remove("active");
+        loginForm.style.display = "none";
+      }
     });
+  });
 }
 
 function initAuthForms() {
-    const loginForm = document.getElementById('loginForm');
-    const registerForm = document.getElementById('registerForm');
-    
-    if (loginForm) {
-        loginForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const email = document.getElementById('loginEmail').value.trim();
-            const senha = document.getElementById('loginPassword').value;
-            
-            const user = validateLogin(email, senha);
-            
-            if (user) {
-                setCurrentSession(user);
-                showToast('Login efetuado com sucesso!', 'success');
-                
-                setTimeout(() => {
-                    if (user.role === 'admin') {
-                        window.location.href = 'admin.html';
-                    } else {
-                        window.location.reload();
-                    }
-                }, 1000);
-            } else {
-                showToast('Email ou senha incorretos', 'error');
-            }
-        });
-    }
-    
-    if (registerForm) {
-        registerForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const nome = document.getElementById('registerName').value.trim();
-            const telefone = document.getElementById('registerPhone').value.trim();
-            const email = document.getElementById('registerEmail').value.trim();
-            const senha = document.getElementById('registerPassword').value;
-            const confirmarSenha = document.getElementById('registerPasswordConfirm').value;
-            
-            if (senha !== confirmarSenha) {
-                showToast('As senhas não coincidem', 'error');
-                return;
-            }
-            
-            if (senha.length < 6) {
-                showToast('A senha deve ter pelo menos 6 caracteres', 'error');
-                return;
-            }
-            
-            if (getUserByEmail(email)) {
-                showToast('Este email já está registado', 'error');
-                return;
-            }
-            
-            const newUser = createUser({ nome, email, telefone, senha });
-            setCurrentSession(newUser);
-            showToast('Conta criada com sucesso!', 'success');
-            
-            setTimeout(() => {
-                window.location.reload();
-            }, 1000);
-        });
-    }
+  const loginForm = document.getElementById("loginForm");
+  const registerForm = document.getElementById("registerForm");
+
+  if (loginForm) {
+    loginForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const email = document.getElementById("loginEmail").value.trim();
+      const senha = document.getElementById("loginPassword").value;
+
+      const user = validateLogin(email, senha);
+
+      if (user) {
+        setCurrentSession(user);
+        showToast("Login efetuado com sucesso!", "success");
+
+        setTimeout(() => {
+          if (user.role === "admin") {
+            window.location.href = "admin.html";
+          } else {
+            window.location.reload();
+          }
+        }, 1000);
+      } else {
+        showToast("Email ou senha incorretos", "error");
+      }
+    });
+  }
+
+  if (registerForm) {
+    registerForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const nome = document.getElementById("registerName").value.trim();
+      const telefone = document.getElementById("registerPhone").value.trim();
+      const email = document.getElementById("registerEmail").value.trim();
+      const senha = document.getElementById("registerPassword").value;
+      const confirmarSenha = document.getElementById(
+        "registerPasswordConfirm",
+      ).value;
+
+      if (senha !== confirmarSenha) {
+        showToast("As senhas não coincidem", "error");
+        return;
+      }
+
+      if (senha.length < 6) {
+        showToast("A senha deve ter pelo menos 6 caracteres", "error");
+        return;
+      }
+
+      if (getUserByEmail(email)) {
+        showToast("Este email já está registado", "error");
+        return;
+      }
+
+      const newUser = createUser({ nome, email, telefone, senha });
+      setCurrentSession(newUser);
+      showToast("Conta criada com sucesso!", "success");
+
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
+    });
+  }
 }
 
 function initProfileTabs() {
-    const tabs = document.querySelectorAll('.auth-tab[data-profile-tab]');
-    
-    tabs.forEach(tab => {
-        tab.addEventListener('click', () => {
-            tabs.forEach(t => t.classList.remove('active'));
-            tab.classList.add('active');
-            
-            // Esconder todas as tabs
-            document.querySelectorAll('.profile-tab').forEach(t => {
-                t.style.display = 'none';
-                t.classList.remove('active');
-            });
-            
-            // Mostrar tab selecionada
-            const tabId = tab.dataset.profileTab + 'Tab';
-            const tabContent = document.getElementById(tabId);
-            if (tabContent) {
-                tabContent.style.display = 'block';
-                tabContent.classList.add('active');
-            }
-        });
+  const tabs = document.querySelectorAll(".auth-tab[data-profile-tab]");
+
+  tabs.forEach((tab) => {
+    tab.addEventListener("click", () => {
+      tabs.forEach((t) => t.classList.remove("active"));
+      tab.classList.add("active");
+
+      // Esconder todas as tabs
+      document.querySelectorAll(".profile-tab").forEach((t) => {
+        t.style.display = "none";
+        t.classList.remove("active");
+      });
+
+      // Mostrar tab selecionada
+      const tabId = tab.dataset.profileTab + "Tab";
+      const tabContent = document.getElementById(tabId);
+      if (tabContent) {
+        tabContent.style.display = "block";
+        tabContent.classList.add("active");
+      }
     });
+  });
 }
 
 function loadUserBookings() {
-    const container = document.getElementById('userBookings');
-    if (!container) return;
-    
-    const session = getCurrentSession();
-    if (!session) return;
-    
-    const bookings = getUserBookings(session.id);
-    
-    if (bookings.length === 0) {
-        container.innerHTML = '<p class="no-items">Ainda não tens marcações.</p>';
-        return;
-    }
-    
-    container.innerHTML = bookings.map(b => `
+  const container = document.getElementById("userBookings");
+  if (!container) return;
+
+  const session = getCurrentSession();
+  if (!session) return;
+
+  const bookings = getUserBookings(session.id);
+
+  if (bookings.length === 0) {
+    container.innerHTML = '<p class="no-items">Ainda não tens marcações.</p>';
+    return;
+  }
+
+  container.innerHTML = bookings
+    .map(
+      (b) => `
         <div class="booking-card">
             <div class="booking-info">
                 <h4>${b.itemTitulo}</h4>
@@ -1983,26 +2071,30 @@ function loadUserBookings() {
                 <p><strong>Data/Hora:</strong> ${b.dataHoraOuPreferencia}</p>
                 <p><strong>Estado:</strong> <span class="status-badge status-${b.estado}">${getStatusLabel(b.estado)}</span></p>
             </div>
-            ${b.estado === 'pending' ? `<button class="btn btn-outline btn-sm" onclick="cancelUserBooking('${b.id}')">Cancelar</button>` : ''}
+            ${b.estado === "pending" ? `<button class="btn btn-outline btn-sm" onclick="cancelUserBooking('${b.id}')">Cancelar</button>` : ""}
         </div>
-    `).join('');
+    `,
+    )
+    .join("");
 }
 
 function loadUserOrders() {
-    const container = document.getElementById('userOrders');
-    if (!container) return;
-    
-    const session = getCurrentSession();
-    if (!session) return;
-    
-    const orders = getUserOrders(session.id);
-    
-    if (orders.length === 0) {
-        container.innerHTML = '<p class="no-items">Ainda não tens encomendas.</p>';
-        return;
-    }
-    
-    container.innerHTML = orders.map(o => `
+  const container = document.getElementById("userOrders");
+  if (!container) return;
+
+  const session = getCurrentSession();
+  if (!session) return;
+
+  const orders = getUserOrders(session.id);
+
+  if (orders.length === 0) {
+    container.innerHTML = '<p class="no-items">Ainda não tens encomendas.</p>';
+    return;
+  }
+
+  container.innerHTML = orders
+    .map(
+      (o) => `
         <div class="order-card">
             <div class="order-info">
                 <h4>Encomenda #${o.id.slice(-6).toUpperCase()}</h4>
@@ -2011,203 +2103,215 @@ function loadUserOrders() {
                 <p><strong>Estado:</strong> <span class="status-badge status-${o.estado}">${getOrderStatusLabel(o.estado)}</span></p>
             </div>
         </div>
-    `).join('');
+    `,
+    )
+    .join("");
 }
 
 function loadUserSettings() {
-    const session = getCurrentSession();
-    if (!session) {
-        console.log('loadUserSettings: Sem sessão');
-        return;
+  const session = getCurrentSession();
+  if (!session) {
+    console.log("loadUserSettings: Sem sessão");
+    return;
+  }
+
+  console.log("loadUserSettings: Sessão encontrada", session);
+
+  // Verificar se estamos na página correta (conta.html)
+  const settingsForm = document.getElementById("settingsForm");
+  if (!settingsForm) {
+    console.log(
+      "loadUserSettings: Formulário settingsForm não encontrado, pulando...",
+    );
+    return;
+  }
+
+  // Usar dados da sessão diretamente
+  const user = session;
+
+  // Aguardar DOM estar pronto
+  setTimeout(() => {
+    // Preencher campos
+    const nameInput = document.getElementById("settingsName");
+    const phoneInput = document.getElementById("settingsPhone");
+    const emailInput = document.getElementById("settingsEmail");
+
+    if (nameInput) nameInput.value = user.nome || "";
+    if (phoneInput) phoneInput.value = user.telefone || "";
+    if (emailInput) emailInput.value = user.email || "";
+
+    console.log("Campos preenchidos:", {
+      nome: nameInput?.value,
+      telefone: phoneInput?.value,
+      email: emailInput?.value,
+    });
+
+    // Configurar formulário
+    if (!settingsForm) {
+      console.error("Formulário settingsForm não encontrado!");
+      return;
     }
-    
-    console.log('loadUserSettings: Sessão encontrada', session);
-    
-    // Usar dados da sessão diretamente
-    const user = session;
-    
-    // Aguardar DOM estar pronto
-    setTimeout(() => {
-        // Preencher campos
-        const nameInput = document.getElementById('settingsName');
-        const phoneInput = document.getElementById('settingsPhone');
-        const emailInput = document.getElementById('settingsEmail');
-        
-        if (nameInput) nameInput.value = user.nome || '';
-        if (phoneInput) phoneInput.value = user.telefone || '';
-        if (emailInput) emailInput.value = user.email || '';
-        
-        console.log('Campos preenchidos:', {
-            nome: nameInput?.value,
-            telefone: phoneInput?.value,
-            email: emailInput?.value
-        });
-        
-        // Configurar formulário
-        const settingsForm = document.getElementById('settingsForm');
-        if (!settingsForm) {
-            console.error('Formulário settingsForm não encontrado!');
-            return;
+
+    // Remover listeners antigos
+    if (settingsForm.dataset.initialized === "true") {
+      console.log("Formulário já inicializado, pulando...");
+      return;
+    }
+
+    settingsForm.dataset.initialized = "true";
+    console.log("Inicializando formulário de settings");
+
+    // Event listener no formulário
+    settingsForm.addEventListener("submit", handleSettingsSubmit);
+
+    // Event listener direto no botão como fallback
+    const submitBtn = settingsForm.querySelector('button[type="submit"]');
+    if (submitBtn) {
+      submitBtn.addEventListener("click", function (e) {
+        console.log("Botão clicado diretamente");
+        if (!settingsForm.checkValidity()) {
+          return; // Deixa validação HTML5 funcionar
         }
-        
-        // Remover listeners antigos
-        if (settingsForm.dataset.initialized === 'true') {
-            console.log('Formulário já inicializado, pulando...');
-            return;
-        }
-        
-        settingsForm.dataset.initialized = 'true';
-        console.log('Inicializando formulário de settings');
-        
-        // Event listener no formulário
-        settingsForm.addEventListener('submit', handleSettingsSubmit);
-        
-        // Event listener direto no botão como fallback
-        const submitBtn = settingsForm.querySelector('button[type="submit"]');
-        if (submitBtn) {
-            submitBtn.addEventListener('click', function(e) {
-                console.log('Botão clicado diretamente');
-                if (!settingsForm.checkValidity()) {
-                    return; // Deixa validação HTML5 funcionar
-                }
-                e.preventDefault();
-                handleSettingsSubmit(e);
-            });
-        }
-    }, 200);
+        e.preventDefault();
+        handleSettingsSubmit(e);
+      });
+    }
+  }, 200);
 }
 
 function handleSettingsSubmit(e) {
-    e.preventDefault();
-    console.log('handleSettingsSubmit chamado');
-    
-    const session = getCurrentSession();
-    if (!session) {
-        console.error('Sem sessão ao salvar');
-        showToast('Erro: Sessão expirada', 'error');
-        return;
+  e.preventDefault();
+  console.log("handleSettingsSubmit chamado");
+
+  const session = getCurrentSession();
+  if (!session) {
+    console.error("Sem sessão ao salvar");
+    showToast("Erro: Sessão expirada", "error");
+    return;
+  }
+
+  const nome = document.getElementById("settingsName").value.trim();
+  const telefone = document.getElementById("settingsPhone").value.trim();
+  const email = document.getElementById("settingsEmail").value.trim();
+
+  console.log("Dados do formulário:", { nome, telefone, email });
+
+  if (!nome || !email || !telefone) {
+    console.log("Validação falhou: campo obrigatório vazio");
+    showToast("Nome, telefone e email são obrigatórios!", "error");
+    return;
+  }
+
+  console.log("Salvando diretamente no localStorage...");
+
+  // Forçar salvamento direto no localStorage
+  const users = getUsers();
+  console.log("Usuários antes da atualização:", users);
+  console.log("Sessão atual:", session);
+
+  // Buscar por email (mais confiável que ID)
+  const userIndex = users.findIndex(
+    (u) => u.email.toLowerCase() === session.email.toLowerCase(),
+  );
+  console.log("Índice do usuário (busca por email):", userIndex);
+
+  if (userIndex === -1) {
+    console.error("Usuário não encontrado na lista");
+    console.log("Tentando buscar por ID como fallback...");
+    const userIndexById = users.findIndex((u) => u.id === session.id);
+    console.log("Índice por ID:", userIndexById);
+
+    if (userIndexById === -1) {
+      showToast("Erro: Usuário não encontrado", "error");
+      return;
     }
-    
-    const nome = document.getElementById('settingsName').value.trim();
-    const telefone = document.getElementById('settingsPhone').value.trim();
-    const email = document.getElementById('settingsEmail').value.trim();
-    
-    console.log('Dados do formulário:', { nome, telefone, email });
-    
-    if (!nome || !email || !telefone) {
-        console.log('Validação falhou: campo obrigatório vazio');
-        showToast('Nome, telefone e email são obrigatórios!', 'error');
-        return;
-    }
-    
-    console.log('Salvando diretamente no localStorage...');
-    
-    // Forçar salvamento direto no localStorage
-    const users = getUsers();
-    console.log('Usuários antes da atualização:', users);
-    console.log('Sessão atual:', session);
-    
-    // Buscar por email (mais confiável que ID)
-    const userIndex = users.findIndex(u => u.email.toLowerCase() === session.email.toLowerCase());
-    console.log('Índice do usuário (busca por email):', userIndex);
-    
-    if (userIndex === -1) {
-        console.error('Usuário não encontrado na lista');
-        console.log('Tentando buscar por ID como fallback...');
-        const userIndexById = users.findIndex(u => u.id === session.id);
-        console.log('Índice por ID:', userIndexById);
-        
-        if (userIndexById === -1) {
-            showToast('Erro: Usuário não encontrado', 'error');
-            return;
-        }
-        
-        // Usar índice encontrado por ID
-        const finalIndex = userIndexById;
-        
-        // Atualizar dados
-        users[finalIndex] = {
-            ...users[finalIndex],
-            nome: nome,
-            telefone: telefone,
-            email: email
-        };
-        
-        console.log('Usuário atualizado (via ID):', users[finalIndex]);
-        
-        // Salvar
-        localStorage.setItem('users', JSON.stringify(users));
-        console.log('Dados salvos no localStorage');
-        
-        // Atualizar sessão
-        setCurrentSession(users[finalIndex]);
-        showToast('Dados atualizados com sucesso!', 'success');
-        updateAuthUI();
-        return;
-    }
-    
-    // Atualizar dados do usuário
-    users[userIndex] = {
-        ...users[userIndex],
-        nome: nome,
-        telefone: telefone,
-        email: email
+
+    // Usar índice encontrado por ID
+    const finalIndex = userIndexById;
+
+    // Atualizar dados
+    users[finalIndex] = {
+      ...users[finalIndex],
+      nome: nome,
+      telefone: telefone,
+      email: email,
     };
-    
-    console.log('Usuário atualizado:', users[userIndex]);
-    
-    // Salvar diretamente no localStorage
-    localStorage.setItem('users', JSON.stringify(users));
-    console.log('Dados salvos no localStorage');
-    
-    // Verificar se foi salvo
-    const savedUsers = JSON.parse(localStorage.getItem('users') || '[]');
-    const savedUser = savedUsers.find(u => u.id === session.id);
-    console.log('Usuário verificado após salvar:', savedUser);
-    
+
+    console.log("Usuário atualizado (via ID):", users[finalIndex]);
+
+    // Salvar
+    localStorage.setItem("users", JSON.stringify(users));
+    console.log("Dados salvos no localStorage");
+
     // Atualizar sessão
-    setCurrentSession(users[userIndex]);
-    
-    showToast('Dados atualizados com sucesso!', 'success');
-    
-    // Atualizar UI
-    const userNameEl = document.getElementById('userName');
-    const userEmailEl = document.getElementById('userEmail');
-    
-    if (userNameEl) userNameEl.textContent = nome;
-    if (userEmailEl) userEmailEl.textContent = email;
-    
-    // Atualizar auth UI
+    setCurrentSession(users[finalIndex]);
+    showToast("Dados atualizados com sucesso!", "success");
     updateAuthUI();
-    
-    console.log('Salvamento concluído com sucesso!');
+    return;
+  }
+
+  // Atualizar dados do usuário
+  users[userIndex] = {
+    ...users[userIndex],
+    nome: nome,
+    telefone: telefone,
+    email: email,
+  };
+
+  console.log("Usuário atualizado:", users[userIndex]);
+
+  // Salvar diretamente no localStorage
+  localStorage.setItem("users", JSON.stringify(users));
+  console.log("Dados salvos no localStorage");
+
+  // Verificar se foi salvo
+  const savedUsers = JSON.parse(localStorage.getItem("users") || "[]");
+  const savedUser = savedUsers.find((u) => u.id === session.id);
+  console.log("Usuário verificado após salvar:", savedUser);
+
+  // Atualizar sessão
+  setCurrentSession(users[userIndex]);
+
+  showToast("Dados atualizados com sucesso!", "success");
+
+  // Atualizar UI
+  const userNameEl = document.getElementById("userName");
+  const userEmailEl = document.getElementById("userEmail");
+
+  if (userNameEl) userNameEl.textContent = nome;
+  if (userEmailEl) userEmailEl.textContent = email;
+
+  // Atualizar auth UI
+  updateAuthUI();
+
+  console.log("Salvamento concluído com sucesso!");
 }
 
 function logout() {
-    clearSession();
-    showToast('Sessão terminada', 'info');
-    window.location.href = 'index.html';
+  clearSession();
+  showToast("Sessão terminada", "info");
+  window.location.href = "index.html";
 }
 
 function getStatusLabel(status) {
-    const labels = {
-        'pending': 'Pendente',
-        'confirmed': 'Confirmada',
-        'completed': 'Concluída',
-        'cancelled': 'Cancelada'
-    };
-    return labels[status] || status;
+  const labels = {
+    pending: "Pendente",
+    confirmed: "Confirmada",
+    completed: "Concluída",
+    cancelled: "Cancelada",
+  };
+  return labels[status] || status;
 }
 
 function getOrderStatusLabel(status) {
-    const labels = {
-        'pending': 'Pendente',
-        'processing': 'Em Processamento',
-        'shipped': 'Enviada',
-        'delivered': 'Entregue',
-        'cancelled': 'Cancelada'
-    };
-    return labels[status] || status;
+  const labels = {
+    pending: "Pendente",
+    processing: "Em Processamento",
+    shipped: "Enviada",
+    delivered: "Entregue",
+    cancelled: "Cancelada",
+  };
+  return labels[status] || status;
 }
 
 // ============================================
@@ -2215,35 +2319,36 @@ function getOrderStatusLabel(status) {
 // ============================================
 
 function loadCartPage() {
-    const cartItems = document.getElementById('cartItems');
-    const cartSummary = document.getElementById('cartSummary');
-    
-    if (!cartItems) return;
-    
-    const cart = getCart();
-    
-    if (cart.length === 0) {
-        cartItems.innerHTML = `
+  const cartItems = document.getElementById("cartItems");
+  const cartSummary = document.getElementById("cartSummary");
+
+  if (!cartItems) return;
+
+  const cart = getCart();
+
+  if (cart.length === 0) {
+    cartItems.innerHTML = `
             <div class="empty-cart">
                 <h3>O teu carrinho está vazio</h3>
                 <p>Adiciona produtos para continuar.</p>
                 <a href="produtos.html" class="btn btn-primary">Ver Produtos</a>
             </div>
         `;
-        if (cartSummary) cartSummary.style.display = 'none';
-        return;
-    }
-    
-    let subtotal = 0;
-    
-    cartItems.innerHTML = cart.map(item => {
-        const product = getProductById(item.productId);
-        if (!product) return '';
-        
-        const itemTotal = product.preco * item.quantidade;
-        subtotal += itemTotal;
-        
-        return `
+    if (cartSummary) cartSummary.style.display = "none";
+    return;
+  }
+
+  let subtotal = 0;
+
+  cartItems.innerHTML = cart
+    .map((item) => {
+      const product = getProductById(item.productId);
+      if (!product) return "";
+
+      const itemTotal = product.preco * item.quantidade;
+      subtotal += itemTotal;
+
+      return `
             <div class="cart-item">
                 <img src="${product.imagemUrl}" alt="${product.nome}" loading="lazy">
                 <div class="cart-item-info">
@@ -2254,64 +2359,67 @@ function loadCartPage() {
                 <span class="cart-item-remove" onclick="removeProductFromCart('${item.productId}')">&times;</span>
             </div>
         `;
-    }).join('');
-    
-    if (cartSummary) {
-        cartSummary.style.display = 'block';
-        document.getElementById('cartSubtotal').textContent = `${subtotal}€`;
-        document.getElementById('cartTotal').textContent = `${subtotal}€`;
-    }
+    })
+    .join("");
+
+  if (cartSummary) {
+    cartSummary.style.display = "block";
+    document.getElementById("cartSubtotal").textContent = `${subtotal}€`;
+    document.getElementById("cartTotal").textContent = `${subtotal}€`;
+  }
 }
 
 function checkout() {
-    const session = getCurrentSession();
-    
-    if (!session) {
-        showToast('Precisas de estar logado para finalizar a compra', 'error');
-        setTimeout(() => {
-            window.location.href = 'conta.html';
-        }, 1500);
-        return;
-    }
-    
-    const cart = getCart();
-    if (cart.length === 0) {
-        showToast('O teu carrinho está vazio', 'error');
-        return;
-    }
-    
-    // Calcular total
-    let total = 0;
-    const items = cart.map(item => {
-        const product = getProductById(item.productId);
-        if (product) {
-            total += product.preco * item.quantity;
-            return {
-                productId: item.productId,
-                nome: product.nome,
-                preco: product.preco,
-                quantity: item.quantity
-            };
-        }
-        return null;
-    }).filter(Boolean);
-    
-    // Criar encomenda
-    const order = createOrder({
-        userId: session.id,
-        items: items,
-        total: total
-    });
-    
-    // Limpar carrinho
-    clearCart();
-    updateCartBadge();
-    
-    showToast('Encomenda realizada com sucesso!', 'success');
-    
+  const session = getCurrentSession();
+
+  if (!session) {
+    showToast("Precisas de estar logado para finalizar a compra", "error");
     setTimeout(() => {
-        window.location.href = 'conta.html';
-    }, 2000);
+      window.location.href = "conta.html";
+    }, 1500);
+    return;
+  }
+
+  const cart = getCart();
+  if (cart.length === 0) {
+    showToast("O teu carrinho está vazio", "error");
+    return;
+  }
+
+  // Calcular total
+  let total = 0;
+  const items = cart
+    .map((item) => {
+      const product = getProductById(item.productId);
+      if (product) {
+        total += product.preco * item.quantity;
+        return {
+          productId: item.productId,
+          nome: product.nome,
+          preco: product.preco,
+          quantity: item.quantity,
+        };
+      }
+      return null;
+    })
+    .filter(Boolean);
+
+  // Criar encomenda
+  const order = createOrder({
+    userId: session.id,
+    items: items,
+    total: total,
+  });
+
+  // Limpar carrinho
+  clearCart();
+  updateCartBadge();
+
+  showToast("Encomenda realizada com sucesso!", "success");
+
+  setTimeout(() => {
+    window.location.href = "conta.html";
+  }, 2000);
 }
 
 // ============================================
@@ -2319,39 +2427,45 @@ function checkout() {
 // ============================================
 
 function loadEventDetail() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const id = urlParams.get('id');
-    
-    if (!id) {
-        window.location.href = 'eventos.html';
-        return;
-    }
-    
-    const event = getEventById(id);
-    if (!event) {
-        showToast('Evento não encontrado', 'error');
-        window.location.href = 'eventos.html';
-        return;
-    }
-    
-    // Preencher página
-    document.getElementById('eventImage').src = event.imagemUrl;
-    document.getElementById('eventImage').alt = event.titulo;
-    document.getElementById('eventTitle').textContent = event.titulo;
-    document.getElementById('eventDate').textContent = formatDate(new Date(event.data));
-    document.getElementById('eventTime').textContent = new Date(event.data).toLocaleTimeString('pt-PT', { hour: '2-digit', minute: '2-digit' });
-    document.getElementById('eventLocation').textContent = event.local;
-    document.getElementById('eventSpots').textContent = event.vagas;
-    document.getElementById('eventPrice').textContent = event.preco > 0 ? `${event.preco}€` : 'Gratuito';
-    document.getElementById('eventDescription').innerHTML = event.descricao.replace(/\n/g, '<br>');
-    
-    // Botão de inscrição
-    const bookBtn = document.getElementById('bookEventBtn');
-    if (bookBtn) {
-        bookBtn.onclick = () => openEventBookingModal(event.id);
-    }
-    
-    document.title = `${event.titulo} - Yemar Makeup Artist`;
+  const urlParams = new URLSearchParams(window.location.search);
+  const id = urlParams.get("id");
+
+  if (!id) {
+    window.location.href = "eventos.html";
+    return;
+  }
+
+  const event = getEventById(id);
+  if (!event) {
+    showToast("Evento não encontrado", "error");
+    window.location.href = "eventos.html";
+    return;
+  }
+
+  // Preencher página
+  document.getElementById("eventImage").src = event.imagemUrl;
+  document.getElementById("eventImage").alt = event.titulo;
+  document.getElementById("eventTitle").textContent = event.titulo;
+  document.getElementById("eventDate").textContent = formatDate(
+    new Date(event.data),
+  );
+  document.getElementById("eventTime").textContent = new Date(
+    event.data,
+  ).toLocaleTimeString("pt-PT", { hour: "2-digit", minute: "2-digit" });
+  document.getElementById("eventLocation").textContent = event.local;
+  document.getElementById("eventSpots").textContent = event.vagas;
+  document.getElementById("eventPrice").textContent =
+    event.preco > 0 ? `${event.preco}€` : "Gratuito";
+  document.getElementById("eventDescription").innerHTML =
+    event.descricao.replace(/\n/g, "<br>");
+
+  // Botão de inscrição
+  const bookBtn = document.getElementById("bookEventBtn");
+  if (bookBtn) {
+    bookBtn.onclick = () => openEventBookingModal(event.id);
+  }
+
+  document.title = `${event.titulo} - Yemar Makeup Artist`;
 }
 
 // ============================================
@@ -2359,133 +2473,135 @@ function loadEventDetail() {
 // ============================================
 
 function loadAdminPage() {
-    const session = getCurrentSession();
-    
-    if (!session || session.role !== 'admin') {
-        showToast('Acesso restrito a administradores', 'error');
-        window.location.href = 'conta.html';
-        return;
-    }
-    
-    // Carregar dashboard
-    loadAdminDashboard();
-    
-    // Inicializar navegação
-    initAdminNav();
-    
-    // Inicializar formulários de configurações
-    initAdminSettingsForms();
-    
-    // Carregar portfólio e certificados
-    loadPortfolioImagesAdmin();
-    loadCertificatesAdmin();
-    
-    // Carregar formação e certificações textuais
-    loadFormacaoList();
-    loadCertificacaoList();
-    
-    // Carregar analytics
-    loadAnalyticsStats();
+  const session = getCurrentSession();
+
+  if (!session || session.role !== "admin") {
+    showToast("Acesso restrito a administradores", "error");
+    window.location.href = "conta.html";
+    return;
+  }
+
+  // Carregar dashboard
+  loadAdminDashboard();
+
+  // Inicializar navegação
+  initAdminNav();
+
+  // Inicializar formulários de configurações
+  initAdminSettingsForms();
+
+  // Carregar portfólio e certificados
+  loadPortfolioImagesAdmin();
+  loadCertificatesAdmin();
+
+  // Carregar formação e certificações textuais
+  loadFormacaoList();
+  loadCertificacaoList();
+
+  // Carregar analytics
+  loadAnalyticsStats();
 }
 
 function initAdminNav() {
-    const navItems = document.querySelectorAll('.admin-menu-item');
-    const mobileNavItems = document.querySelectorAll('#mobileAdminNav a');
-    
-    const allItems = [...navItems, ...mobileNavItems];
-    
-    allItems.forEach(item => {
-        item.addEventListener('click', (e) => {
-            e.preventDefault();
-            
-            const section = item.dataset.section;
-            
-            // Atualizar active state
-            navItems.forEach(i => i.classList.remove('active'));
-            mobileNavItems.forEach(i => i.classList.remove('active'));
-            
-            document.querySelectorAll(`[data-section="${section}"]`).forEach(i => i.classList.add('active'));
-            
-            // Esconder todas as seções
-            document.querySelectorAll('.admin-section').forEach(s => {
-                s.classList.remove('active');
-                s.style.display = 'none';
-            });
-            
-            // Mostrar seção selecionada
-            const sectionEl = document.getElementById(section + 'Section');
-            if (sectionEl) {
-                sectionEl.classList.add('active');
-                sectionEl.style.display = 'block';
-                
-                // Carregar dados da seção
-                loadAdminSection(section);
-            }
-            
-            // Fechar menu mobile
-            const mobileMenu = document.getElementById('mobileMenu');
-            if (mobileMenu) {
-                mobileMenu.classList.remove('open');
-                document.body.style.overflow = '';
-            }
-        });
+  const navItems = document.querySelectorAll(".admin-menu-item");
+  const mobileNavItems = document.querySelectorAll("#mobileAdminNav a");
+
+  const allItems = [...navItems, ...mobileNavItems];
+
+  allItems.forEach((item) => {
+    item.addEventListener("click", (e) => {
+      e.preventDefault();
+
+      const section = item.dataset.section;
+
+      // Atualizar active state
+      navItems.forEach((i) => i.classList.remove("active"));
+      mobileNavItems.forEach((i) => i.classList.remove("active"));
+
+      document
+        .querySelectorAll(`[data-section="${section}"]`)
+        .forEach((i) => i.classList.add("active"));
+
+      // Esconder todas as seções
+      document.querySelectorAll(".admin-section").forEach((s) => {
+        s.classList.remove("active");
+        s.style.display = "none";
+      });
+
+      // Mostrar seção selecionada
+      const sectionEl = document.getElementById(section + "Section");
+      if (sectionEl) {
+        sectionEl.classList.add("active");
+        sectionEl.style.display = "block";
+
+        // Carregar dados da seção
+        loadAdminSection(section);
+      }
+
+      // Fechar menu mobile
+      const mobileMenu = document.getElementById("mobileMenu");
+      if (mobileMenu) {
+        mobileMenu.classList.remove("open");
+        document.body.style.overflow = "";
+      }
     });
+  });
 }
 
 function loadAdminSection(section) {
-    switch(section) {
-        case 'dashboard':
-            loadAdminDashboard();
-            break;
-        case 'bookings':
-            loadAdminBookings();
-            break;
-        case 'orders':
-            loadAdminOrders();
-            break;
-        case 'services':
-            loadAdminServices();
-            break;
-        case 'workshops':
-            loadAdminWorkshops();
-            break;
-        case 'products':
-            loadAdminProducts();
-            break;
-        case 'posts':
-            loadAdminPosts();
-            break;
-        case 'events':
-            loadAdminEvents();
-            break;
-        case 'users':
-            loadAdminUsers();
-            break;
-        case 'messages':
-            loadAdminMessages();
-            break;
-        case 'images':
-            loadImagesSection();
-            break;
-        case 'reports':
-            loadAdminReports();
-            break;
-        case 'settings':
-            loadAdminSettingsPage();
-            break;
-    }
+  switch (section) {
+    case "dashboard":
+      loadAdminDashboard();
+      break;
+    case "bookings":
+      loadAdminBookings();
+      break;
+    case "orders":
+      loadAdminOrders();
+      break;
+    case "services":
+      loadAdminServices();
+      break;
+    case "workshops":
+      loadAdminWorkshops();
+      break;
+    case "products":
+      loadAdminProducts();
+      break;
+    case "posts":
+      loadAdminPosts();
+      break;
+    case "events":
+      loadAdminEvents();
+      break;
+    case "users":
+      loadAdminUsers();
+      break;
+    case "messages":
+      loadAdminMessages();
+      break;
+    case "images":
+      loadImagesSection();
+      break;
+    case "reports":
+      loadAdminReports();
+      break;
+    case "settings":
+      loadAdminSettingsPage();
+      break;
+  }
 }
 
 function loadAdminReports() {
-    initializeReportDates();
-    loadReports();
+  initializeReportDates();
+  loadReports();
 }
 
 function loadAdminDashboard() {
-    const statsGrid = document.getElementById('statsGrid');
-    if (statsGrid) {
-        const stats = getAdminStats();
-        statsGrid.innerHTML = `
+  const statsGrid = document.getElementById("statsGrid");
+  if (statsGrid) {
+    const stats = getAdminStats();
+    statsGrid.innerHTML = `
             <div class="stat-card">
                 <div class="stat-icon">📅</div>
                 <div class="stat-info">
@@ -2515,190 +2631,263 @@ function loadAdminDashboard() {
                 </div>
             </div>
         `;
-    }
-    
-    // Carregar marcações recentes
-    const recentBookings = document.getElementById('recentBookings');
-    if (recentBookings) {
-        const bookings = getBookings().slice(0, 5);
-        if (bookings.length === 0) {
-            recentBookings.innerHTML = '<p class="no-items">Sem marcações recentes.</p>';
-        } else {
-            recentBookings.innerHTML = bookings.map(b => `
+  }
+
+  // Carregar marcações recentes
+  const recentBookings = document.getElementById("recentBookings");
+  if (recentBookings) {
+    const bookings = getBookings().slice(0, 5);
+    if (bookings.length === 0) {
+      recentBookings.innerHTML =
+        '<p class="no-items">Sem marcações recentes.</p>';
+    } else {
+      recentBookings.innerHTML = bookings
+        .map(
+          (b) => `
                 <div class="recent-item">
                     <strong>${b.itemTitulo}</strong>
                     <span class="status-badge status-${b.estado}">${getStatusLabel(b.estado)}</span>
                 </div>
-            `).join('');
-        }
+            `,
+        )
+        .join("");
     }
-    
-    // Carregar encomendas recentes
-    const recentOrders = document.getElementById('recentOrders');
-    if (recentOrders) {
-        const orders = getOrders().slice(0, 5);
-        if (orders.length === 0) {
-            recentOrders.innerHTML = '<p class="no-items">Sem encomendas recentes.</p>';
-        } else {
-            recentOrders.innerHTML = orders.map(o => `
+  }
+
+  // Carregar encomendas recentes
+  const recentOrders = document.getElementById("recentOrders");
+  if (recentOrders) {
+    const orders = getOrders().slice(0, 5);
+    if (orders.length === 0) {
+      recentOrders.innerHTML =
+        '<p class="no-items">Sem encomendas recentes.</p>';
+    } else {
+      recentOrders.innerHTML = orders
+        .map(
+          (o) => `
                 <div class="recent-item">
                     <strong>#${o.id.slice(-6).toUpperCase()}</strong> - ${o.total}€
                     <span class="status-badge status-${o.estado}">${getOrderStatusLabel(o.estado)}</span>
                 </div>
-            `).join('');
-        }
+            `,
+        )
+        .join("");
     }
+  }
 }
 
 function loadAdminUsers() {
-    const container = document.getElementById('usersTableBody');
-    if (container) {
-        const users = getUsers();
-        container.innerHTML = users.map(u => `
+  const container = document.getElementById("usersTableBody");
+  if (container) {
+    const users = getUsers();
+    container.innerHTML = users
+      .map(
+        (u) => `
             <tr>
                 <td>${u.nome}</td>
                 <td>${u.email}</td>
-                <td>${u.telefone || '-'}</td>
-                <td><span class="status-badge ${u.role === 'admin' ? 'status-confirmed' : 'status-pending'}">${u.role === 'admin' ? 'Admin' : 'Utilizador'}</span></td>
+                <td>${u.telefone || "-"}</td>
+                <td><span class="status-badge ${u.role === "admin" ? "status-confirmed" : "status-pending"}">${u.role === "admin" ? "Admin" : "Utilizador"}</span></td>
                 <td>${formatDate(new Date(u.createdAt))}</td>
             </tr>
-        `).join('');
-    }
+        `,
+      )
+      .join("");
+  }
 }
 
 function loadAdminMessages() {
-    const container = document.getElementById('messagesTableBody');
-    if (container) {
-        const messages = getMessages ? getMessages() : [];
-        if (messages.length === 0) {
-            container.innerHTML = '<tr><td colspan="6">Sem mensagens.</td></tr>';
-        } else {
-            container.innerHTML = messages.map(m => `
+  const container = document.getElementById("messagesTableBody");
+  if (container) {
+    const messages = getMessages ? getMessages() : [];
+    if (messages.length === 0) {
+      container.innerHTML = '<tr><td colspan="6">Sem mensagens.</td></tr>';
+    } else {
+      container.innerHTML = messages
+        .map(
+          (m) => `
                 <tr>
                     <td>${m.nome}</td>
                     <td>${m.email}</td>
                     <td>${m.assunto}</td>
                     <td>${formatDate(new Date(m.createdAt))}</td>
-                    <td><span class="status-badge ${m.lida ? 'status-confirmed' : 'status-pending'}">${m.lida ? 'Lida' : 'Nova'}</span></td>
+                    <td><span class="status-badge ${m.lida ? "status-confirmed" : "status-pending"}">${m.lida ? "Lida" : "Nova"}</span></td>
                     <td>
                         <button class="btn-action" onclick="viewMessage('${m.id}')" title="Ver">👁</button>
                     </td>
                 </tr>
-            `).join('');
-        }
+            `,
+        )
+        .join("");
     }
+  }
+}
+
+function updateImagePreviews() {
+  const welcomeAvatarUrl = document.getElementById("welcomeAvatarUrl");
+  const aboutImageUrl = document.getElementById("aboutImageUrl");
+  const footerAvatarUrl = document.getElementById("footerAvatarUrl");
+
+  const welcomePreview = document.getElementById("welcomeAvatarPreview");
+  const aboutPreview = document.getElementById("aboutImagePreview");
+  const footerPreview = document.getElementById("footerAvatarPreview");
+
+  if (welcomeAvatarUrl && welcomePreview) {
+    welcomePreview.src = welcomeAvatarUrl.value || welcomeAvatarUrl.placeholder;
+  }
+  if (aboutImageUrl && aboutPreview) {
+    aboutPreview.src = aboutImageUrl.value || aboutImageUrl.placeholder;
+  }
+  if (footerAvatarUrl && footerPreview) {
+    footerPreview.src = footerAvatarUrl.value || footerAvatarUrl.placeholder;
+  }
 }
 
 function loadAdminSettingsPage() {
-    // Carregar configurações existentes se houver
-    const settings = getSiteSettings();
-    
-    const heroTitle = document.getElementById('heroTitle');
-    const heroSubtitle = document.getElementById('heroSubtitle');
-    const heroImage = document.getElementById('heroImage');
-    const heroCta = document.getElementById('heroCta');
-    const contactEmail = document.getElementById('settingsContactEmail');
-    const contactPhone = document.getElementById('settingsContactPhone');
-    const contactAddress = document.getElementById('settingsAddress');
-    const contactWhatsApp = document.getElementById('settingsWhatsApp');
-    const contactMapUrl = document.getElementById('settingsMapUrl');
-    const whatsappTemplate = document.getElementById('whatsappNotificationTemplate');
-    
-    if (heroTitle) heroTitle.value = settings.bannerTitulo || 'Realça a Tua Beleza Natural';
-    if (heroSubtitle) heroSubtitle.value = settings.bannerSubtitulo || 'Maquilhagem profissional para todos os momentos especiais da tua vida';
-    if (heroImage) heroImage.value = settings.bannerImagemUrl || '';
-    if (heroCta) heroCta.value = settings.bannerCta || 'Marcar Agora';
-    if (contactEmail) contactEmail.value = settings.emailContacto || 'yemarmk@gmail.com';
-    if (contactPhone) contactPhone.value = settings.telefone || '(+351) 933758731';
-    if (contactAddress) contactAddress.value = settings.endereco || '';
-    if (contactWhatsApp) contactWhatsApp.value = settings.whatsapp || '351933758731';
-    if (contactMapUrl) contactMapUrl.value = settings.mapUrl || '';
-    if (whatsappTemplate) whatsappTemplate.value = settings.whatsappNotificationTemplate || getDefaultWhatsAppTemplate();
-    
-    // Form handlers
-    const heroForm = document.getElementById('heroSettingsForm');
-    if (heroForm) {
-        heroForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const currentSettings = getSiteSettings();
-            updateSiteSettings({
-                ...currentSettings,
-                bannerTitulo: document.getElementById('heroTitle').value,
-                bannerSubtitulo: document.getElementById('heroSubtitle').value,
-                bannerImagemUrl: document.getElementById('heroImage').value,
-                bannerCta: document.getElementById('heroCta').value
-            });
-            
-            showToast('Configurações do banner guardadas!', 'success');
-        });
-    }
-    
-    const contactForm = document.getElementById('contactSettingsForm');
-    if (contactForm) {
-        contactForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const currentSettings = getSiteSettings();
-            updateSiteSettings({
-                ...currentSettings,
-                emailContacto: document.getElementById('settingsContactEmail').value,
-                telefone: document.getElementById('settingsContactPhone').value,
-                whatsapp: document.getElementById('settingsWhatsApp').value,
-                endereco: document.getElementById('settingsAddress').value,
-                mapUrl: document.getElementById('settingsMapUrl').value
-            });
-            
-            showToast('Informações de contacto guardadas!', 'success');
-        });
-    }
-    
-    // Carregar imagens existentes
-    const welcomeAvatarUrl = document.getElementById('welcomeAvatarUrl');
-    const aboutImageUrl = document.getElementById('aboutImageUrl');
-    const footerAvatarUrl = document.getElementById('footerAvatarUrl');
-    
-    if (welcomeAvatarUrl) welcomeAvatarUrl.value = settings.welcomeAvatarUrl || 'assets/images/logo_name.png';
-    if (aboutImageUrl) aboutImageUrl.value = settings.aboutImageUrl || 'assets/images/capa.png';
-    if (footerAvatarUrl) footerAvatarUrl.value = settings.footerAvatarUrl || 'assets/images/capa.png';
-    
-    // Form handler para imagens
-    const imagesForm = document.getElementById('imagesSettingsForm');
-    if (imagesForm) {
-        imagesForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const currentSettings = getSiteSettings();
-            updateSiteSettings({
-                ...currentSettings,
-                welcomeAvatarUrl: document.getElementById('welcomeAvatarUrl').value,
-                aboutImageUrl: document.getElementById('aboutImageUrl').value,
-                footerAvatarUrl: document.getElementById('footerAvatarUrl').value
-            });
-            
-            showToast('Imagens guardadas! Recarregue a página para ver as alterações.', 'success');
-        });
-    }
-    
-    // Form handler para mensagens WhatsApp
-    const whatsappForm = document.getElementById('whatsappSettingsForm');
-    if (whatsappForm) {
-        whatsappForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const currentSettings = getSiteSettings();
-            updateSiteSettings({
-                ...currentSettings,
-                whatsappNotificationTemplate: document.getElementById('whatsappNotificationTemplate').value
-            });
-            
-            showToast('Mensagem WhatsApp guardada!', 'success');
-        });
-    }
+  // Carregar configurações existentes se houver
+  const settings = getSiteSettings();
+
+  const heroTitle = document.getElementById("heroTitle");
+  const heroSubtitle = document.getElementById("heroSubtitle");
+  const heroImage = document.getElementById("heroImage");
+  const heroCta = document.getElementById("heroCta");
+  const contactEmail = document.getElementById("settingsContactEmail");
+  const contactPhone = document.getElementById("settingsContactPhone");
+  const contactAddress = document.getElementById("settingsAddress");
+  const contactWhatsApp = document.getElementById("settingsWhatsApp");
+  const contactMapUrl = document.getElementById("settingsMapUrl");
+  const whatsappTemplate = document.getElementById(
+    "whatsappNotificationTemplate",
+  );
+
+  if (heroTitle)
+    heroTitle.value = settings.bannerTitulo || "Realça a Tua Beleza Natural";
+  if (heroSubtitle)
+    heroSubtitle.value =
+      settings.bannerSubtitulo ||
+      "Maquilhagem profissional para todos os momentos especiais da tua vida";
+  if (heroImage) heroImage.value = settings.bannerImagemUrl || "";
+  if (heroCta) heroCta.value = settings.bannerCta || "Marcar Agora";
+  if (contactEmail)
+    contactEmail.value = settings.emailContacto || "yemarmk@gmail.com";
+  if (contactPhone)
+    contactPhone.value = settings.telefone || "(+351) 933758731";
+  if (contactAddress) contactAddress.value = settings.endereco || "";
+  if (contactWhatsApp)
+    contactWhatsApp.value = settings.whatsapp || "351933758731";
+  if (contactMapUrl) contactMapUrl.value = settings.mapUrl || "";
+  if (whatsappTemplate)
+    whatsappTemplate.value =
+      settings.whatsappNotificationTemplate || getDefaultWhatsAppTemplate();
+
+  // Form handlers
+  const heroForm = document.getElementById("heroSettingsForm");
+  if (heroForm) {
+    heroForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const currentSettings = getSiteSettings();
+      updateSiteSettings({
+        ...currentSettings,
+        bannerTitulo: document.getElementById("heroTitle").value,
+        bannerSubtitulo: document.getElementById("heroSubtitle").value,
+        bannerImagemUrl: document.getElementById("heroImage").value,
+        bannerCta: document.getElementById("heroCta").value,
+      });
+
+      showToast("Configurações do banner guardadas!", "success");
+    });
+  }
+
+  const contactForm = document.getElementById("contactSettingsForm");
+  if (contactForm) {
+    contactForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const currentSettings = getSiteSettings();
+      updateSiteSettings({
+        ...currentSettings,
+        emailContacto: document.getElementById("settingsContactEmail").value,
+        telefone: document.getElementById("settingsContactPhone").value,
+        whatsapp: document.getElementById("settingsWhatsApp").value,
+        endereco: document.getElementById("settingsAddress").value,
+        mapUrl: document.getElementById("settingsMapUrl").value,
+      });
+
+      showToast("Informações de contacto guardadas!", "success");
+    });
+  }
+
+  // Carregar imagens existentes
+  const welcomeAvatarUrl = document.getElementById("welcomeAvatarUrl");
+  const aboutImageUrl = document.getElementById("aboutImageUrl");
+  const footerAvatarUrl = document.getElementById("footerAvatarUrl");
+
+  if (welcomeAvatarUrl)
+    welcomeAvatarUrl.value =
+      settings.welcomeAvatarUrl || "assets/images/logo.png";
+  if (aboutImageUrl)
+    aboutImageUrl.value = settings.aboutImageUrl || "assets/images/capa.png";
+  if (footerAvatarUrl)
+    footerAvatarUrl.value =
+      settings.footerAvatarUrl || "assets/images/capa.png";
+
+  // Atualizar previews das imagens
+  updateImagePreviews();
+
+  // Adicionar event listeners para atualizar previews em tempo real
+  if (welcomeAvatarUrl) {
+    welcomeAvatarUrl.addEventListener("input", updateImagePreviews);
+  }
+  if (aboutImageUrl) {
+    aboutImageUrl.addEventListener("input", updateImagePreviews);
+  }
+  if (footerAvatarUrl) {
+    footerAvatarUrl.addEventListener("input", updateImagePreviews);
+  }
+
+  // Form handler para imagens
+  const imagesForm = document.getElementById("imagesSettingsForm");
+  if (imagesForm) {
+    imagesForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const currentSettings = getSiteSettings();
+      updateSiteSettings({
+        ...currentSettings,
+        welcomeAvatarUrl: document.getElementById("welcomeAvatarUrl").value,
+        aboutImageUrl: document.getElementById("aboutImageUrl").value,
+        footerAvatarUrl: document.getElementById("footerAvatarUrl").value,
+      });
+
+      showToast(
+        "Imagens guardadas! Recarregue a página para ver as alterações.",
+        "success",
+      );
+    });
+  }
+
+  // Form handler para mensagens WhatsApp
+  const whatsappForm = document.getElementById("whatsappSettingsForm");
+  if (whatsappForm) {
+    whatsappForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const currentSettings = getSiteSettings();
+      updateSiteSettings({
+        ...currentSettings,
+        whatsappNotificationTemplate: document.getElementById(
+          "whatsappNotificationTemplate",
+        ).value,
+      });
+
+      showToast("Mensagem WhatsApp guardada!", "success");
+    });
+  }
 }
 
 function getDefaultWhatsAppTemplate() {
-    return `🔔 *Nova Marcação Recebida!*
+  return `🔔 *Nova Marcação Recebida!*
 
 *Cliente:* {clienteNome}
 *Email:* {clienteEmail}
@@ -2716,145 +2905,156 @@ _Yemar Makeup Artist_`;
 }
 
 function resetData() {
-    if (confirm('Tens a certeza? Isto irá repor todos os dados para os valores iniciais.')) {
-        localStorage.clear();
-        initializeSeed();
-        showToast('Dados repostos com sucesso!', 'success');
-        setTimeout(() => {
-            window.location.reload();
-        }, 1500);
-    }
+  if (
+    confirm(
+      "Tens a certeza? Isto irá repor todos os dados para os valores iniciais.",
+    )
+  ) {
+    localStorage.clear();
+    initializeSeed();
+    showToast("Dados repostos com sucesso!", "success");
+    setTimeout(() => {
+      window.location.reload();
+    }, 1500);
+  }
 }
 
 function exportData() {
-    const data = {
-        users: getUsers(),
-        services: getServices(),
-        workshops: getWorkshops(),
-        products: getProducts(),
-        posts: getPosts(),
-        events: getEvents(),
-        bookings: getBookings(),
-        orders: getOrders(),
-        settings: getSiteSettings()
-    };
-    
-    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'yemar-makeup-data.json';
-    a.click();
-    URL.revokeObjectURL(url);
-    
-    showToast('Dados exportados com sucesso!', 'success');
+  const data = {
+    users: getUsers(),
+    services: getServices(),
+    workshops: getWorkshops(),
+    products: getProducts(),
+    posts: getPosts(),
+    events: getEvents(),
+    bookings: getBookings(),
+    orders: getOrders(),
+    settings: getSiteSettings(),
+  };
+
+  const blob = new Blob([JSON.stringify(data, null, 2)], {
+    type: "application/json",
+  });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "yemar-makeup-data.json";
+  a.click();
+  URL.revokeObjectURL(url);
+
+  showToast("Dados exportados com sucesso!", "success");
 }
 
 function getAdminStats() {
-    return {
-        pendingBookings: getBookings().filter(b => b.estado === 'pending').length,
-        pendingOrders: getOrders().filter(o => o.estado === 'pending').length,
-        totalUsers: getUsers().length,
-        totalProducts: getProducts().length
-    };
+  return {
+    pendingBookings: getBookings().filter((b) => b.estado === "pending").length,
+    pendingOrders: getOrders().filter((o) => o.estado === "pending").length,
+    totalUsers: getUsers().length,
+    totalProducts: getProducts().length,
+  };
 }
 
 // Funções auxiliares para admin modals
 function openServiceModal() {
-    openAddServiceModal();
+  openAddServiceModal();
 }
 
 function openWorkshopModal() {
-    openAddWorkshopModal();
+  openAddWorkshopModal();
 }
 
 function openProductModal() {
-    openAddProductModal();
+  openAddProductModal();
 }
 
 function openPostModal() {
-    openAddPostModal();
+  openAddPostModal();
 }
 
 function openEventModal() {
-    openAddEventModal();
+  openAddEventModal();
 }
-
 
 // ============================================
 // TOGGLE PASSWORD VISIBILITY
 // ============================================
 
 function togglePasswordVisibility(inputId, button) {
-    const input = document.getElementById(inputId);
-    if (input.type === 'password') {
-        input.type = 'text';
-        button.classList.add('active');
-        button.querySelector('.eye-icon').textContent = '🙈';
-    } else {
-        input.type = 'password';
-        button.classList.remove('active');
-        button.querySelector('.eye-icon').textContent = '👁';
-    }
+  const input = document.getElementById(inputId);
+  if (input.type === "password") {
+    input.type = "text";
+    button.classList.add("active");
+    button.querySelector(".eye-icon").textContent = "🙈";
+  } else {
+    input.type = "password";
+    button.classList.remove("active");
+    button.querySelector(".eye-icon").textContent = "👁";
+  }
 }
-
 
 // ============================================
 // ADMIN - PORTFOLIO MANAGEMENT
 // ============================================
 
 function addPortfolioImageAdmin() {
-    const imageUrl = document.getElementById('portfolioImageUrl').value.trim();
-    const title = document.getElementById('portfolioImageTitle').value.trim();
-    const description = document.getElementById('portfolioImageDesc').value.trim();
-    
-    if (!imageUrl) {
-        showToast('Por favor, insira a URL da imagem', 'error');
-        return;
-    }
-    
-    addPortfolioImage({
-        imageUrl,
-        title,
-        description
-    });
-    
-    document.getElementById('portfolioImageUrl').value = '';
-    document.getElementById('portfolioImageTitle').value = '';
-    document.getElementById('portfolioImageDesc').value = '';
-    
-    showToast('Imagem adicionada ao portfólio!', 'success');
-    loadPortfolioImagesAdmin();
+  const imageUrl = document.getElementById("portfolioImageUrl").value.trim();
+  const title = document.getElementById("portfolioImageTitle").value.trim();
+  const description = document
+    .getElementById("portfolioImageDesc")
+    .value.trim();
+
+  if (!imageUrl) {
+    showToast("Por favor, insira a URL da imagem", "error");
+    return;
+  }
+
+  addPortfolioImage({
+    imageUrl,
+    title,
+    description,
+  });
+
+  document.getElementById("portfolioImageUrl").value = "";
+  document.getElementById("portfolioImageTitle").value = "";
+  document.getElementById("portfolioImageDesc").value = "";
+
+  showToast("Imagem adicionada ao portfólio!", "success");
+  loadPortfolioImagesAdmin();
 }
 
 function loadPortfolioImagesAdmin() {
-    const images = getPortfolioImages();
-    const grid = document.getElementById('portfolioImagesGrid');
-    
-    if (!grid) return;
-    
-    if (images.length === 0) {
-        grid.innerHTML = '<p style="color: #666; text-align: center; padding: 20px;">Nenhuma imagem no portfólio.</p>';
-        return;
-    }
-    
-    grid.innerHTML = images.map(img => `
+  const images = getPortfolioImages();
+  const grid = document.getElementById("portfolioImagesGrid");
+
+  if (!grid) return;
+
+  if (images.length === 0) {
+    grid.innerHTML =
+      '<p style="color: #666; text-align: center; padding: 20px;">Nenhuma imagem no portfólio.</p>';
+    return;
+  }
+
+  grid.innerHTML = images
+    .map(
+      (img) => `
         <div class="admin-image-item">
-            <img src="${img.imageUrl}" alt="${img.title || 'Portfolio'}">
+            <img src="${img.imageUrl}" alt="${img.title || "Portfolio"}">
             <div class="admin-image-actions">
-                <span style="font-size: 0.85rem;">${img.title || 'Sem título'}</span>
+                <span style="font-size: 0.85rem;">${img.title || "Sem título"}</span>
                 <button class="btn btn-sm btn-outline" onclick="removePortfolioImageAdmin('${img.id}')">Remover</button>
             </div>
         </div>
-    `).join('');
+    `,
+    )
+    .join("");
 }
 
 function removePortfolioImageAdmin(id) {
-    if (confirm('Tem certeza que deseja remover esta imagem?')) {
-        removePortfolioImage(id);
-        showToast('Imagem removida!', 'success');
-        loadPortfolioImagesAdmin();
-    }
+  if (confirm("Tem certeza que deseja remover esta imagem?")) {
+    removePortfolioImage(id);
+    showToast("Imagem removida!", "success");
+    loadPortfolioImagesAdmin();
+  }
 }
 
 // ============================================
@@ -2862,60 +3062,65 @@ function removePortfolioImageAdmin(id) {
 // ============================================
 
 function addCertificateAdmin() {
-    const imageUrl = document.getElementById('certificateImageUrl').value.trim();
-    const title = document.getElementById('certificateTitle').value.trim();
-    const year = document.getElementById('certificateYear').value.trim();
-    
-    if (!imageUrl || !title) {
-        showToast('Por favor, preencha a URL e o título do certificado', 'error');
-        return;
-    }
-    
-    addCertificate({
-        imageUrl,
-        title,
-        year
-    });
-    
-    document.getElementById('certificateImageUrl').value = '';
-    document.getElementById('certificateTitle').value = '';
-    document.getElementById('certificateYear').value = '';
-    
-    showToast('Certificado adicionado!', 'success');
-    loadCertificatesAdmin();
+  const imageUrl = document.getElementById("certificateImageUrl").value.trim();
+  const title = document.getElementById("certificateTitle").value.trim();
+  const year = document.getElementById("certificateYear").value.trim();
+
+  if (!imageUrl || !title) {
+    showToast("Por favor, preencha a URL e o título do certificado", "error");
+    return;
+  }
+
+  addCertificate({
+    imageUrl,
+    title,
+    year,
+  });
+
+  document.getElementById("certificateImageUrl").value = "";
+  document.getElementById("certificateTitle").value = "";
+  document.getElementById("certificateYear").value = "";
+
+  showToast("Certificado adicionado!", "success");
+  loadCertificatesAdmin();
 }
 
 function loadCertificatesAdmin() {
-    const certificates = getCertificates();
-    const grid = document.getElementById('certificatesGrid');
-    
-    if (!grid) return;
-    
-    if (certificates.length === 0) {
-        grid.innerHTML = '<p style="color: #666; text-align: center; padding: 20px;">Nenhum certificado cadastrado.</p>';
-        return;
-    }
-    
-    grid.innerHTML = certificates.map(cert => `
+  const certificates = getCertificates();
+  const grid = document.getElementById("certificatesGrid");
+
+  if (!grid) return;
+
+  if (certificates.length === 0) {
+    grid.innerHTML =
+      '<p style="color: #666; text-align: center; padding: 20px;">Nenhum certificado cadastrado.</p>';
+    return;
+  }
+
+  grid.innerHTML = certificates
+    .map(
+      (cert) => `
         <div class="admin-image-item">
             <img src="${cert.imageUrl}" alt="${cert.title}">
             <div class="admin-image-actions">
                 <div>
                     <strong style="font-size: 0.85rem;">${cert.title}</strong>
-                    ${cert.year ? `<br><small>${cert.year}</small>` : ''}
+                    ${cert.year ? `<br><small>${cert.year}</small>` : ""}
                 </div>
                 <button class="btn btn-sm btn-outline" onclick="removeCertificateAdmin('${cert.id}')">Remover</button>
             </div>
         </div>
-    `).join('');
+    `,
+    )
+    .join("");
 }
 
 function removeCertificateAdmin(id) {
-    if (confirm('Tem certeza que deseja remover este certificado?')) {
-        removeCertificate(id);
-        showToast('Certificado removido!', 'success');
-        loadCertificatesAdmin();
-    }
+  if (confirm("Tem certeza que deseja remover este certificado?")) {
+    removeCertificate(id);
+    showToast("Certificado removido!", "success");
+    loadCertificatesAdmin();
+  }
 }
 
 // ============================================
@@ -2923,12 +3128,12 @@ function removeCertificateAdmin(id) {
 // ============================================
 
 function loadAnalyticsStats() {
-    const stats = getVisitStats();
-    const container = document.getElementById('analyticsStats');
-    
-    if (!container) return;
-    
-    container.innerHTML = `
+  const stats = getVisitStats();
+  const container = document.getElementById("analyticsStats");
+
+  if (!container) return;
+
+  container.innerHTML = `
         <div class="stats-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
             <div class="stat-card">
                 <div class="stat-value">${stats.total}</div>
@@ -2948,35 +3153,40 @@ function loadAnalyticsStats() {
             </div>
         </div>
     `;
-    
-    loadPageVisitsChart(stats.byPage);
+
+  loadPageVisitsChart(stats.byPage);
 }
 
 function loadPageVisitsChart(byPage) {
-    const container = document.getElementById('pageVisitsChart');
-    
-    if (!container) return;
-    
-    const sortedPages = Object.entries(byPage).sort((a, b) => b[1] - a[1]);
-    
-    if (sortedPages.length === 0) {
-        container.innerHTML = '<p style="color: #666;">Nenhuma visita registrada ainda.</p>';
-        return;
-    }
-    
-    const maxVisits = Math.max(...sortedPages.map(p => p[1]));
-    
-    container.innerHTML = `
+  const container = document.getElementById("pageVisitsChart");
+
+  if (!container) return;
+
+  const sortedPages = Object.entries(byPage).sort((a, b) => b[1] - a[1]);
+
+  if (sortedPages.length === 0) {
+    container.innerHTML =
+      '<p style="color: #666;">Nenhuma visita registrada ainda.</p>';
+    return;
+  }
+
+  const maxVisits = Math.max(...sortedPages.map((p) => p[1]));
+
+  container.innerHTML = `
         <div style="display: flex; flex-direction: column; gap: 10px;">
-            ${sortedPages.map(([page, visits]) => `
+            ${sortedPages
+              .map(
+                ([page, visits]) => `
                 <div style="display: flex; align-items: center; gap: 10px;">
                     <div style="min-width: 100px; font-size: 0.9rem;">${page}</div>
                     <div style="flex: 1; background: #eee; border-radius: 4px; height: 24px; position: relative;">
-                        <div style="background: var(--color-red); height: 100%; width: ${(visits / maxVisits * 100)}%; border-radius: 4px;"></div>
+                        <div style="background: var(--color-red); height: 100%; width: ${(visits / maxVisits) * 100}%; border-radius: 4px;"></div>
                     </div>
                     <div style="min-width: 40px; text-align: right; font-weight: 600;">${visits}</div>
                 </div>
-            `).join('')}
+            `,
+              )
+              .join("")}
         </div>
     `;
 }
@@ -2986,40 +3196,41 @@ function loadPageVisitsChart(byPage) {
 // ============================================
 
 function initAdminSettingsForms() {
-    // Site Name Form
-    const siteNameForm = document.getElementById('siteNameForm');
-    if (siteNameForm) {
-        siteNameForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const tagline = document.getElementById('siteTagline').value;
-            updateSiteSettings({ tagline });
-            showToast('Nome do site atualizado!', 'success');
-            applySiteSettings();
-        });
-    }
-    
-    // Shop Settings Form
-    const shopForm = document.getElementById('shopSettingsForm');
-    if (shopForm) {
-        shopForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const shopEnabled = document.getElementById('shopEnabled').checked;
-            updateSiteSettings({ shopEnabled });
-            showToast('Configurações da loja atualizadas!', 'success');
-        });
-    }
-    
-    // Load current settings
-    const settings = getSiteSettings();
-    if (settings) {
-        const taglineInput = document.getElementById('siteTagline');
-        const shopEnabledInput = document.getElementById('shopEnabled');
-        
-        if (taglineInput) taglineInput.value = settings.tagline || 'Yemar Makeup Artist';
-        if (shopEnabledInput) shopEnabledInput.checked = settings.shopEnabled !== false;
-    }
-}
+  // Site Name Form
+  const siteNameForm = document.getElementById("siteNameForm");
+  if (siteNameForm) {
+    siteNameForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const tagline = document.getElementById("siteTagline").value;
+      updateSiteSettings({ tagline });
+      showToast("Nome do site atualizado!", "success");
+      applySiteSettings();
+    });
+  }
 
+  // Shop Settings Form
+  const shopForm = document.getElementById("shopSettingsForm");
+  if (shopForm) {
+    shopForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const shopEnabled = document.getElementById("shopEnabled").checked;
+      updateSiteSettings({ shopEnabled });
+      showToast("Configurações da loja atualizadas!", "success");
+    });
+  }
+
+  // Load current settings
+  const settings = getSiteSettings();
+  if (settings) {
+    const taglineInput = document.getElementById("siteTagline");
+    const shopEnabledInput = document.getElementById("shopEnabled");
+
+    if (taglineInput)
+      taglineInput.value = settings.tagline || "Yemar Makeup Artist";
+    if (shopEnabledInput)
+      shopEnabledInput.checked = settings.shopEnabled !== false;
+  }
+}
 
 // ============================================
 // CERTIFICATES CAROUSEL
@@ -3029,206 +3240,218 @@ let currentCertificateIndex = 0;
 let certificatesAutoplayInterval = null;
 
 function loadCertificatesCarousel() {
-    const certificates = getCertificates();
-    const section = document.getElementById('certificatesSection');
-    const track = document.getElementById('certificatesTrack');
-    const controls = document.getElementById('carouselControls');
-    
-    if (!section || !track) return;
-    
-    if (certificates.length === 0) {
-        section.style.display = 'none';
-        return;
-    }
-    
-    section.style.display = 'block';
-    
-    track.innerHTML = certificates.map(cert => `
+  const certificates = getCertificates();
+  const section = document.getElementById("certificatesSection");
+  const track = document.getElementById("certificatesTrack");
+  const controls = document.getElementById("carouselControls");
+
+  if (!section || !track) return;
+
+  if (certificates.length === 0) {
+    section.style.display = "none";
+    return;
+  }
+
+  section.style.display = "block";
+
+  track.innerHTML = certificates
+    .map(
+      (cert) => `
         <div class="certificate-item">
             <img src="${cert.imageUrl}" alt="${cert.title}">
             <div class="certificate-info">
                 <h3>${cert.title}</h3>
-                ${cert.year ? `<p>${cert.year}</p>` : ''}
+                ${cert.year ? `<p>${cert.year}</p>` : ""}
             </div>
         </div>
-    `).join('');
-    
-    // Show controls only if more than 1 certificate
-    if (controls) {
-        controls.style.display = certificates.length > 1 ? 'flex' : 'none';
-    }
-    
-    currentCertificateIndex = 0;
-    updateCertificatesCarousel();
-    
-    // Iniciar autoplay se houver mais de 1 certificado
-    if (certificates.length > 1) {
-        startCertificatesAutoplay();
-    }
+    `,
+    )
+    .join("");
+
+  // Show controls only if more than 1 certificate
+  if (controls) {
+    controls.style.display = certificates.length > 1 ? "flex" : "none";
+  }
+
+  currentCertificateIndex = 0;
+  updateCertificatesCarousel();
+
+  // Iniciar autoplay se houver mais de 1 certificado
+  if (certificates.length > 1) {
+    startCertificatesAutoplay();
+  }
 }
 
 function moveCertificatesCarousel(direction) {
-    const certificates = getCertificates();
-    const maxIndex = Math.max(0, certificates.length - 1);
-    
-    // Parar autoplay quando usuário interage manualmente
-    stopCertificatesAutoplay();
-    
-    currentCertificateIndex += direction;
-    
-    if (currentCertificateIndex < 0) {
-        currentCertificateIndex = 0;
-    } else if (currentCertificateIndex > maxIndex) {
-        currentCertificateIndex = maxIndex;
+  const certificates = getCertificates();
+  const maxIndex = Math.max(0, certificates.length - 1);
+
+  // Parar autoplay quando usuário interage manualmente
+  stopCertificatesAutoplay();
+
+  currentCertificateIndex += direction;
+
+  if (currentCertificateIndex < 0) {
+    currentCertificateIndex = 0;
+  } else if (currentCertificateIndex > maxIndex) {
+    currentCertificateIndex = maxIndex;
+  }
+
+  updateCertificatesCarousel();
+
+  // Reiniciar autoplay após 2 segundos de inatividade
+  setTimeout(() => {
+    if (certificates.length > 1) {
+      startCertificatesAutoplay();
     }
-    
-    updateCertificatesCarousel();
-    
-    // Reiniciar autoplay após 2 segundos de inatividade
-    setTimeout(() => {
-        if (certificates.length > 1) {
-            startCertificatesAutoplay();
-        }
-    }, 2000);
+  }, 2000);
 }
 
 function updateCertificatesCarousel() {
-    const track = document.getElementById('certificatesTrack');
-    if (!track) return;
-    
-    // Calcula offset baseado no container width para centralizar
-    const containerWidth = track.parentElement.offsetWidth;
-    const itemWidth = 600;
-    const offset = (containerWidth / 2) - (itemWidth / 2) - (currentCertificateIndex * (itemWidth + 20));
-    track.style.transform = `translateX(${offset}px)`;
-    
-    // Update button states
-    const prevBtn = document.getElementById('prevBtn');
-    const nextBtn = document.getElementById('nextBtn');
-    const certificates = getCertificates();
-    const maxIndex = Math.max(0, certificates.length - 1);
-    
-    if (prevBtn) {
-        prevBtn.disabled = currentCertificateIndex === 0;
-    }
-    
-    if (nextBtn) {
-        nextBtn.disabled = currentCertificateIndex >= maxIndex;
-    }
+  const track = document.getElementById("certificatesTrack");
+  if (!track) return;
+
+  // Calcula offset baseado no container width para centralizar
+  const containerWidth = track.parentElement.offsetWidth;
+  const itemWidth = 600;
+  const offset =
+    containerWidth / 2 -
+    itemWidth / 2 -
+    currentCertificateIndex * (itemWidth + 20);
+  track.style.transform = `translateX(${offset}px)`;
+
+  // Update button states
+  const prevBtn = document.getElementById("prevBtn");
+  const nextBtn = document.getElementById("nextBtn");
+  const certificates = getCertificates();
+  const maxIndex = Math.max(0, certificates.length - 1);
+
+  if (prevBtn) {
+    prevBtn.disabled = currentCertificateIndex === 0;
+  }
+
+  if (nextBtn) {
+    nextBtn.disabled = currentCertificateIndex >= maxIndex;
+  }
 }
 
 function startCertificatesAutoplay() {
-    // Limpar intervalo existente
-    if (certificatesAutoplayInterval) {
-        clearInterval(certificatesAutoplayInterval);
+  // Limpar intervalo existente
+  if (certificatesAutoplayInterval) {
+    clearInterval(certificatesAutoplayInterval);
+  }
+
+  // Iniciar novo intervalo (troca a cada 4 segundos)
+  certificatesAutoplayInterval = setInterval(() => {
+    const certificates = getCertificates();
+    const maxIndex = Math.max(0, certificates.length - 1);
+
+    currentCertificateIndex++;
+
+    // Voltar ao início quando chegar ao fim
+    if (currentCertificateIndex > maxIndex) {
+      currentCertificateIndex = 0;
     }
-    
-    // Iniciar novo intervalo (troca a cada 4 segundos)
-    certificatesAutoplayInterval = setInterval(() => {
-        const certificates = getCertificates();
-        const maxIndex = Math.max(0, certificates.length - 1);
-        
-        currentCertificateIndex++;
-        
-        // Voltar ao início quando chegar ao fim
-        if (currentCertificateIndex > maxIndex) {
-            currentCertificateIndex = 0;
-        }
-        
-        updateCertificatesCarousel();
-    }, 4000);
+
+    updateCertificatesCarousel();
+  }, 4000);
 }
 
 function stopCertificatesAutoplay() {
-    if (certificatesAutoplayInterval) {
-        clearInterval(certificatesAutoplayInterval);
-        certificatesAutoplayInterval = null;
-    }
+  if (certificatesAutoplayInterval) {
+    clearInterval(certificatesAutoplayInterval);
+    certificatesAutoplayInterval = null;
+  }
 }
-
 
 // ============================================
 // RELATÓRIOS E ANÁLISES
 // ============================================
 
 let reportsCharts = {
-    services: null,
-    revenue: null,
-    bookingsStatus: null,
-    topProducts: null
+  services: null,
+  revenue: null,
+  bookingsStatus: null,
+  topProducts: null,
 };
 
 function loadReports() {
-    const startDate = document.getElementById('reportStartDate').value;
-    const endDate = document.getElementById('reportEndDate').value;
-    
-    // Gerar estatísticas
-    const stats = generateReportStats(startDate, endDate);
-    displayReportStats(stats);
-    
-    // Gerar gráficos
-    generateServicesChart(startDate, endDate);
-    generateRevenueChart(startDate, endDate);
-    generateBookingsStatusChart(startDate, endDate);
-    generateTopProductsChart(startDate, endDate);
-    
-    // Gerar tabela de serviços
-    generateServicesTable(startDate, endDate);
+  const startDate = document.getElementById("reportStartDate").value;
+  const endDate = document.getElementById("reportEndDate").value;
+
+  // Gerar estatísticas
+  const stats = generateReportStats(startDate, endDate);
+  displayReportStats(stats);
+
+  // Gerar gráficos
+  generateServicesChart(startDate, endDate);
+  generateRevenueChart(startDate, endDate);
+  generateBookingsStatusChart(startDate, endDate);
+  generateTopProductsChart(startDate, endDate);
+
+  // Gerar tabela de serviços
+  generateServicesTable(startDate, endDate);
 }
 
 function generateReportStats(startDate, endDate) {
-    const bookings = filterByDateRange(getBookings(), startDate, endDate);
-    const orders = filterByDateRange(getOrders(), startDate, endDate);
-    
-    const totalBookings = bookings.length;
-    const confirmedBookings = bookings.filter(b => b.status === 'Confirmada').length;
-    const completedBookings = bookings.filter(b => b.status === 'Concluída').length;
-    const cancelledBookings = bookings.filter(b => b.status === 'Cancelada').length;
-    
-    const totalOrders = orders.length;
-    const completedOrders = orders.filter(o => o.status === 'Entregue').length;
-    
-    // Calcular receita
-    let bookingsRevenue = 0;
-    bookings.forEach(booking => {
-        if (booking.status === 'Concluída') {
-            if (booking.serviceId) {
-                const service = getServiceById(booking.serviceId);
-                if (service) bookingsRevenue += parseFloat(service.preco) || 0;
-            } else if (booking.workshopId) {
-                const workshop = getWorkshopById(booking.workshopId);
-                if (workshop) bookingsRevenue += parseFloat(workshop.preco) || 0;
-            }
-        }
-    });
-    
-    let ordersRevenue = 0;
-    orders.forEach(order => {
-        if (order.status === 'Entregue') {
-            ordersRevenue += parseFloat(order.total) || 0;
-        }
-    });
-    
-    const totalRevenue = bookingsRevenue + ordersRevenue;
-    
-    return {
-        totalBookings,
-        confirmedBookings,
-        completedBookings,
-        cancelledBookings,
-        totalOrders,
-        completedOrders,
-        bookingsRevenue,
-        ordersRevenue,
-        totalRevenue
-    };
+  const bookings = filterByDateRange(getBookings(), startDate, endDate);
+  const orders = filterByDateRange(getOrders(), startDate, endDate);
+
+  const totalBookings = bookings.length;
+  const confirmedBookings = bookings.filter(
+    (b) => b.status === "Confirmada",
+  ).length;
+  const completedBookings = bookings.filter(
+    (b) => b.status === "Concluída",
+  ).length;
+  const cancelledBookings = bookings.filter(
+    (b) => b.status === "Cancelada",
+  ).length;
+
+  const totalOrders = orders.length;
+  const completedOrders = orders.filter((o) => o.status === "Entregue").length;
+
+  // Calcular receita
+  let bookingsRevenue = 0;
+  bookings.forEach((booking) => {
+    if (booking.status === "Concluída") {
+      if (booking.serviceId) {
+        const service = getServiceById(booking.serviceId);
+        if (service) bookingsRevenue += parseFloat(service.preco) || 0;
+      } else if (booking.workshopId) {
+        const workshop = getWorkshopById(booking.workshopId);
+        if (workshop) bookingsRevenue += parseFloat(workshop.preco) || 0;
+      }
+    }
+  });
+
+  let ordersRevenue = 0;
+  orders.forEach((order) => {
+    if (order.status === "Entregue") {
+      ordersRevenue += parseFloat(order.total) || 0;
+    }
+  });
+
+  const totalRevenue = bookingsRevenue + ordersRevenue;
+
+  return {
+    totalBookings,
+    confirmedBookings,
+    completedBookings,
+    cancelledBookings,
+    totalOrders,
+    completedOrders,
+    bookingsRevenue,
+    ordersRevenue,
+    totalRevenue,
+  };
 }
 
 function displayReportStats(stats) {
-    const statsGrid = document.getElementById('reportStatsGrid');
-    if (!statsGrid) return;
-    
-    statsGrid.innerHTML = `
+  const statsGrid = document.getElementById("reportStatsGrid");
+  if (!statsGrid) return;
+
+  statsGrid.innerHTML = `
         <div class="stat-card">
             <div class="stat-value">${stats.totalBookings}</div>
             <div class="stat-label">Total Marcações</div>
@@ -3249,302 +3472,306 @@ function displayReportStats(stats) {
 }
 
 function filterByDateRange(items, startDate, endDate) {
-    if (!startDate && !endDate) return items;
-    
-    return items.filter(item => {
-        const itemDate = new Date(item.createdAt || item.data);
-        const start = startDate ? new Date(startDate) : new Date('1900-01-01');
-        const end = endDate ? new Date(endDate) : new Date('2100-12-31');
-        
-        return itemDate >= start && itemDate <= end;
-    });
+  if (!startDate && !endDate) return items;
+
+  return items.filter((item) => {
+    const itemDate = new Date(item.createdAt || item.data);
+    const start = startDate ? new Date(startDate) : new Date("1900-01-01");
+    const end = endDate ? new Date(endDate) : new Date("2100-12-31");
+
+    return itemDate >= start && itemDate <= end;
+  });
 }
 
 function generateServicesChart(startDate, endDate) {
-    const bookings = filterByDateRange(getBookings(), startDate, endDate);
-    const services = getServices();
-    
-    const serviceCounts = {};
-    services.forEach(service => {
-        serviceCounts[service.nome] = 0;
-    });
-    
-    bookings.forEach(booking => {
-        if (booking.serviceId) {
-            const service = getServiceById(booking.serviceId);
-            if (service && serviceCounts[service.nome] !== undefined) {
-                serviceCounts[service.nome]++;
-            }
-        }
-    });
-    
-    const labels = Object.keys(serviceCounts);
-    const data = Object.values(serviceCounts);
-    
-    const ctx = document.getElementById('servicesChart');
-    if (!ctx) return;
-    
-    if (reportsCharts.services) {
-        reportsCharts.services.destroy();
+  const bookings = filterByDateRange(getBookings(), startDate, endDate);
+  const services = getServices();
+
+  const serviceCounts = {};
+  services.forEach((service) => {
+    serviceCounts[service.nome] = 0;
+  });
+
+  bookings.forEach((booking) => {
+    if (booking.serviceId) {
+      const service = getServiceById(booking.serviceId);
+      if (service && serviceCounts[service.nome] !== undefined) {
+        serviceCounts[service.nome]++;
+      }
     }
-    
-    reportsCharts.services = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: labels,
-            datasets: [{
-                label: 'Número de Marcações',
-                data: data,
-                backgroundColor: '#c9a227',
-                borderColor: '#c9a227',
-                borderWidth: 1
-            }]
+  });
+
+  const labels = Object.keys(serviceCounts);
+  const data = Object.values(serviceCounts);
+
+  const ctx = document.getElementById("servicesChart");
+  if (!ctx) return;
+
+  if (reportsCharts.services) {
+    reportsCharts.services.destroy();
+  }
+
+  reportsCharts.services = new Chart(ctx, {
+    type: "bar",
+    data: {
+      labels: labels,
+      datasets: [
+        {
+          label: "Número de Marcações",
+          data: data,
+          backgroundColor: "#c9a227",
+          borderColor: "#c9a227",
+          borderWidth: 1,
         },
-        options: {
-            responsive: true,
-            maintainAspectRatio: true,
-            plugins: {
-                legend: {
-                    display: false
-                }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    ticks: {
-                        stepSize: 1
-                    }
-                }
-            }
-        }
-    });
+      ],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      plugins: {
+        legend: {
+          display: false,
+        },
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: {
+            stepSize: 1,
+          },
+        },
+      },
+    },
+  });
 }
 
 function generateRevenueChart(startDate, endDate) {
-    const bookings = filterByDateRange(getBookings(), startDate, endDate);
-    const orders = filterByDateRange(getOrders(), startDate, endDate);
-    
-    // Agrupar por mês
-    const monthlyRevenue = {};
-    
-    bookings.forEach(booking => {
-        if (booking.status === 'Concluída' && booking.createdAt) {
-            const month = booking.createdAt.substring(0, 7); // YYYY-MM
-            if (!monthlyRevenue[month]) monthlyRevenue[month] = 0;
-            
-            if (booking.serviceId) {
-                const service = getServiceById(booking.serviceId);
-                if (service) monthlyRevenue[month] += parseFloat(service.preco) || 0;
-            } else if (booking.workshopId) {
-                const workshop = getWorkshopById(booking.workshopId);
-                if (workshop) monthlyRevenue[month] += parseFloat(workshop.preco) || 0;
-            }
-        }
-    });
-    
-    orders.forEach(order => {
-        if (order.status === 'Entregue' && order.createdAt) {
-            const month = order.createdAt.substring(0, 7);
-            if (!monthlyRevenue[month]) monthlyRevenue[month] = 0;
-            monthlyRevenue[month] += parseFloat(order.total) || 0;
-        }
-    });
-    
-    const labels = Object.keys(monthlyRevenue).sort();
-    const data = labels.map(month => monthlyRevenue[month]);
-    
-    const ctx = document.getElementById('revenueChart');
-    if (!ctx) return;
-    
-    if (reportsCharts.revenue) {
-        reportsCharts.revenue.destroy();
+  const bookings = filterByDateRange(getBookings(), startDate, endDate);
+  const orders = filterByDateRange(getOrders(), startDate, endDate);
+
+  // Agrupar por mês
+  const monthlyRevenue = {};
+
+  bookings.forEach((booking) => {
+    if (booking.status === "Concluída" && booking.createdAt) {
+      const month = booking.createdAt.substring(0, 7); // YYYY-MM
+      if (!monthlyRevenue[month]) monthlyRevenue[month] = 0;
+
+      if (booking.serviceId) {
+        const service = getServiceById(booking.serviceId);
+        if (service) monthlyRevenue[month] += parseFloat(service.preco) || 0;
+      } else if (booking.workshopId) {
+        const workshop = getWorkshopById(booking.workshopId);
+        if (workshop) monthlyRevenue[month] += parseFloat(workshop.preco) || 0;
+      }
     }
-    
-    reportsCharts.revenue = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: labels,
-            datasets: [{
-                label: 'Receita (€)',
-                data: data,
-                backgroundColor: 'rgba(201, 162, 39, 0.2)',
-                borderColor: '#c9a227',
-                borderWidth: 2,
-                tension: 0.4,
-                fill: true
-            }]
+  });
+
+  orders.forEach((order) => {
+    if (order.status === "Entregue" && order.createdAt) {
+      const month = order.createdAt.substring(0, 7);
+      if (!monthlyRevenue[month]) monthlyRevenue[month] = 0;
+      monthlyRevenue[month] += parseFloat(order.total) || 0;
+    }
+  });
+
+  const labels = Object.keys(monthlyRevenue).sort();
+  const data = labels.map((month) => monthlyRevenue[month]);
+
+  const ctx = document.getElementById("revenueChart");
+  if (!ctx) return;
+
+  if (reportsCharts.revenue) {
+    reportsCharts.revenue.destroy();
+  }
+
+  reportsCharts.revenue = new Chart(ctx, {
+    type: "line",
+    data: {
+      labels: labels,
+      datasets: [
+        {
+          label: "Receita (€)",
+          data: data,
+          backgroundColor: "rgba(201, 162, 39, 0.2)",
+          borderColor: "#c9a227",
+          borderWidth: 2,
+          tension: 0.4,
+          fill: true,
         },
-        options: {
-            responsive: true,
-            maintainAspectRatio: true,
-            plugins: {
-                legend: {
-                    display: true
-                }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            }
-        }
-    });
+      ],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      plugins: {
+        legend: {
+          display: true,
+        },
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+        },
+      },
+    },
+  });
 }
 
 function generateBookingsStatusChart(startDate, endDate) {
-    const bookings = filterByDateRange(getBookings(), startDate, endDate);
-    
-    const statusCounts = {
-        'Pendente': 0,
-        'Confirmada': 0,
-        'Concluída': 0,
-        'Cancelada': 0
-    };
-    
-    bookings.forEach(booking => {
-        if (statusCounts[booking.status] !== undefined) {
-            statusCounts[booking.status]++;
-        }
-    });
-    
-    const ctx = document.getElementById('bookingsStatusChart');
-    if (!ctx) return;
-    
-    if (reportsCharts.bookingsStatus) {
-        reportsCharts.bookingsStatus.destroy();
+  const bookings = filterByDateRange(getBookings(), startDate, endDate);
+
+  const statusCounts = {
+    Pendente: 0,
+    Confirmada: 0,
+    Concluída: 0,
+    Cancelada: 0,
+  };
+
+  bookings.forEach((booking) => {
+    if (statusCounts[booking.status] !== undefined) {
+      statusCounts[booking.status]++;
     }
-    
-    reportsCharts.bookingsStatus = new Chart(ctx, {
-        type: 'doughnut',
-        data: {
-            labels: Object.keys(statusCounts),
-            datasets: [{
-                data: Object.values(statusCounts),
-                backgroundColor: [
-                    '#ffc107',
-                    '#4caf50',
-                    '#2196f3',
-                    '#f44336'
-                ]
-            }]
+  });
+
+  const ctx = document.getElementById("bookingsStatusChart");
+  if (!ctx) return;
+
+  if (reportsCharts.bookingsStatus) {
+    reportsCharts.bookingsStatus.destroy();
+  }
+
+  reportsCharts.bookingsStatus = new Chart(ctx, {
+    type: "doughnut",
+    data: {
+      labels: Object.keys(statusCounts),
+      datasets: [
+        {
+          data: Object.values(statusCounts),
+          backgroundColor: ["#ffc107", "#4caf50", "#2196f3", "#f44336"],
         },
-        options: {
-            responsive: true,
-            maintainAspectRatio: true,
-            plugins: {
-                legend: {
-                    position: 'bottom'
-                }
-            }
-        }
-    });
+      ],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      plugins: {
+        legend: {
+          position: "bottom",
+        },
+      },
+    },
+  });
 }
 
 function generateTopProductsChart(startDate, endDate) {
-    const orders = filterByDateRange(getOrders(), startDate, endDate);
-    const products = getProducts();
-    
-    const productSales = {};
-    products.forEach(product => {
-        productSales[product.nome] = 0;
-    });
-    
-    orders.forEach(order => {
-        if (order.items && Array.isArray(order.items)) {
-            order.items.forEach(item => {
-                const product = getProductById(item.productId);
-                if (product && productSales[product.nome] !== undefined) {
-                    productSales[product.nome] += item.quantity || 0;
-                }
-            });
+  const orders = filterByDateRange(getOrders(), startDate, endDate);
+  const products = getProducts();
+
+  const productSales = {};
+  products.forEach((product) => {
+    productSales[product.nome] = 0;
+  });
+
+  orders.forEach((order) => {
+    if (order.items && Array.isArray(order.items)) {
+      order.items.forEach((item) => {
+        const product = getProductById(item.productId);
+        if (product && productSales[product.nome] !== undefined) {
+          productSales[product.nome] += item.quantity || 0;
         }
-    });
-    
-    // Pegar top 5
-    const sorted = Object.entries(productSales)
-        .sort((a, b) => b[1] - a[1])
-        .slice(0, 5);
-    
-    const labels = sorted.map(item => item[0]);
-    const data = sorted.map(item => item[1]);
-    
-    const ctx = document.getElementById('topProductsChart');
-    if (!ctx) return;
-    
-    if (reportsCharts.topProducts) {
-        reportsCharts.topProducts.destroy();
+      });
     }
-    
-    reportsCharts.topProducts = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: labels,
-            datasets: [{
-                label: 'Unidades Vendidas',
-                data: data,
-                backgroundColor: '#c9a227',
-                borderColor: '#c9a227',
-                borderWidth: 1
-            }]
+  });
+
+  // Pegar top 5
+  const sorted = Object.entries(productSales)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 5);
+
+  const labels = sorted.map((item) => item[0]);
+  const data = sorted.map((item) => item[1]);
+
+  const ctx = document.getElementById("topProductsChart");
+  if (!ctx) return;
+
+  if (reportsCharts.topProducts) {
+    reportsCharts.topProducts.destroy();
+  }
+
+  reportsCharts.topProducts = new Chart(ctx, {
+    type: "bar",
+    data: {
+      labels: labels,
+      datasets: [
+        {
+          label: "Unidades Vendidas",
+          data: data,
+          backgroundColor: "#c9a227",
+          borderColor: "#c9a227",
+          borderWidth: 1,
         },
-        options: {
-            responsive: true,
-            maintainAspectRatio: true,
-            indexAxis: 'y',
-            plugins: {
-                legend: {
-                    display: false
-                }
-            },
-            scales: {
-                x: {
-                    beginAtZero: true,
-                    ticks: {
-                        stepSize: 1
-                    }
-                }
-            }
-        }
-    });
+      ],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      indexAxis: "y",
+      plugins: {
+        legend: {
+          display: false,
+        },
+      },
+      scales: {
+        x: {
+          beginAtZero: true,
+          ticks: {
+            stepSize: 1,
+          },
+        },
+      },
+    },
+  });
 }
 
 function generateServicesTable(startDate, endDate) {
-    const bookings = filterByDateRange(getBookings(), startDate, endDate);
-    const services = getServices();
-    
-    const serviceStats = {};
-    services.forEach(service => {
-        serviceStats[service.id] = {
-            nome: service.nome,
-            preco: parseFloat(service.preco) || 0,
-            total: 0,
-            confirmadas: 0,
-            concluidas: 0,
-            canceladas: 0,
-            receita: 0
-        };
-    });
-    
-    bookings.forEach(booking => {
-        if (booking.serviceId && serviceStats[booking.serviceId]) {
-            const stats = serviceStats[booking.serviceId];
-            stats.total++;
-            
-            if (booking.status === 'Confirmada') stats.confirmadas++;
-            if (booking.status === 'Concluída') {
-                stats.concluidas++;
-                stats.receita += stats.preco;
-            }
-            if (booking.status === 'Cancelada') stats.canceladas++;
-        }
-    });
-    
-    const tbody = document.getElementById('servicesReportTable');
-    if (!tbody) return;
-    
-    tbody.innerHTML = Object.values(serviceStats)
-        .sort((a, b) => b.total - a.total)
-        .map(stats => `
+  const bookings = filterByDateRange(getBookings(), startDate, endDate);
+  const services = getServices();
+
+  const serviceStats = {};
+  services.forEach((service) => {
+    serviceStats[service.id] = {
+      nome: service.nome,
+      preco: parseFloat(service.preco) || 0,
+      total: 0,
+      confirmadas: 0,
+      concluidas: 0,
+      canceladas: 0,
+      receita: 0,
+    };
+  });
+
+  bookings.forEach((booking) => {
+    if (booking.serviceId && serviceStats[booking.serviceId]) {
+      const stats = serviceStats[booking.serviceId];
+      stats.total++;
+
+      if (booking.status === "Confirmada") stats.confirmadas++;
+      if (booking.status === "Concluída") {
+        stats.concluidas++;
+        stats.receita += stats.preco;
+      }
+      if (booking.status === "Cancelada") stats.canceladas++;
+    }
+  });
+
+  const tbody = document.getElementById("servicesReportTable");
+  if (!tbody) return;
+
+  tbody.innerHTML = Object.values(serviceStats)
+    .sort((a, b) => b.total - a.total)
+    .map(
+      (stats) => `
             <tr>
                 <td>${stats.nome}</td>
                 <td>${stats.total}</td>
@@ -3553,37 +3780,38 @@ function generateServicesTable(startDate, endDate) {
                 <td>${stats.canceladas}</td>
                 <td>€${stats.receita.toFixed(2)}</td>
             </tr>
-        `).join('');
+        `,
+    )
+    .join("");
 }
 
 // Inicializar datas padrão (últimos 30 dias)
 function initializeReportDates() {
-    const endDate = new Date();
-    const startDate = new Date();
-    startDate.setDate(startDate.getDate() - 30);
-    
-    const startInput = document.getElementById('reportStartDate');
-    const endInput = document.getElementById('reportEndDate');
-    
-    if (startInput) startInput.value = startDate.toISOString().split('T')[0];
-    if (endInput) endInput.value = endDate.toISOString().split('T')[0];
-}
+  const endDate = new Date();
+  const startDate = new Date();
+  startDate.setDate(startDate.getDate() - 30);
 
+  const startInput = document.getElementById("reportStartDate");
+  const endInput = document.getElementById("reportEndDate");
+
+  if (startInput) startInput.value = startDate.toISOString().split("T")[0];
+  if (endInput) endInput.value = endDate.toISOString().split("T")[0];
+}
 
 // ============================================
 // EXPORTAÇÃO DE RELATÓRIOS
 // ============================================
 
 function exportReportPDF() {
-    const startDate = document.getElementById('reportStartDate').value;
-    const endDate = document.getElementById('reportEndDate').value;
-    
-    const stats = generateReportStats(startDate, endDate);
-    const bookings = filterByDateRange(getBookings(), startDate, endDate);
-    const services = getServices();
-    
-    // Gerar conteúdo HTML para PDF
-    const content = `
+  const startDate = document.getElementById("reportStartDate").value;
+  const endDate = document.getElementById("reportEndDate").value;
+
+  const stats = generateReportStats(startDate, endDate);
+  const bookings = filterByDateRange(getBookings(), startDate, endDate);
+  const services = getServices();
+
+  // Gerar conteúdo HTML para PDF
+  const content = `
 <!DOCTYPE html>
 <html>
 <head>
@@ -3669,7 +3897,7 @@ function exportReportPDF() {
     </div>
     
     <div class="period">
-        <strong>Período:</strong> ${startDate || 'Início'} até ${endDate || 'Hoje'}
+        <strong>Período:</strong> ${startDate || "Início"} até ${endDate || "Hoje"}
     </div>
     
     <h2>Estatísticas Gerais</h2>
@@ -3710,61 +3938,65 @@ function exportReportPDF() {
     </table>
     
     <div class="footer">
-        <p>Relatório gerado em ${new Date().toLocaleString('pt-PT')}</p>
+        <p>Relatório gerado em ${new Date().toLocaleString("pt-PT")}</p>
         <p>Yemar Makeup Artist - Maquilhagem Profissional</p>
     </div>
 </body>
 </html>
     `;
-    
-    // Criar blob e download
-    const blob = new Blob([content], { type: 'text/html' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `relatorio_${startDate || 'inicio'}_${endDate || 'hoje'}.html`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-    
-    showToast('Relatório HTML gerado! Abra o arquivo e use "Imprimir > Salvar como PDF" no navegador.', 'success');
+
+  // Criar blob e download
+  const blob = new Blob([content], { type: "text/html" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `relatorio_${startDate || "inicio"}_${endDate || "hoje"}.html`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+
+  showToast(
+    'Relatório HTML gerado! Abra o arquivo e use "Imprimir > Salvar como PDF" no navegador.',
+    "success",
+  );
 }
 
 function generateServicesTableHTML(startDate, endDate) {
-    const bookings = filterByDateRange(getBookings(), startDate, endDate);
-    const services = getServices();
-    
-    const serviceStats = {};
-    services.forEach(service => {
-        serviceStats[service.id] = {
-            nome: service.nome,
-            preco: parseFloat(service.preco) || 0,
-            total: 0,
-            confirmadas: 0,
-            concluidas: 0,
-            canceladas: 0,
-            receita: 0
-        };
-    });
-    
-    bookings.forEach(booking => {
-        if (booking.serviceId && serviceStats[booking.serviceId]) {
-            const stats = serviceStats[booking.serviceId];
-            stats.total++;
-            
-            if (booking.status === 'Confirmada') stats.confirmadas++;
-            if (booking.status === 'Concluída') {
-                stats.concluidas++;
-                stats.receita += stats.preco;
-            }
-            if (booking.status === 'Cancelada') stats.canceladas++;
-        }
-    });
-    
-    return Object.values(serviceStats)
-        .sort((a, b) => b.total - a.total)
-        .map(stats => `
+  const bookings = filterByDateRange(getBookings(), startDate, endDate);
+  const services = getServices();
+
+  const serviceStats = {};
+  services.forEach((service) => {
+    serviceStats[service.id] = {
+      nome: service.nome,
+      preco: parseFloat(service.preco) || 0,
+      total: 0,
+      confirmadas: 0,
+      concluidas: 0,
+      canceladas: 0,
+      receita: 0,
+    };
+  });
+
+  bookings.forEach((booking) => {
+    if (booking.serviceId && serviceStats[booking.serviceId]) {
+      const stats = serviceStats[booking.serviceId];
+      stats.total++;
+
+      if (booking.status === "Confirmada") stats.confirmadas++;
+      if (booking.status === "Concluída") {
+        stats.concluidas++;
+        stats.receita += stats.preco;
+      }
+      if (booking.status === "Cancelada") stats.canceladas++;
+    }
+  });
+
+  return Object.values(serviceStats)
+    .sort((a, b) => b.total - a.total)
+    .map(
+      (stats) => `
             <tr>
                 <td>${stats.nome}</td>
                 <td>${stats.total}</td>
@@ -3773,81 +4005,87 @@ function generateServicesTableHTML(startDate, endDate) {
                 <td>${stats.canceladas}</td>
                 <td>€${stats.receita.toFixed(2)}</td>
             </tr>
-        `).join('');
+        `,
+    )
+    .join("");
 }
 
 function exportReportExcel() {
-    const startDate = document.getElementById('reportStartDate').value;
-    const endDate = document.getElementById('reportEndDate').value;
-    
-    const stats = generateReportStats(startDate, endDate);
-    const bookings = filterByDateRange(getBookings(), startDate, endDate);
-    const services = getServices();
-    
-    // Gerar conteúdo CSV
-    let csv = 'RELATÓRIO DE DESEMPENHO - YEMAR MAKEUP ARTIST\n';
-    csv += `Período: ${startDate || 'Início'} até ${endDate || 'Hoje'}\n`;
-    csv += `Gerado em: ${new Date().toLocaleString('pt-PT')}\n\n`;
-    
-    csv += 'ESTATÍSTICAS GERAIS\n';
-    csv += 'Métrica,Valor\n';
-    csv += `Total Marcações,${stats.totalBookings}\n`;
-    csv += `Marcações Confirmadas,${stats.confirmedBookings}\n`;
-    csv += `Marcações Concluídas,${stats.completedBookings}\n`;
-    csv += `Marcações Canceladas,${stats.cancelledBookings}\n`;
-    csv += `Total Encomendas,${stats.totalOrders}\n`;
-    csv += `Encomendas Entregues,${stats.completedOrders}\n`;
-    csv += `Receita Marcações,€${stats.bookingsRevenue.toFixed(2)}\n`;
-    csv += `Receita Encomendas,€${stats.ordersRevenue.toFixed(2)}\n`;
-    csv += `Receita Total,€${stats.totalRevenue.toFixed(2)}\n\n`;
-    
-    csv += 'DETALHAMENTO DE SERVIÇOS\n';
-    csv += 'Serviço,Total Marcações,Confirmadas,Concluídas,Canceladas,Receita Total\n';
-    
-    const serviceStats = {};
-    services.forEach(service => {
-        serviceStats[service.id] = {
-            nome: service.nome,
-            preco: parseFloat(service.preco) || 0,
-            total: 0,
-            confirmadas: 0,
-            concluidas: 0,
-            canceladas: 0,
-            receita: 0
-        };
+  const startDate = document.getElementById("reportStartDate").value;
+  const endDate = document.getElementById("reportEndDate").value;
+
+  const stats = generateReportStats(startDate, endDate);
+  const bookings = filterByDateRange(getBookings(), startDate, endDate);
+  const services = getServices();
+
+  // Gerar conteúdo CSV
+  let csv = "RELATÓRIO DE DESEMPENHO - YEMAR MAKEUP ARTIST\n";
+  csv += `Período: ${startDate || "Início"} até ${endDate || "Hoje"}\n`;
+  csv += `Gerado em: ${new Date().toLocaleString("pt-PT")}\n\n`;
+
+  csv += "ESTATÍSTICAS GERAIS\n";
+  csv += "Métrica,Valor\n";
+  csv += `Total Marcações,${stats.totalBookings}\n`;
+  csv += `Marcações Confirmadas,${stats.confirmedBookings}\n`;
+  csv += `Marcações Concluídas,${stats.completedBookings}\n`;
+  csv += `Marcações Canceladas,${stats.cancelledBookings}\n`;
+  csv += `Total Encomendas,${stats.totalOrders}\n`;
+  csv += `Encomendas Entregues,${stats.completedOrders}\n`;
+  csv += `Receita Marcações,€${stats.bookingsRevenue.toFixed(2)}\n`;
+  csv += `Receita Encomendas,€${stats.ordersRevenue.toFixed(2)}\n`;
+  csv += `Receita Total,€${stats.totalRevenue.toFixed(2)}\n\n`;
+
+  csv += "DETALHAMENTO DE SERVIÇOS\n";
+  csv +=
+    "Serviço,Total Marcações,Confirmadas,Concluídas,Canceladas,Receita Total\n";
+
+  const serviceStats = {};
+  services.forEach((service) => {
+    serviceStats[service.id] = {
+      nome: service.nome,
+      preco: parseFloat(service.preco) || 0,
+      total: 0,
+      confirmadas: 0,
+      concluidas: 0,
+      canceladas: 0,
+      receita: 0,
+    };
+  });
+
+  bookings.forEach((booking) => {
+    if (booking.serviceId && serviceStats[booking.serviceId]) {
+      const s = serviceStats[booking.serviceId];
+      s.total++;
+      if (booking.status === "Confirmada") s.confirmadas++;
+      if (booking.status === "Concluída") {
+        s.concluidas++;
+        s.receita += s.preco;
+      }
+      if (booking.status === "Cancelada") s.canceladas++;
+    }
+  });
+
+  Object.values(serviceStats)
+    .sort((a, b) => b.total - a.total)
+    .forEach((s) => {
+      csv += `${s.nome},${s.total},${s.confirmadas},${s.concluidas},${s.canceladas},€${s.receita.toFixed(2)}\n`;
     });
-    
-    bookings.forEach(booking => {
-        if (booking.serviceId && serviceStats[booking.serviceId]) {
-            const s = serviceStats[booking.serviceId];
-            s.total++;
-            if (booking.status === 'Confirmada') s.confirmadas++;
-            if (booking.status === 'Concluída') {
-                s.concluidas++;
-                s.receita += s.preco;
-            }
-            if (booking.status === 'Cancelada') s.canceladas++;
-        }
-    });
-    
-    Object.values(serviceStats)
-        .sort((a, b) => b.total - a.total)
-        .forEach(s => {
-            csv += `${s.nome},${s.total},${s.confirmadas},${s.concluidas},${s.canceladas},€${s.receita.toFixed(2)}\n`;
-        });
-    
-    // Criar blob e download
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `relatorio_${startDate || 'inicio'}_${endDate || 'hoje'}.csv`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-    
-    showToast('Relatório CSV exportado! Abra com Excel ou Google Sheets.', 'success');
+
+  // Criar blob e download
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `relatorio_${startDate || "inicio"}_${endDate || "hoje"}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+
+  showToast(
+    "Relatório CSV exportado! Abra com Excel ou Google Sheets.",
+    "success",
+  );
 }
 
 // ============================================
@@ -3858,19 +4096,19 @@ function exportReportExcel() {
  * Editar marcação
  */
 function adminEditBooking(bookingId) {
-    const booking = getBookingById(bookingId);
-    if (!booking) {
-        showToast('Marcação não encontrada', 'error');
-        return;
-    }
-    
-    const user = getUserById(booking.userId);
-    
-    const content = `
+  const booking = getBookingById(bookingId);
+  if (!booking) {
+    showToast("Marcação não encontrada", "error");
+    return;
+  }
+
+  const user = getUserById(booking.userId);
+
+  const content = `
         <form id="editBookingForm" onsubmit="saveEditedBooking(event, '${bookingId}')">
             <div class="form-group">
                 <label>Cliente</label>
-                <input type="text" value="${user ? user.nome : 'N/A'}" disabled>
+                <input type="text" value="${user ? user.nome : "N/A"}" disabled>
             </div>
             
             <div class="form-group">
@@ -3890,128 +4128,130 @@ function adminEditBooking(bookingId) {
             
             <div class="form-group">
                 <label for="editObservacoes">Observações</label>
-                <textarea id="editObservacoes" name="observacoes" rows="3">${booking.observacoes || ''}</textarea>
+                <textarea id="editObservacoes" name="observacoes" rows="3">${booking.observacoes || ""}</textarea>
             </div>
             
             <div class="form-group">
                 <label for="editStatus">Estado *</label>
                 <select id="editStatus" name="status" required>
-                    <option value="Pendente" ${booking.status === 'Pendente' ? 'selected' : ''}>Pendente</option>
-                    <option value="Confirmada" ${booking.status === 'Confirmada' ? 'selected' : ''}>Confirmada</option>
-                    <option value="Concluída" ${booking.status === 'Concluída' ? 'selected' : ''}>Concluída</option>
-                    <option value="Cancelada" ${booking.status === 'Cancelada' ? 'selected' : ''}>Cancelada</option>
+                    <option value="Pendente" ${booking.status === "Pendente" ? "selected" : ""}>Pendente</option>
+                    <option value="Confirmada" ${booking.status === "Confirmada" ? "selected" : ""}>Confirmada</option>
+                    <option value="Concluída" ${booking.status === "Concluída" ? "selected" : ""}>Concluída</option>
+                    <option value="Cancelada" ${booking.status === "Cancelada" ? "selected" : ""}>Cancelada</option>
                 </select>
             </div>
             
             <button type="submit" class="btn btn-primary btn-block">Guardar Alterações</button>
         </form>
     `;
-    
-    openModal('Editar Marcação', content);
+
+  openModal("Editar Marcação", content);
 }
 
 /**
  * Salvar marcação editada
  */
 function saveEditedBooking(event, bookingId) {
-    event.preventDefault();
-    
-    const form = event.target;
-    const dataHora = form.dataHora.value;
-    const observacoes = form.observacoes.value;
-    const status = form.status.value;
-    
-    // Atualizar marcação
-    const bookings = getBookings();
-    const index = bookings.findIndex(b => b.id === bookingId);
-    
-    if (index === -1) {
-        showToast('Erro ao atualizar marcação', 'error');
-        return;
-    }
-    
-    bookings[index] = {
-        ...bookings[index],
-        dataHoraOuPreferencia: formatDateTimeForDisplay(dataHora),
-        observacoes: observacoes,
-        status: status
-    };
-    
-    localStorage.setItem('bookings', JSON.stringify(bookings));
-    
-    showToast('Marcação atualizada com sucesso!', 'success');
-    closeModal();
-    loadAdminBookings();
+  event.preventDefault();
+
+  const form = event.target;
+  const dataHora = form.dataHora.value;
+  const observacoes = form.observacoes.value;
+  const status = form.status.value;
+
+  // Atualizar marcação
+  const bookings = getBookings();
+  const index = bookings.findIndex((b) => b.id === bookingId);
+
+  if (index === -1) {
+    showToast("Erro ao atualizar marcação", "error");
+    return;
+  }
+
+  bookings[index] = {
+    ...bookings[index],
+    dataHoraOuPreferencia: formatDateTimeForDisplay(dataHora),
+    observacoes: observacoes,
+    status: status,
+  };
+
+  localStorage.setItem("bookings", JSON.stringify(bookings));
+
+  showToast("Marcação atualizada com sucesso!", "success");
+  closeModal();
+  loadAdminBookings();
 }
 
 /**
  * Converter data para formato datetime-local
  */
 function convertToDateTimeLocal(dateString) {
-    if (!dateString) return '';
-    
-    // Tentar parsear diferentes formatos
-    try {
-        // Formato: "15/01/2025 às 14:00"
-        const match = dateString.match(/(\d{2})\/(\d{2})\/(\d{4})\s+às\s+(\d{2}):(\d{2})/);
-        if (match) {
-            const [_, day, month, year, hour, minute] = match;
-            return `${year}-${month}-${day}T${hour}:${minute}`;
-        }
-        
-        // Formato ISO
-        const date = new Date(dateString);
-        if (!isNaN(date.getTime())) {
-            const year = date.getFullYear();
-            const month = String(date.getMonth() + 1).padStart(2, '0');
-            const day = String(date.getDate()).padStart(2, '0');
-            const hours = String(date.getHours()).padStart(2, '0');
-            const minutes = String(date.getMinutes()).padStart(2, '0');
-            return `${year}-${month}-${day}T${hours}:${minutes}`;
-        }
-    } catch (e) {
-        console.error('Erro ao converter data:', e);
+  if (!dateString) return "";
+
+  // Tentar parsear diferentes formatos
+  try {
+    // Formato: "15/01/2025 às 14:00"
+    const match = dateString.match(
+      /(\d{2})\/(\d{2})\/(\d{4})\s+às\s+(\d{2}):(\d{2})/,
+    );
+    if (match) {
+      const [_, day, month, year, hour, minute] = match;
+      return `${year}-${month}-${day}T${hour}:${minute}`;
     }
-    
-    return '';
+
+    // Formato ISO
+    const date = new Date(dateString);
+    if (!isNaN(date.getTime())) {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+      const hours = String(date.getHours()).padStart(2, "0");
+      const minutes = String(date.getMinutes()).padStart(2, "0");
+      return `${year}-${month}-${day}T${hours}:${minutes}`;
+    }
+  } catch (e) {
+    console.error("Erro ao converter data:", e);
+  }
+
+  return "";
 }
 
 /**
  * Formatar datetime-local para exibição
  */
 function formatDateTimeForDisplay(dateTimeLocal) {
-    if (!dateTimeLocal) return '';
-    
-    const date = new Date(dateTimeLocal);
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const year = date.getFullYear();
-    const hours = String(date.getHours()).padStart(2, '0');
-    const minutes = String(date.getMinutes()).padStart(2, '0');
-    
-    return `${day}/${month}/${year} às ${hours}:${minutes}`;
+  if (!dateTimeLocal) return "";
+
+  const date = new Date(dateTimeLocal);
+  const day = String(date.getDate()).padStart(2, "0");
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const year = date.getFullYear();
+  const hours = String(date.getHours()).padStart(2, "0");
+  const minutes = String(date.getMinutes()).padStart(2, "0");
+
+  return `${day}/${month}/${year} às ${hours}:${minutes}`;
 }
 
 /**
  * Enviar mensagem WhatsApp ao cliente
  */
 function adminSendWhatsAppToClient(bookingId) {
-    const booking = getBookingById(bookingId);
-    if (!booking) {
-        showToast('Marcação não encontrada', 'error');
-        return;
-    }
-    
-    const user = getUserById(booking.userId);
-    if (!user) {
-        showToast('Cliente não encontrado', 'error');
-        return;
-    }
-    
-    const settings = getSiteSettings();
-    
-    // Mensagem padrão personalizável
-    const content = `
+  const booking = getBookingById(bookingId);
+  if (!booking) {
+    showToast("Marcação não encontrada", "error");
+    return;
+  }
+
+  const user = getUserById(booking.userId);
+  if (!user) {
+    showToast("Cliente não encontrado", "error");
+    return;
+  }
+
+  const settings = getSiteSettings();
+
+  // Mensagem padrão personalizável
+  const content = `
         <form id="whatsappClientForm" onsubmit="sendWhatsAppToClient(event, '${bookingId}')">
             <div class="form-group">
                 <label>Cliente</label>
@@ -4020,7 +4260,7 @@ function adminSendWhatsAppToClient(bookingId) {
             
             <div class="form-group">
                 <label>Telefone do Cliente</label>
-                <input type="text" id="clientPhone" value="${user.telefone || ''}" placeholder="Ex: 351912345678">
+                <input type="text" id="clientPhone" value="${user.telefone || ""}" placeholder="Ex: 351912345678">
                 <small>Formato: código do país + número (sem espaços ou símbolos)</small>
             </div>
             
@@ -4033,67 +4273,67 @@ function adminSendWhatsAppToClient(bookingId) {
             <button type="submit" class="btn btn-primary btn-block">📱 Abrir WhatsApp</button>
         </form>
     `;
-    
-    openModal('Enviar Mensagem ao Cliente', content);
+
+  openModal("Enviar Mensagem ao Cliente", content);
 }
 
 /**
  * Template de mensagem WhatsApp para cliente
  */
 function getClientWhatsAppTemplate(booking, user) {
-    const settings = getSiteSettings();
-    const statusMessages = {
-        'Pendente': 'Recebemos a sua marcação e estamos a processar o seu pedido.',
-        'Confirmada': 'A sua marcação foi confirmada! Aguardamos por si.',
-        'Concluída': 'Obrigado por escolher os nossos serviços!',
-        'Cancelada': 'A sua marcação foi cancelada conforme solicitado.'
-    };
-    
-    return `Olá ${user.nome}! 👋
+  const settings = getSiteSettings();
+  const statusMessages = {
+    Pendente: "Recebemos a sua marcação e estamos a processar o seu pedido.",
+    Confirmada: "A sua marcação foi confirmada! Aguardamos por si.",
+    Concluída: "Obrigado por escolher os nossos serviços!",
+    Cancelada: "A sua marcação foi cancelada conforme solicitado.",
+  };
 
-${statusMessages[booking.status] || 'Informação sobre a sua marcação:'}
+  return `Olá ${user.nome}! 👋
+
+${statusMessages[booking.status] || "Informação sobre a sua marcação:"}
 
 *Detalhes da Marcação:*
 📅 Serviço: ${booking.itemTitulo}
-📆 Data/Hora: ${booking.dataHoraOuPreferencia || 'A confirmar'}
+📆 Data/Hora: ${booking.dataHoraOuPreferencia || "A confirmar"}
 📍 Estado: ${booking.status}
 
-${booking.observacoes ? `📝 Observações: ${booking.observacoes}\n\n` : ''}${booking.status === 'Confirmada' ? 'Por favor, chegue 10 minutos antes do horário marcado.\n\n' : ''}Qualquer dúvida, estamos à disposição!
+${booking.observacoes ? `📝 Observações: ${booking.observacoes}\n\n` : ""}${booking.status === "Confirmada" ? "Por favor, chegue 10 minutos antes do horário marcado.\n\n" : ""}Qualquer dúvida, estamos à disposição!
 
-_${settings.tagline || 'Yemar Makeup Artist'}_`;
+_${settings.tagline || "Yemar Makeup Artist"}_`;
 }
 
 /**
  * Enviar WhatsApp ao cliente
  */
 function sendWhatsAppToClient(event, bookingId) {
-    event.preventDefault();
-    
-    const form = event.target;
-    const phone = form.querySelector('#clientPhone').value.trim();
-    const message = form.querySelector('#whatsappMessage').value.trim();
-    
-    if (!phone) {
-        showToast('Por favor, insira o telefone do cliente', 'error');
-        return;
-    }
-    
-    if (!message) {
-        showToast('Por favor, escreva uma mensagem', 'error');
-        return;
-    }
-    
-    // Limpar telefone (remover espaços, parênteses, hífens)
-    const cleanPhone = phone.replace(/[\s\-\(\)]/g, '');
-    
-    // Criar URL do WhatsApp
-    const whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`;
-    
-    // Abrir WhatsApp
-    window.open(whatsappUrl, '_blank');
-    
-    showToast('WhatsApp aberto! Envie a mensagem.', 'success');
-    closeModal();
+  event.preventDefault();
+
+  const form = event.target;
+  const phone = form.querySelector("#clientPhone").value.trim();
+  const message = form.querySelector("#whatsappMessage").value.trim();
+
+  if (!phone) {
+    showToast("Por favor, insira o telefone do cliente", "error");
+    return;
+  }
+
+  if (!message) {
+    showToast("Por favor, escreva uma mensagem", "error");
+    return;
+  }
+
+  // Limpar telefone (remover espaços, parênteses, hífens)
+  const cleanPhone = phone.replace(/[\s\-\(\)]/g, "");
+
+  // Criar URL do WhatsApp
+  const whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`;
+
+  // Abrir WhatsApp
+  window.open(whatsappUrl, "_blank");
+
+  showToast("WhatsApp aberto! Envie a mensagem.", "success");
+  closeModal();
 }
 
 /**
@@ -4101,172 +4341,184 @@ function sendWhatsAppToClient(event, bookingId) {
  */
 
 function loadFormacaoList() {
-    const settings = getSiteSettings();
-    const formacaoList = document.getElementById('formacaoList');
-    if (!formacaoList) return;
-    
-    const formacoes = settings.formacaoAcademica || [];
-    
-    if (formacoes.length === 0) {
-        formacaoList.innerHTML = '<p style="color: #999; font-size: 0.9rem;">Nenhuma formação adicionada</p>';
-        return;
-    }
-    
-    formacaoList.innerHTML = formacoes.map((formacao, index) => `
+  const settings = getSiteSettings();
+  const formacaoList = document.getElementById("formacaoList");
+  if (!formacaoList) return;
+
+  const formacoes = settings.formacaoAcademica || [];
+
+  if (formacoes.length === 0) {
+    formacaoList.innerHTML =
+      '<p style="color: #999; font-size: 0.9rem;">Nenhuma formação adicionada</p>';
+    return;
+  }
+
+  formacaoList.innerHTML = formacoes
+    .map(
+      (formacao, index) => `
         <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; background: #f9f9f9; border-radius: 4px; margin-bottom: 0.5rem;">
             <span style="font-size: 0.9rem;">${formacao}</span>
             <button class="btn btn-sm btn-outline" onclick="removeFormacao(${index})" style="padding: 0.25rem 0.5rem;">✕</button>
         </div>
-    `).join('');
+    `,
+    )
+    .join("");
 }
 
 function addFormacao() {
-    const input = document.getElementById('newFormacao');
-    const value = input.value.trim();
-    
-    if (!value) {
-        showToast('Por favor, insira a formação', 'error');
-        return;
-    }
-    
-    const settings = getSiteSettings();
-    if (!settings.formacaoAcademica) {
-        settings.formacaoAcademica = [];
-    }
-    
-    settings.formacaoAcademica.push(value);
-    setData('siteSettings', settings);
-    
-    input.value = '';
-    loadFormacaoList();
-    showToast('Formação adicionada com sucesso!', 'success');
+  const input = document.getElementById("newFormacao");
+  const value = input.value.trim();
+
+  if (!value) {
+    showToast("Por favor, insira a formação", "error");
+    return;
+  }
+
+  const settings = getSiteSettings();
+  if (!settings.formacaoAcademica) {
+    settings.formacaoAcademica = [];
+  }
+
+  settings.formacaoAcademica.push(value);
+  setData("siteSettings", settings);
+
+  input.value = "";
+  loadFormacaoList();
+  showToast("Formação adicionada com sucesso!", "success");
 }
 
 function removeFormacao(index) {
-    if (!confirm('Deseja remover esta formação?')) return;
-    
-    const settings = getSiteSettings();
-    settings.formacaoAcademica.splice(index, 1);
-    setData('siteSettings', settings);
-    
-    loadFormacaoList();
-    showToast('Formação removida com sucesso!', 'success');
+  if (!confirm("Deseja remover esta formação?")) return;
+
+  const settings = getSiteSettings();
+  settings.formacaoAcademica.splice(index, 1);
+  setData("siteSettings", settings);
+
+  loadFormacaoList();
+  showToast("Formação removida com sucesso!", "success");
 }
 
 function loadCertificacaoList() {
-    const settings = getSiteSettings();
-    const certificacaoList = document.getElementById('certificacaoList');
-    if (!certificacaoList) return;
-    
-    const certificacoes = settings.certificacoesTextuais || [];
-    
-    if (certificacoes.length === 0) {
-        certificacaoList.innerHTML = '<p style="color: #999; font-size: 0.9rem;">Nenhuma certificação adicionada</p>';
-        return;
-    }
-    
-    certificacaoList.innerHTML = certificacoes.map((cert, index) => `
+  const settings = getSiteSettings();
+  const certificacaoList = document.getElementById("certificacaoList");
+  if (!certificacaoList) return;
+
+  const certificacoes = settings.certificacoesTextuais || [];
+
+  if (certificacoes.length === 0) {
+    certificacaoList.innerHTML =
+      '<p style="color: #999; font-size: 0.9rem;">Nenhuma certificação adicionada</p>';
+    return;
+  }
+
+  certificacaoList.innerHTML = certificacoes
+    .map(
+      (cert, index) => `
         <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; background: #f9f9f9; border-radius: 4px; margin-bottom: 0.5rem;">
             <span style="font-size: 0.9rem;">${cert}</span>
             <button class="btn btn-sm btn-outline" onclick="removeCertificacao(${index})" style="padding: 0.25rem 0.5rem;">✕</button>
         </div>
-    `).join('');
+    `,
+    )
+    .join("");
 }
 
 function addCertificacao() {
-    const input = document.getElementById('newCertificacao');
-    const value = input.value.trim();
-    
-    if (!value) {
-        showToast('Por favor, insira a certificação', 'error');
-        return;
-    }
-    
-    const settings = getSiteSettings();
-    if (!settings.certificacoesTextuais) {
-        settings.certificacoesTextuais = [];
-    }
-    
-    settings.certificacoesTextuais.push(value);
-    setData('siteSettings', settings);
-    
-    input.value = '';
-    loadCertificacaoList();
-    showToast('Certificação adicionada com sucesso!', 'success');
+  const input = document.getElementById("newCertificacao");
+  const value = input.value.trim();
+
+  if (!value) {
+    showToast("Por favor, insira a certificação", "error");
+    return;
+  }
+
+  const settings = getSiteSettings();
+  if (!settings.certificacoesTextuais) {
+    settings.certificacoesTextuais = [];
+  }
+
+  settings.certificacoesTextuais.push(value);
+  setData("siteSettings", settings);
+
+  input.value = "";
+  loadCertificacaoList();
+  showToast("Certificação adicionada com sucesso!", "success");
 }
 
 function removeCertificacao(index) {
-    if (!confirm('Deseja remover esta certificação?')) return;
-    
-    const settings = getSiteSettings();
-    settings.certificacoesTextuais.splice(index, 1);
-    setData('siteSettings', settings);
-    
-    loadCertificacaoList();
-    showToast('Certificação removida com sucesso!', 'success');
+  if (!confirm("Deseja remover esta certificação?")) return;
+
+  const settings = getSiteSettings();
+  settings.certificacoesTextuais.splice(index, 1);
+  setData("siteSettings", settings);
+
+  loadCertificacaoList();
+  showToast("Certificação removida com sucesso!", "success");
 }
 
 /**
  * Carregar formação e certificações na página Sobre
  */
 function loadFormacaoSobrePage() {
-    const list = document.getElementById('formacaoAcademicaList');
-    if (!list) return;
-    
-    const settings = getSiteSettings();
-    const formacoes = settings.formacaoAcademica || [];
-    
-    if (formacoes.length === 0) {
-        list.innerHTML = '<li>Informação em breve</li>';
-        return;
-    }
-    
-    list.innerHTML = formacoes.map(f => `<li>${f}</li>`).join('');
+  const list = document.getElementById("formacaoAcademicaList");
+  if (!list) return;
+
+  const settings = getSiteSettings();
+  const formacoes = settings.formacaoAcademica || [];
+
+  if (formacoes.length === 0) {
+    list.innerHTML = "<li>Informação em breve</li>";
+    return;
+  }
+
+  list.innerHTML = formacoes.map((f) => `<li>${f}</li>`).join("");
 }
 
 function loadCertificacoesSobrePage() {
-    const list = document.getElementById('certificacoesTextuaisList');
-    if (!list) return;
-    
-    const settings = getSiteSettings();
-    const certificacoes = settings.certificacoesTextuais || [];
-    
-    if (certificacoes.length === 0) {
-        list.innerHTML = '<li>Informação em breve</li>';
-        return;
-    }
-    
-    list.innerHTML = certificacoes.map(c => `<li>${c}</li>`).join('');
-}
+  const list = document.getElementById("certificacoesTextuaisList");
+  if (!list) return;
 
+  const settings = getSiteSettings();
+  const certificacoes = settings.certificacoesTextuais || [];
+
+  if (certificacoes.length === 0) {
+    list.innerHTML = "<li>Informação em breve</li>";
+    return;
+  }
+
+  list.innerHTML = certificacoes.map((c) => `<li>${c}</li>`).join("");
+}
 
 // ============================================
 // ADMIN - IMAGES MANAGEMENT SECTION
 // ============================================
 
 function loadImagesSection() {
-    loadImagesServices();
-    loadImagesWorkshops();
-    loadImagesPosts();
-    loadImagesTrend();
-    loadImagesBride();
-    loadImagesMistakes();
-    loadImagesBrushes();
-    loadImagesProducts();
-    loadImagesEvents();
+  loadImagesServices();
+  loadImagesWorkshops();
+  loadImagesPosts();
+  loadImagesTrend();
+  loadImagesBride();
+  loadImagesMistakes();
+  loadImagesBrushes();
+  loadImagesProducts();
+  loadImagesEvents();
 }
 
 function loadImagesServices() {
-    const services = getActiveServices();
-    const grid = document.getElementById('imagesServicesGrid');
-    if (!grid) return;
-    
-    if (services.length === 0) {
-        grid.innerHTML = '<p style="color: #666; text-align: center; padding: 20px;">Nenhum serviço cadastrado.</p>';
-        return;
-    }
-    
-    grid.innerHTML = services.map(service => `
+  const services = getActiveServices();
+  const grid = document.getElementById("imagesServicesGrid");
+  if (!grid) return;
+
+  if (services.length === 0) {
+    grid.innerHTML =
+      '<p style="color: #666; text-align: center; padding: 20px;">Nenhum serviço cadastrado.</p>';
+    return;
+  }
+
+  grid.innerHTML = services
+    .map(
+      (service) => `
         <div class="admin-image-preview-card">
             <img src="${service.imagemUrl}" alt="${service.nome}" onerror="this.src='https://via.placeholder.com/300x180?text=Sem+Imagem'">
             <div class="admin-image-preview-info">
@@ -4277,20 +4529,25 @@ function loadImagesServices() {
                 </div>
             </div>
         </div>
-    `).join('');
+    `,
+    )
+    .join("");
 }
 
 function loadImagesWorkshops() {
-    const workshops = getActiveWorkshops();
-    const grid = document.getElementById('imagesWorkshopsGrid');
-    if (!grid) return;
-    
-    if (workshops.length === 0) {
-        grid.innerHTML = '<p style="color: #666; text-align: center; padding: 20px;">Nenhum workshop cadastrado.</p>';
-        return;
-    }
-    
-    grid.innerHTML = workshops.map(workshop => `
+  const workshops = getActiveWorkshops();
+  const grid = document.getElementById("imagesWorkshopsGrid");
+  if (!grid) return;
+
+  if (workshops.length === 0) {
+    grid.innerHTML =
+      '<p style="color: #666; text-align: center; padding: 20px;">Nenhum workshop cadastrado.</p>';
+    return;
+  }
+
+  grid.innerHTML = workshops
+    .map(
+      (workshop) => `
         <div class="admin-image-preview-card">
             <img src="${workshop.imagemUrl}" alt="${workshop.nome}" onerror="this.src='https://via.placeholder.com/300x180?text=Sem+Imagem'">
             <div class="admin-image-preview-info">
@@ -4301,20 +4558,25 @@ function loadImagesWorkshops() {
                 </div>
             </div>
         </div>
-    `).join('');
+    `,
+    )
+    .join("");
 }
 
 function loadImagesPosts() {
-    const posts = getActivePosts();
-    const grid = document.getElementById('imagesPostsGrid');
-    if (!grid) return;
-    
-    if (posts.length === 0) {
-        grid.innerHTML = '<p style="color: #666; text-align: center; padding: 20px;">Nenhum post cadastrado.</p>';
-        return;
-    }
-    
-    grid.innerHTML = posts.map(post => `
+  const posts = getActivePosts();
+  const grid = document.getElementById("imagesPostsGrid");
+  if (!grid) return;
+
+  if (posts.length === 0) {
+    grid.innerHTML =
+      '<p style="color: #666; text-align: center; padding: 20px;">Nenhum post cadastrado.</p>';
+    return;
+  }
+
+  grid.innerHTML = posts
+    .map(
+      (post) => `
         <div class="admin-image-preview-card">
             <img src="${post.imagemUrl}" alt="${post.titulo}" onerror="this.src='https://via.placeholder.com/300x180?text=Sem+Imagem'">
             <div class="admin-image-preview-info">
@@ -4325,20 +4587,25 @@ function loadImagesPosts() {
                 </div>
             </div>
         </div>
-    `).join('');
+    `,
+    )
+    .join("");
 }
 
 function loadImagesTrend() {
-    const posts = getActivePosts().filter(p => p.categoria === 'Tendências');
-    const grid = document.getElementById('imagesTrendGrid');
-    if (!grid) return;
-    
-    if (posts.length === 0) {
-        grid.innerHTML = '<p style="color: #666; text-align: center; padding: 20px;">Nenhum post com categoria "Tendências" encontrado.</p>';
-        return;
-    }
-    
-    grid.innerHTML = posts.map(post => `
+  const posts = getActivePosts().filter((p) => p.categoria === "Tendências");
+  const grid = document.getElementById("imagesTrendGrid");
+  if (!grid) return;
+
+  if (posts.length === 0) {
+    grid.innerHTML =
+      '<p style="color: #666; text-align: center; padding: 20px;">Nenhum post com categoria "Tendências" encontrado.</p>';
+    return;
+  }
+
+  grid.innerHTML = posts
+    .map(
+      (post) => `
         <div class="admin-image-preview-card">
             <img src="${post.imagemUrl}" alt="${post.titulo}" onerror="this.src='https://via.placeholder.com/300x180?text=Sem+Imagem'">
             <div class="admin-image-preview-info">
@@ -4349,20 +4616,25 @@ function loadImagesTrend() {
                 </div>
             </div>
         </div>
-    `).join('');
+    `,
+    )
+    .join("");
 }
 
 function loadImagesBride() {
-    const posts = getActivePosts().filter(p => p.categoria === 'Tutorial');
-    const grid = document.getElementById('imagesBrideGrid');
-    if (!grid) return;
-    
-    if (posts.length === 0) {
-        grid.innerHTML = '<p style="color: #666; text-align: center; padding: 20px;">Nenhum post com categoria "Tutorial" encontrado.</p>';
-        return;
-    }
-    
-    grid.innerHTML = posts.map(post => `
+  const posts = getActivePosts().filter((p) => p.categoria === "Tutorial");
+  const grid = document.getElementById("imagesBrideGrid");
+  if (!grid) return;
+
+  if (posts.length === 0) {
+    grid.innerHTML =
+      '<p style="color: #666; text-align: center; padding: 20px;">Nenhum post com categoria "Tutorial" encontrado.</p>';
+    return;
+  }
+
+  grid.innerHTML = posts
+    .map(
+      (post) => `
         <div class="admin-image-preview-card">
             <img src="${post.imagemUrl}" alt="${post.titulo}" onerror="this.src='https://via.placeholder.com/300x180?text=Sem+Imagem'">
             <div class="admin-image-preview-info">
@@ -4373,20 +4645,25 @@ function loadImagesBride() {
                 </div>
             </div>
         </div>
-    `).join('');
+    `,
+    )
+    .join("");
 }
 
 function loadImagesMistakes() {
-    const posts = getActivePosts().filter(p => p.categoria === 'Dicas');
-    const grid = document.getElementById('imagesMistakesGrid');
-    if (!grid) return;
-    
-    if (posts.length === 0) {
-        grid.innerHTML = '<p style="color: #666; text-align: center; padding: 20px;">Nenhum post com categoria "Dicas" encontrado.</p>';
-        return;
-    }
-    
-    grid.innerHTML = posts.map(post => `
+  const posts = getActivePosts().filter((p) => p.categoria === "Dicas");
+  const grid = document.getElementById("imagesMistakesGrid");
+  if (!grid) return;
+
+  if (posts.length === 0) {
+    grid.innerHTML =
+      '<p style="color: #666; text-align: center; padding: 20px;">Nenhum post com categoria "Dicas" encontrado.</p>';
+    return;
+  }
+
+  grid.innerHTML = posts
+    .map(
+      (post) => `
         <div class="admin-image-preview-card">
             <img src="${post.imagemUrl}" alt="${post.titulo}" onerror="this.src='https://via.placeholder.com/300x180?text=Sem+Imagem'">
             <div class="admin-image-preview-info">
@@ -4397,20 +4674,25 @@ function loadImagesMistakes() {
                 </div>
             </div>
         </div>
-    `).join('');
+    `,
+    )
+    .join("");
 }
 
 function loadImagesBrushes() {
-    const posts = getActivePosts().filter(p => p.categoria === 'Produtos');
-    const grid = document.getElementById('imagesBrushesGrid');
-    if (!grid) return;
-    
-    if (posts.length === 0) {
-        grid.innerHTML = '<p style="color: #666; text-align: center; padding: 20px;">Nenhum post com categoria "Produtos" encontrado.</p>';
-        return;
-    }
-    
-    grid.innerHTML = posts.map(post => `
+  const posts = getActivePosts().filter((p) => p.categoria === "Produtos");
+  const grid = document.getElementById("imagesBrushesGrid");
+  if (!grid) return;
+
+  if (posts.length === 0) {
+    grid.innerHTML =
+      '<p style="color: #666; text-align: center; padding: 20px;">Nenhum post com categoria "Produtos" encontrado.</p>';
+    return;
+  }
+
+  grid.innerHTML = posts
+    .map(
+      (post) => `
         <div class="admin-image-preview-card">
             <img src="${post.imagemUrl}" alt="${post.titulo}" onerror="this.src='https://via.placeholder.com/300x180?text=Sem+Imagem'">
             <div class="admin-image-preview-info">
@@ -4421,20 +4703,25 @@ function loadImagesBrushes() {
                 </div>
             </div>
         </div>
-    `).join('');
+    `,
+    )
+    .join("");
 }
 
 function loadImagesProducts() {
-    const products = getActiveProducts();
-    const grid = document.getElementById('imagesProductsGrid');
-    if (!grid) return;
-    
-    if (products.length === 0) {
-        grid.innerHTML = '<p style="color: #666; text-align: center; padding: 20px;">Nenhum produto cadastrado.</p>';
-        return;
-    }
-    
-    grid.innerHTML = products.map(product => `
+  const products = getActiveProducts();
+  const grid = document.getElementById("imagesProductsGrid");
+  if (!grid) return;
+
+  if (products.length === 0) {
+    grid.innerHTML =
+      '<p style="color: #666; text-align: center; padding: 20px;">Nenhum produto cadastrado.</p>';
+    return;
+  }
+
+  grid.innerHTML = products
+    .map(
+      (product) => `
         <div class="admin-image-preview-card">
             <img src="${product.imagemUrl}" alt="${product.nome}" onerror="this.src='https://via.placeholder.com/300x180?text=Sem+Imagem'">
             <div class="admin-image-preview-info">
@@ -4445,20 +4732,25 @@ function loadImagesProducts() {
                 </div>
             </div>
         </div>
-    `).join('');
+    `,
+    )
+    .join("");
 }
 
 function loadImagesEvents() {
-    const events = getActiveEvents();
-    const grid = document.getElementById('imagesEventsGrid');
-    if (!grid) return;
-    
-    if (events.length === 0) {
-        grid.innerHTML = '<p style="color: #666; text-align: center; padding: 20px;">Nenhum evento cadastrado.</p>';
-        return;
-    }
-    
-    grid.innerHTML = events.map(event => `
+  const events = getActiveEvents();
+  const grid = document.getElementById("imagesEventsGrid");
+  if (!grid) return;
+
+  if (events.length === 0) {
+    grid.innerHTML =
+      '<p style="color: #666; text-align: center; padding: 20px;">Nenhum evento cadastrado.</p>';
+    return;
+  }
+
+  grid.innerHTML = events
+    .map(
+      (event) => `
         <div class="admin-image-preview-card">
             <img src="${event.imagemUrl}" alt="${event.nome}" onerror="this.src='https://via.placeholder.com/300x180?text=Sem+Imagem'">
             <div class="admin-image-preview-info">
@@ -4469,90 +4761,98 @@ function loadImagesEvents() {
                 </div>
             </div>
         </div>
-    `).join('');
+    `,
+    )
+    .join("");
 }
 
 function editImageUrl(type, id, title, currentUrl) {
-    const newTitle = prompt(`Editar NOME de "${title}":\n\nNome atual:\n${title}\n\nNovo Nome:`, title);
-    
-    if (newTitle === null) {
-        return; // Cancelado
-    }
-    
-    const newUrl = prompt(`Editar URL da imagem de "${newTitle}":\n\nURL atual:\n${currentUrl}\n\nNova URL:`, currentUrl);
-    
-    if (newUrl === null) {
-        return; // Cancelado
-    }
-    
-    const trimmedTitle = newTitle.trim();
-    const trimmedUrl = newUrl.trim();
-    
-    if (!trimmedTitle) {
-        showToast('O nome não pode estar vazio!', 'error');
-        return;
-    }
-    
-    if (!trimmedUrl) {
-        showToast('A URL não pode estar vazia!', 'error');
-        return;
-    }
-    
-    // Atualizar conforme o tipo
-    switch(type) {
-        case 'service':
-            const service = getServiceById(id);
-            if (service) {
-                service.nome = trimmedTitle;
-                service.imagemUrl = trimmedUrl;
-                updateService(service);
-                showToast('Serviço e Imagem atualizados!', 'success');
-                loadImagesServices();
-            }
-            break;
-        case 'workshop':
-            const workshop = getWorkshopById(id);
-            if (workshop) {
-                workshop.nome = trimmedTitle;
-                workshop.imagemUrl = trimmedUrl;
-                updateWorkshop(workshop);
-                showToast('Workshop e Imagem atualizados!', 'success');
-                loadImagesWorkshops();
-            }
-            break;
-        case 'post':
-            const post = getPostById(id);
-            if (post) {
-                post.titulo = trimmedTitle;
-                post.imagemUrl = trimmedUrl;
-                updatePost(post);
-                showToast('Post e Imagem atualizados!', 'success');
-                loadImagesPosts();
-                loadImagesTrend();
-                loadImagesBride();
-                loadImagesMistakes();
-                loadImagesBrushes();
-            }
-            break;
-        case 'product':
-            const product = getProductById(id);
-            if (product) {
-                product.nome = trimmedTitle;
-                product.imagemUrl = trimmedUrl;
-                updateProduct(product);
-                showToast('Produto e Imagem atualizados!', 'success');
-                loadImagesProducts();
-            }
-            break;
-        case 'event':
-            const event = getEventById(id);
-            if (event) {
-                event.nome = trimmedTitle;
-                event.imagemUrl = trimmedUrl;
-                updateEvent(event);
-                showToast('Evento e Imagem atualizados!', 'success');
-                loadImagesEvents();
-            }
-            break;
-    }
+  const newTitle = prompt(
+    `Editar NOME de "${title}":\n\nNome atual:\n${title}\n\nNovo Nome:`,
+    title,
+  );
+
+  if (newTitle === null) {
+    return; // Cancelado
+  }
+
+  const newUrl = prompt(
+    `Editar URL da imagem de "${newTitle}":\n\nURL atual:\n${currentUrl}\n\nNova URL:`,
+    currentUrl,
+  );
+
+  if (newUrl === null) {
+    return; // Cancelado
+  }
+
+  const trimmedTitle = newTitle.trim();
+  const trimmedUrl = newUrl.trim();
+
+  if (!trimmedTitle) {
+    showToast("O nome não pode estar vazio!", "error");
+    return;
+  }
+
+  if (!trimmedUrl) {
+    showToast("A URL não pode estar vazia!", "error");
+    return;
+  }
+
+  // Atualizar conforme o tipo
+  switch (type) {
+    case "service":
+      const service = getServiceById(id);
+      if (service) {
+        service.nome = trimmedTitle;
+        service.imagemUrl = trimmedUrl;
+        updateService(service);
+        showToast("Serviço e Imagem atualizados!", "success");
+        loadImagesServices();
+      }
+      break;
+    case "workshop":
+      const workshop = getWorkshopById(id);
+      if (workshop) {
+        workshop.nome = trimmedTitle;
+        workshop.imagemUrl = trimmedUrl;
+        updateWorkshop(workshop);
+        showToast("Workshop e Imagem atualizados!", "success");
+        loadImagesWorkshops();
+      }
+      break;
+    case "post":
+      const post = getPostById(id);
+      if (post) {
+        post.titulo = trimmedTitle;
+        post.imagemUrl = trimmedUrl;
+        updatePost(post);
+        showToast("Post e Imagem atualizados!", "success");
+        loadImagesPosts();
+        loadImagesTrend();
+        loadImagesBride();
+        loadImagesMistakes();
+        loadImagesBrushes();
+      }
+      break;
+    case "product":
+      const product = getProductById(id);
+      if (product) {
+        product.nome = trimmedTitle;
+        product.imagemUrl = trimmedUrl;
+        updateProduct(product);
+        showToast("Produto e Imagem atualizados!", "success");
+        loadImagesProducts();
+      }
+      break;
+    case "event":
+      const event = getEventById(id);
+      if (event) {
+        event.nome = trimmedTitle;
+        event.imagemUrl = trimmedUrl;
+        updateEvent(event);
+        showToast("Evento e Imagem atualizados!", "success");
+        loadImagesEvents();
+      }
+      break;
+  }
 }

@@ -1,774 +1,1361 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-PT">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Painel Administrativo - Yemar Makeup Artist">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Painel Administrativo - Yemar Makeup Artist"
+    />
     <title>Admin - Yemar Makeup Artist</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://images.unsplash.com">
-    <link rel="dns-prefetch" href="https://images.unsplash.com">
-    <link rel="stylesheet" href="css/styles.css">
-</head>
-<body>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://images.unsplash.com" />
+    <link rel="dns-prefetch" href="https://images.unsplash.com" />
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body>
     <!-- Header -->
     <header class="header">
-        <div class="container">
-            <div class="top-bar">
-                <button class="hamburger" id="hamburger" aria-label="Abrir menu">
-                    <span></span><span></span><span></span>
-                </button>
-                <nav class="main-nav" aria-label="Navegação principal">
-                    <a href="index.html">INÍCIO</a>
-                    <a href="admin.html">ADMIN</a>
-                </nav>
-                <div class="header-right">
-                    <div class="auth-link"><a href="conta.html" id="adminUserName">Admin</a></div>
-                    <button class="btn btn-sm btn-outline" onclick="logout()">Sair</button>
-                </div>
+      <div class="container">
+        <div class="top-bar">
+          <button class="hamburger" id="hamburger" aria-label="Abrir menu">
+            <span></span><span></span><span></span>
+          </button>
+          <nav class="main-nav" aria-label="Navegação principal">
+            <a href="index.html">INÍCIO</a>
+            <a href="admin.html">ADMIN</a>
+          </nav>
+          <div class="header-right">
+            <div class="auth-link">
+              <a href="conta.html" id="adminUserName">Admin</a>
             </div>
-            <div class="logo-section">
-                <a href="index.html"><img src="assets/images/logo.png" alt="Yemar Makeup Artist" class="logo-img" style="height: 80px;"></a>
-                <p class="tagline">PAINEL ADMINISTRATIVO</p>
-            </div>
+            <button class="btn btn-sm btn-outline" onclick="logout()">
+              Sair
+            </button>
+          </div>
         </div>
+        <div class="logo-section">
+          <a href="index.html"
+            ><img
+              src="assets/images/logo.png"
+              alt="Yemar Makeup Artist"
+              class="logo-img"
+              style="height: 80px"
+          /></a>
+          <p class="tagline">PAINEL ADMINISTRATIVO</p>
+        </div>
+      </div>
     </header>
 
     <!-- Mobile Menu -->
     <div class="mobile-menu" id="mobileMenu">
-        <div class="mobile-menu-header">
-            <span class="logo-text" style="font-size: 1.2rem;">ADMIN</span>
-            <button class="mobile-menu-close" id="closeMenu" aria-label="Fechar menu">&times;</button>
-        </div>
-        <nav class="mobile-nav" id="mobileAdminNav">
-            <a href="#" data-section="dashboard">Dashboard</a>
-            <a href="#" data-section="bookings">Marcações</a>
-            <a href="#" data-section="orders">Encomendas</a>
-            <a href="#" data-section="services">Serviços</a>
-            <a href="#" data-section="workshops">Workshops</a>
-            <a href="#" data-section="products">Produtos</a>
-            <a href="#" data-section="posts">Blog</a>
-            <a href="#" data-section="events">Eventos</a>
-            <a href="#" data-section="users">Utilizadores</a>
-            <a href="#" data-section="messages">Mensagens</a>
-            <a href="#" data-section="images">Gestão de Imagens</a>
-            <a href="#" data-section="settings">Definições</a>
-        </nav>
+      <div class="mobile-menu-header">
+        <span class="logo-text" style="font-size: 1.2rem">ADMIN</span>
+        <button
+          class="mobile-menu-close"
+          id="closeMenu"
+          aria-label="Fechar menu"
+        >
+          &times;
+        </button>
+      </div>
+      <nav class="mobile-nav" id="mobileAdminNav">
+        <a href="#" data-section="dashboard">Dashboard</a>
+        <a href="#" data-section="bookings">Marcações</a>
+        <a href="#" data-section="orders">Encomendas</a>
+        <a href="#" data-section="services">Serviços</a>
+        <a href="#" data-section="workshops">Workshops</a>
+        <a href="#" data-section="products">Produtos</a>
+        <a href="#" data-section="posts">Blog</a>
+        <a href="#" data-section="events">Eventos</a>
+        <a href="#" data-section="users">Utilizadores</a>
+        <a href="#" data-section="messages">Mensagens</a>
+        <a href="#" data-section="images">Gestão de Imagens</a>
+        <a href="#" data-section="settings">Definições</a>
+      </nav>
     </div>
 
     <!-- Main Content -->
     <main id="main">
-        <div class="admin-layout">
-            <!-- Sidebar -->
-            <aside class="admin-sidebar">
-                <nav id="adminNav">
-                    <a class="admin-menu-item active" data-section="dashboard">📊 Dashboard</a>
-                    <a class="admin-menu-item" data-section="bookings">📅 Marcações</a>
-                    <a class="admin-menu-item" data-section="orders">📦 Encomendas</a>
-                    <a class="admin-menu-item" data-section="services">💄 Serviços</a>
-                    <a class="admin-menu-item" data-section="workshops">🎓 Workshops</a>
-                    <a class="admin-menu-item" data-section="products">🛍️ Produtos</a>
-                    <a class="admin-menu-item" data-section="posts">📝 Blog</a>
-                    <a class="admin-menu-item" data-section="events">🎉 Eventos</a>
-                    <a class="admin-menu-item" data-section="users">👥 Utilizadores</a>
-                    <a class="admin-menu-item" data-section="messages">✉️ Mensagens</a>
-                    <a class="admin-menu-item" data-section="images">🖼️ Gestão de Imagens</a>
-                    <a class="admin-menu-item" data-section="reports">📈 Relatórios</a>
-                    <a class="admin-menu-item" data-section="settings">⚙️ Definições</a>
-                </nav>
-            </aside>
+      <div class="admin-layout">
+        <!-- Sidebar -->
+        <aside class="admin-sidebar">
+          <nav id="adminNav">
+            <a class="admin-menu-item active" data-section="dashboard"
+              >📊 Dashboard</a
+            >
+            <a class="admin-menu-item" data-section="bookings">📅 Marcações</a>
+            <a class="admin-menu-item" data-section="orders">📦 Encomendas</a>
+            <a class="admin-menu-item" data-section="services">💄 Serviços</a>
+            <a class="admin-menu-item" data-section="workshops">🎓 Workshops</a>
+            <a class="admin-menu-item" data-section="products">🛍️ Produtos</a>
+            <a class="admin-menu-item" data-section="posts">📝 Blog</a>
+            <a class="admin-menu-item" data-section="events">🎉 Eventos</a>
+            <a class="admin-menu-item" data-section="users">👥 Utilizadores</a>
+            <a class="admin-menu-item" data-section="messages">✉️ Mensagens</a>
+            <a class="admin-menu-item" data-section="images"
+              >🖼️ Gestão de Imagens</a
+            >
+            <a class="admin-menu-item" data-section="reports">📈 Relatórios</a>
+            <a class="admin-menu-item" data-section="settings">⚙️ Definições</a>
+          </nav>
+        </aside>
 
-            <!-- Content Area -->
-            <div class="admin-content">
-                <!-- Dashboard -->
-                <section id="dashboardSection" class="admin-section active">
-                    <h2 style="margin-bottom: 1.5rem;">Dashboard</h2>
-                    <div class="alert alert-info" style="margin-bottom: 1.5rem; padding: 1rem; background: #e8f4f8; border-left: 4px solid #0066cc; border-radius: 4px;">
-                        <strong>📊 Visão Geral:</strong> Aqui você encontra um resumo das principais estatísticas do site, incluindo total de serviços, marcasções, produtos e posts. As últimas marcações e encomendas são exibidas para acompanhamento rápido.
-                    </div>
-                    <div class="stats-grid" id="statsGrid">
-                        <!-- Stats serão carregadas via JS -->
-                    </div>
-                    
-                    <div class="grid grid-2" style="margin-top: 2rem;">
-                        <div class="admin-table-container">
-                            <div class="admin-table-header">
-                                <h3 class="admin-table-title">Últimas Marcações</h3>
-                            </div>
-                            <div id="recentBookings" style="padding: 1rem;">
-                                <!-- Marcações recentes -->
-                            </div>
-                        </div>
-                        <div class="admin-table-container">
-                            <div class="admin-table-header">
-                                <h3 class="admin-table-title">Últimas Encomendas</h3>
-                            </div>
-                            <div id="recentOrders" style="padding: 1rem;">
-                                <!-- Encomendas recentes -->
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- Marcações -->
-                <section id="bookingsSection" class="admin-section">
-                    <h2 style="margin-bottom: 1.5rem;">Gestão de Marcações</h2>
-                    <div class="alert alert-info" style="margin-bottom: 1.5rem; padding: 1rem; background: #e8f4f8; border-left: 4px solid #0066cc; border-radius: 4px;">
-                        <strong>📅 Como usar:</strong> Visualize e gerencie todas as marcações de serviços, workshops e eventos. Ao <strong>confirmar</strong> uma marcação, o sistema abre automaticamente o WhatsApp com uma mensagem pré-formatada para o cliente. Use os filtros para ver apenas marcações pendentes, confirmadas, concluídas ou canceladas.
-                    </div>
-                    <div class="filters" style="margin-bottom: 1rem;">
-                        <select id="bookingStatusFilter" onchange="loadAdminBookings()">
-                            <option value="">Todos os Estados</option>
-                            <option value="pending">Pendentes</option>
-                            <option value="confirmed">Confirmadas</option>
-                            <option value="completed">Concluídas</option>
-                            <option value="cancelled">Canceladas</option>
-                        </select>
-                    </div>
-                    <div class="admin-table-container">
-                        <table class="admin-table">
-                            <thead>
-                                <tr>
-                                    <th>Cliente</th>
-                                    <th>Serviço</th>
-                                    <th>Data/Hora</th>
-                                    <th>Estado</th>
-                                    <th>Ações</th>
-                                </tr>
-                            </thead>
-                            <tbody id="bookingsTableBody">
-                                <!-- Linhas serão carregadas via JS -->
-                            </tbody>
-                        </table>
-                    </div>
-                </section>
-
-                <!-- Encomendas -->
-                <section id="ordersSection" class="admin-section">
-                    <h2 style="margin-bottom: 1.5rem;">Gestão de Encomendas</h2>
-                    <div class="alert alert-info" style="margin-bottom: 1.5rem; padding: 1rem; background: #e8f4f8; border-left: 4px solid #0066cc; border-radius: 4px;">
-                        <strong>🛒 Como usar:</strong> Gerencie todas as encomendas da loja online. Atualize o estado de cada encomenda (Pendente → Em Processamento → Enviada → Entregue). Use os filtros para visualizar encomendas por estado.
-                    </div>
-                    <div class="filters" style="margin-bottom: 1rem;">
-                        <select id="orderStatusFilter" onchange="loadAdminOrders()">
-                            <option value="">Todos os Estados</option>
-                            <option value="pending">Pendentes</option>
-                            <option value="processing">Em Processamento</option>
-                            <option value="shipped">Enviadas</option>
-                            <option value="delivered">Entregues</option>
-                            <option value="cancelled">Canceladas</option>
-                        </select>
-                    </div>
-                    <div class="admin-table-container">
-                        <table class="admin-table">
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Cliente</th>
-                                    <th>Total</th>
-                                    <th>Estado</th>
-                                    <th>Data</th>
-                                    <th>Ações</th>
-                                </tr>
-                            </thead>
-                            <tbody id="ordersTableBody">
-                                <!-- Linhas serão carregadas via JS -->
-                            </tbody>
-                        </table>
-                    </div>
-                </section>
-
-                <!-- Serviços -->
-                <section id="servicesSection" class="admin-section">
-                    <div class="alert alert-info" style="margin-bottom: 1.5rem; padding: 1rem; background: #e8f4f8; border-left: 4px solid #0066cc; border-radius: 4px;">
-                        <strong>💄 Como usar:</strong> Adicione, edite ou remova serviços de maquilhagem. Cada serviço pode ter nome, descrição, preço, duração e imagem. Clique em "+ Novo Serviço" para adicionar. Use "Editar" para alterar informações ou "Eliminar" para remover.
-                    </div>
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-                        <h2>Gestão de Serviços</h2>
-                        <button class="btn btn-primary btn-sm" onclick="openServiceModal()">+ Novo Serviço</button>
-                    </div>
-                    <div class="admin-table-container">
-                        <table class="admin-table">
-                            <thead>
-                                <tr>
-                                    <th>Nome</th>
-                                    <th>Categoria</th>
-                                    <th>Preço</th>
-                                    <th>Duração</th>
-                                    <th>Ações</th>
-                                </tr>
-                            </thead>
-                            <tbody id="servicesTableBody">
-                                <!-- Linhas serão carregadas via JS -->
-                            </tbody>
-                        </table>
-                    </div>
-                </section>
-
-                <!-- Workshops -->
-                <section id="workshopsSection" class="admin-section">
-                    <div class="alert alert-info" style="margin-bottom: 1.5rem; padding: 1rem; background: #e8f4f8; border-left: 4px solid #0066cc; border-radius: 4px;">
-                        <strong>🎯 Como usar:</strong> Crie e gerencie workshops de maquilhagem (presenciais ou online). Defina nome, descrição, preço, número de vagas, duração e modalidade. Os clientes podem fazer marcações através do site.
-                    </div>
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-                        <h2>Gestão de Workshops</h2>
-                        <button class="btn btn-primary btn-sm" onclick="openWorkshopModal()">+ Novo Workshop</button>
-                    </div>
-                    <div class="admin-table-container">
-                        <table class="admin-table">
-                            <thead>
-                                <tr>
-                                    <th>Nome</th>
-                                    <th>Modalidade</th>
-                                    <th>Preço</th>
-                                    <th>Vagas</th>
-                                    <th>Ações</th>
-                                </tr>
-                            </thead>
-                            <tbody id="workshopsTableBody">
-                                <!-- Linhas serão carregadas via JS -->
-                            </tbody>
-                        </table>
-                    </div>
-                </section>
-
-                <!-- Produtos -->
-                <section id="productsSection" class="admin-section">
-                    <div class="alert alert-info" style="margin-bottom: 1.5rem; padding: 1rem; background: #e8f4f8; border-left: 4px solid #0066cc; border-radius: 4px;">
-                        <strong>🛍️ Como usar:</strong> Adicione produtos à loja online (maquilhagem, pincéis, etc.). Defina nome, descrição, preço, categoria, stock e imagem. <strong>Nota:</strong> A loja pode ser ativada/desativada em Definições.
-                    </div>
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-                        <h2>Gestão de Produtos</h2>
-                        <button class="btn btn-primary btn-sm" onclick="openProductModal()">+ Novo Produto</button>
-                    </div>
-                    <div class="admin-table-container">
-                        <table class="admin-table">
-                            <thead>
-                                <tr>
-                                    <th>Nome</th>
-                                    <th>Categoria</th>
-                                    <th>Preço</th>
-                                    <th>Stock</th>
-                                    <th>Ações</th>
-                                </tr>
-                            </thead>
-                            <tbody id="productsTableBody">
-                                <!-- Linhas serão carregadas via JS -->
-                            </tbody>
-                        </table>
-                    </div>
-                </section>
-
-                <!-- Blog -->
-                <section id="postsSection" class="admin-section">
-                    <div class="alert alert-info" style="margin-bottom: 1.5rem; padding: 1rem; background: #e8f4f8; border-left: 4px solid #0066cc; border-radius: 4px;">
-                        <strong>✍️ Como usar:</strong> Publique artigos no blog sobre tendências, tutoriais, dicas de maquilhagem, etc. Cada artigo pode ter título, conteúdo, categoria, imagem e data de publicação. Os visitantes podem dar "like" nos artigos.
-                    </div>
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-                        <h2>Gestão do Blog</h2>
-                        <button class="btn btn-primary btn-sm" onclick="openPostModal()">+ Novo Artigo</button>
-                    </div>
-                    <div class="admin-table-container">
-                        <table class="admin-table">
-                            <thead>
-                                <tr>
-                                    <th>Título</th>
-                                    <th>Categoria</th>
-                                    <th>Data</th>
-                                    <th>Likes</th>
-                                    <th>Ações</th>
-                                </tr>
-                            </thead>
-                            <tbody id="postsTableBody">
-                                <!-- Linhas serão carregadas via JS -->
-                            </tbody>
-                        </table>
-                    </div>
-                </section>
-
-                <!-- Eventos -->
-                <section id="eventsSection" class="admin-section">
-                    <div class="alert alert-info" style="margin-bottom: 1.5rem; padding: 1rem; background: #e8f4f8; border-left: 4px solid #0066cc; border-radius: 4px;">
-                        <strong>🎉 Como usar:</strong> Divulgue eventos especiais como lançamentos, desfiles, sessões fotográficas, etc. Defina nome, descrição, data, local e imagem. Os clientes podem fazer marcações para participar.
-                    </div>
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-                        <h2>Gestão de Eventos</h2>
-                        <button class="btn btn-primary btn-sm" onclick="openEventModal()">+ Novo Evento</button>
-                    </div>
-                    <div class="admin-table-container">
-                        <table class="admin-table">
-                            <thead>
-                                <tr>
-                                    <th>Nome</th>
-                                    <th>Data</th>
-                                    <th>Local</th>
-                                    <th>Vagas</th>
-                                    <th>Ações</th>
-                                </tr>
-                            </thead>
-                            <tbody id="eventsTableBody">
-                                <!-- Linhas serão carregadas via JS -->
-                            </tbody>
-                        </table>
-                    </div>
-                </section>
-
-                <!-- Utilizadores -->
-                <section id="usersSection" class="admin-section">
-                    <h2 style="margin-bottom: 1.5rem;">Gestão de Utilizadores</h2>
-                    <div class="alert alert-info" style="margin-bottom: 1.5rem; padding: 1rem; background: #e8f4f8; border-left: 4px solid #0066cc; border-radius: 4px;">
-                        <strong>👥 Como usar:</strong> Visualize todos os utilizadores registados no site. Veja informações como nome, email, telefone e data de registo. Os utilizadores podem fazer marcações e compras após registo.
-                    </div>
-                    <div class="admin-table-container">
-                        <table class="admin-table">
-                            <thead>
-                                <tr>
-                                    <th>Nome</th>
-                                    <th>Email</th>
-                                    <th>Telefone</th>
-                                    <th>Tipo</th>
-                                    <th>Data Registo</th>
-                                </tr>
-                            </thead>
-                            <tbody id="usersTableBody">
-                                <!-- Linhas serão carregadas via JS -->
-                            </tbody>
-                        </table>
-                    </div>
-                </section>
-
-                <!-- Mensagens -->
-                <section id="messagesSection" class="admin-section">
-                    <h2 style="margin-bottom: 1.5rem;">Mensagens de Contacto</h2>
-                    <div class="alert alert-info" style="margin-bottom: 1.5rem; padding: 1rem; background: #e8f4f8; border-left: 4px solid #0066cc; border-radius: 4px;">
-                        <strong>📧 Como usar:</strong> Visualize mensagens enviadas pelos visitantes através do formulário de contacto. Marque como "Lida" após responder. Clique em "Ver" para ler a mensagem completa.
-                    </div>
-                    <div class="admin-table-container">
-                        <table class="admin-table">
-                            <thead>
-                                <tr>
-                                    <th>Nome</th>
-                                    <th>Email</th>
-                                    <th>Assunto</th>
-                                    <th>Data</th>
-                                    <th>Estado</th>
-                                    <th>Ações</th>
-                                </tr>
-                            </thead>
-                            <tbody id="messagesTableBody">
-                                <!-- Linhas serão carregadas via JS -->
-                            </tbody>
-                        </table>
-                    </div>
-                </section>
-
-                <!-- Relatórios -->
-                <section id="reportsSection" class="admin-section">
-                    <h2 style="margin-bottom: 1.5rem;">Relatórios e Análises</h2>
-                    <div class="alert alert-info" style="margin-bottom: 1.5rem; padding: 1rem; background: #e8f4f8; border-left: 4px solid #0066cc; border-radius: 4px;">
-                        <strong>📈 Como usar:</strong> Visualize estatísticas detalhadas, gráficos de desempenho e exporte relatórios em PDF ou Excel. Use os filtros de período para analisar dados específicos.
-                    </div>
-
-                    <!-- Filtros de Período -->
-                    <div class="settings-section">
-                        <h3>Período de Análise</h3>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="reportStartDate">Data Início</label>
-                                <input type="date" id="reportStartDate">
-                            </div>
-                            <div class="form-group">
-                                <label for="reportEndDate">Data Fim</label>
-                                <input type="date" id="reportEndDate">
-                            </div>
-                            <div class="form-group" style="display: flex; align-items: flex-end;">
-                                <button class="btn btn-primary" onclick="loadReports()">Atualizar Relatório</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Botões de Exportação -->
-                    <div style="margin-bottom: 2rem; display: flex; gap: 1rem;">
-                        <button class="btn btn-primary" onclick="exportReportPDF()">📄 Exportar PDF</button>
-                        <button class="btn btn-primary" onclick="exportReportExcel()">📈 Exportar Excel</button>
-                    </div>
-
-                    <!-- Estatísticas Gerais -->
-                    <div class="settings-section">
-                        <h3>Estatísticas Gerais</h3>
-                        <div class="stats-grid" id="reportStatsGrid">
-                            <!-- Stats serão carregadas via JS -->
-                        </div>
-                    </div>
-
-                    <!-- Gráficos -->
-                    <div class="settings-section">
-                        <h3>Gráficos de Desempenho</h3>
-                        <div class="grid grid-2" style="gap: 2rem;">
-                            <div>
-                                <h4 style="margin-bottom: 1rem; font-size: 1rem; color: #666;">Marcações por Serviço</h4>
-                                <canvas id="servicesChart" style="max-height: 300px;"></canvas>
-                            </div>
-                            <div>
-                                <h4 style="margin-bottom: 1rem; font-size: 1rem; color: #666;">Receita por Mês</h4>
-                                <canvas id="revenueChart" style="max-height: 300px;"></canvas>
-                            </div>
-                        </div>
-                        <div class="grid grid-2" style="gap: 2rem; margin-top: 2rem;">
-                            <div>
-                                <h4 style="margin-bottom: 1rem; font-size: 1rem; color: #666;">Status das Marcações</h4>
-                                <canvas id="bookingsStatusChart" style="max-height: 300px;"></canvas>
-                            </div>
-                            <div>
-                                <h4 style="margin-bottom: 1rem; font-size: 1rem; color: #666;">Produtos Mais Vendidos</h4>
-                                <canvas id="topProductsChart" style="max-height: 300px;"></canvas>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Tabelas Detalhadas -->
-                    <div class="settings-section">
-                        <h3>Detalhamento de Serviços</h3>
-                        <div class="admin-table-container">
-                            <table class="admin-table">
-                                <thead>
-                                    <tr>
-                                        <th>Serviço</th>
-                                        <th>Total Marcações</th>
-                                        <th>Confirmadas</th>
-                                        <th>Concluídas</th>
-                                        <th>Canceladas</th>
-                                        <th>Receita Total</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="servicesReportTable">
-                                    <!-- Dados serão carregados via JS -->
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- Gestão de Imagens -->
-                <section id="imagesSection" class="admin-section">
-                    <h2 style="margin-bottom: 1.5rem;">🖼️ Gestão de Imagens</h2>
-                    <div class="alert alert-info" style="margin-bottom: 1.5rem; padding: 1rem; background: #e8f4f8; border-left: 4px solid #0066cc; border-radius: 4px;">
-                        <strong>📸 Como usar:</strong> Visualize e edite todas as imagens do site organizadas por secção. Clique em "Editar" para alterar a URL da imagem. As imagens são exibidas com pré-visualização para facilitar a identificação.
-                    </div>
-
-                    <!-- Serviços -->
-                    <div class="settings-section" style="margin-bottom: 2rem;">
-                        <h3 style="margin-bottom: 1rem; color: var(--color-red); border-bottom: 2px solid var(--color-red); padding-bottom: 0.5rem;">💼 Serviços</h3>
-                        <div id="imagesServicesGrid" class="admin-image-preview-grid">
-                            <!-- Carregado via JS -->
-                        </div>
-                    </div>
-
-                    <!-- Workshops -->
-                    <div class="settings-section" style="margin-bottom: 2rem;">
-                        <h3 style="margin-bottom: 1rem; color: var(--color-red); border-bottom: 2px solid var(--color-red); padding-bottom: 0.5rem;">🎯 Workshops & Cursos</h3>
-                        <div id="imagesWorkshopsGrid" class="admin-image-preview-grid">
-                            <!-- Carregado via JS -->
-                        </div>
-                    </div>
-
-                    <!-- Blog / Últimas Novidades -->
-                    <div class="settings-section" style="margin-bottom: 2rem;">
-                        <h3 style="margin-bottom: 1rem; color: var(--color-red); border-bottom: 2px solid var(--color-red); padding-bottom: 0.5rem;">📰 Blog (Últimas Novidades)</h3>
-                        <div id="imagesPostsGrid" class="admin-image-preview-grid">
-                            <!-- Carregado via JS -->
-                        </div>
-                    </div>
-
-                    <!-- Tendências Verão 2025 -->
-                    <div class="settings-section" style="margin-bottom: 2rem;">
-                        <h3 style="margin-bottom: 1rem; color: var(--color-red); border-bottom: 2px solid var(--color-red); padding-bottom: 0.5rem;">☀️ Tendências de Maquilhagem Verão 2025</h3>
-                        <p style="font-size: 0.9rem; color: #666; margin-bottom: 1rem;"><em>Posts com categoria "Tendências"</em></p>
-                        <div id="imagesTrendGrid" class="admin-image-preview-grid">
-                            <!-- Carregado via JS -->
-                        </div>
-                    </div>
-
-                    <!-- Guia Noivas -->
-                    <div class="settings-section" style="margin-bottom: 2rem;">
-                        <h3 style="margin-bottom: 1rem; color: var(--color-red); border-bottom: 2px solid var(--color-red); padding-bottom: 0.5rem;">💍 Guia Completo: Maquilhagem para Noivas</h3>
-                        <p style="font-size: 0.9rem; color: #666; margin-bottom: 1rem;"><em>Posts com categoria "Tutorial"</em></p>
-                        <div id="imagesBrideGrid" class="admin-image-preview-grid">
-                            <!-- Carregado via JS -->
-                        </div>
-                    </div>
-
-                    <!-- Erros Comuns -->
-                    <div class="settings-section" style="margin-bottom: 2rem;">
-                        <h3 style="margin-bottom: 1rem; color: var(--color-red); border-bottom: 2px solid var(--color-red); padding-bottom: 0.5rem;">⚠️ Os Erros Mais Comuns na Maquilhagem</h3>
-                        <p style="font-size: 0.9rem; color: #666; margin-bottom: 1rem;"><em>Posts com categoria "Dicas"</em></p>
-                        <div id="imagesMistakesGrid" class="admin-image-preview-grid">
-                            <!-- Carregado via JS -->
-                        </div>
-                    </div>
-
-                    <!-- Pincéis Essenciais -->
-                    <div class="settings-section" style="margin-bottom: 2rem;">
-                        <h3 style="margin-bottom: 1rem; color: var(--color-red); border-bottom: 2px solid var(--color-red); padding-bottom: 0.5rem;">🖌️ Pincéis Essenciais para Iniciantes</h3>
-                        <p style="font-size: 0.9rem; color: #666; margin-bottom: 1rem;"><em>Posts com categoria "Produtos"</em></p>
-                        <div id="imagesBrushesGrid" class="admin-image-preview-grid">
-                            <!-- Carregado via JS -->
-                        </div>
-                    </div>
-
-                    <!-- Produtos -->
-                    <div class="settings-section" style="margin-bottom: 2rem;">
-                        <h3 style="margin-bottom: 1rem; color: var(--color-red); border-bottom: 2px solid var(--color-red); padding-bottom: 0.5rem;">🛍️ Produtos</h3>
-                        <div id="imagesProductsGrid" class="admin-image-preview-grid">
-                            <!-- Carregado via JS -->
-                        </div>
-                    </div>
-
-                    <!-- Eventos -->
-                    <div class="settings-section" style="margin-bottom: 2rem;">
-                        <h3 style="margin-bottom: 1rem; color: var(--color-red); border-bottom: 2px solid var(--color-red); padding-bottom: 0.5rem;">🎉 Eventos</h3>
-                        <div id="imagesEventsGrid" class="admin-image-preview-grid">
-                            <!-- Carregado via JS -->
-                        </div>
-                    </div>
-                </section>
-
-                <!-- Definições -->
-                <section id="settingsSection" class="admin-section">
-                    <h2 style="margin-bottom: 1.5rem;">Definições do Site</h2>
-                    <div class="alert alert-info" style="margin-bottom: 1.5rem; padding: 1rem; background: #e8f4f8; border-left: 4px solid #0066cc; border-radius: 4px;">
-                        <strong>⚙️ Como usar:</strong> Configure todos os aspectos do site: nome, loja online, imagens, portfólio, certificados e analytics. Cada seção tem instruções específicas. Lembre-se de clicar em "Guardar Alterações" após editar.
-                    </div>
-                    
-                    <div class="settings-section">
-                        <h3>Nome do Site</h3>
-                        <form id="siteNameForm">
-                            <div class="form-group">
-                                <label for="siteTagline">Nome/Tagline do Site</label>
-                                <input type="text" id="siteTagline" value="Yemar Makeup Artist" placeholder="Ex: Yemar Makeup Artist">
-                                <small style="color: #666; font-size: 0.8rem;">Este nome aparece no cabeçalho do site</small>
-                            </div>
-                            <button type="submit" class="btn btn-primary">Guardar Alterações</button>
-                        </form>
-                    </div>
-
-                    <div class="settings-section">
-                        <h3>Loja Online</h3>
-                        <form id="shopSettingsForm">
-                            <div class="form-group">
-                                <label>
-                                    <input type="checkbox" id="shopEnabled" checked>
-                                    Ativar Loja Online
-                                </label>
-                                <small style="color: #666; font-size: 0.8rem; display: block; margin-top: 0.5rem;">Quando desativada, a loja e produtos não aparecerão no site</small>
-                            </div>
-                            <button type="submit" class="btn btn-primary">Guardar Alterações</button>
-                        </form>
-                    </div>
-
-                    <div class="settings-section">
-                        <h3>Hero Banner</h3>
-                        <form id="heroSettingsForm">
-                            <div class="form-group">
-                                <label for="heroTitle">Título</label>
-                                <input type="text" id="heroTitle" value="Realça a Tua Beleza Natural">
-                            </div>
-                            <div class="form-group">
-                                <label for="heroSubtitle">Subtítulo</label>
-                                <input type="text" id="heroSubtitle" value="Maquilhagem profissional para todos os momentos especiais da tua vida">
-                            </div>
-                            <div class="form-group">
-                                <label for="heroImage">URL da Imagem</label>
-                                <input type="url" id="heroImage" value="https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=1920">
-                            </div>
-                            <div class="form-group">
-                                <label for="heroCta">Texto do Botão</label>
-                                <input type="text" id="heroCta" value="Marcar Agora">
-                            </div>
-                            <button type="submit" class="btn btn-primary">Guardar Alterações</button>
-                        </form>
-                    </div>
-
-                    <div class="settings-section">
-                        <h3>Informações de Contacto</h3>
-                        <form id="contactSettingsForm">
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label for="settingsEmail">Email</label>
-                                    <input type="email" id="settingsContactEmail" value="yemarmk@gmail.com">
-                                </div>
-                                <div class="form-group">
-                                    <label for="settingsPhone">Telefone</label>
-                                    <input type="tel" id="settingsContactPhone" value="(+351) 933758731">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="settingsAddress">Endereço</label>
-                                <input type="text" id="settingsAddress" placeholder="Ex: Rua das Flores, 123 - Lisboa">
-                            </div>
-                            <div class="form-group">
-                                <label for="settingsWhatsApp">WhatsApp (apenas números)</label>
-                                <input type="text" id="settingsWhatsApp" placeholder="Ex: 351933758731" value="351933758731">
-                                <small style="color: #666; font-size: 0.8rem;">Número com código do país, sem espaços ou caracteres especiais</small>
-                            </div>
-                            <div class="form-group">
-                                <label for="settingsMapUrl">URL do Mapa (Google Maps Embed)</label>
-                                <input type="url" id="settingsMapUrl" placeholder="Cole aqui o link embed do Google Maps">
-                                <small style="color: #666; font-size: 0.8rem;">Vá ao Google Maps, clique em "Partilhar" > "Incorporar um mapa" e copie o URL do src</small>
-                            </div>
-                            <button type="submit" class="btn btn-primary">Guardar Alterações</button>
-                        </form>
-                    </div>
-
-                    <div class="settings-section">
-                        <h3>Mensagens WhatsApp</h3>
-                        <form id="whatsappSettingsForm">
-                            <div class="form-group">
-                                <label for="whatsappNotificationTemplate">Mensagem de Notificação ao Admin</label>
-                                <textarea id="whatsappNotificationTemplate" rows="10" placeholder="Personalize a mensagem enviada ao admin quando cliente faz marcação"></textarea>
-                                <small style="color: #666; font-size: 0.8rem; display: block; margin-top: 0.5rem;">
-                                    <strong>Variáveis disponíveis:</strong><br>
-                                    {clienteNome} - Nome do cliente<br>
-                                    {clienteEmail} - Email do cliente<br>
-                                    {clienteTelefone} - Telefone do cliente<br>
-                                    {tipoServico} - Tipo (Serviço, Workshop ou Evento)<br>
-                                    {nomeServico} - Nome do serviço/workshop/evento<br>
-                                    {data} - Data da marcação<br>
-                                    {hora} - Hora da marcação
-                                </small>
-                            </div>
-                            <button type="submit" class="btn btn-primary">Guardar Alterações</button>
-                        </form>
-                    </div>
-
-                    <div class="settings-section">
-                        <h3>Imagens do Site</h3>
-                        <form id="imagesSettingsForm">
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label for="welcomeAvatarUrl">Foto do Perfil (Seção Bem-Vindas)</label>
-                                    <input type="url" id="welcomeAvatarUrl" placeholder=\assets\images\logo_name.png>
-                                    <small style="color: #666; font-size: 0.8rem;">Imagem circular que aparece na homepage</small>
-                                </div>
-                                <div class="form-group">
-                                    <label for="aboutImageUrl">Foto da Página Sobre Mim</label>
-                                    <input type="url" id="aboutImageUrl" placeholder=\assets\images\capa.png>
-                                    <small style="color: #666; font-size: 0.8rem;">Imagem principal da página Sobre Mim</small>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="footerAvatarUrl">Foto do Rodapé (Seção Sobre Mim)</label>
-                                <input type="url" id="footerAvatarUrl" placeholder=\assets\images\logo_name.png value="assets/images/capa.png">
-                                <small style="color: #666; font-size: 0.8rem;">Foto circular que aparece no rodapé. Por padrão, usa a mesma da página Sobre Mim.</small>
-                            </div>
-                            <button type="submit" class="btn btn-primary">Guardar Alterações</button>
-                        </form>
-                    </div>
-
-                    <div class="settings-section">
-                        <h3>Portfólio</h3>
-                        <p style="margin-bottom: 1rem; color: #666;">Gerir imagens do portfólio.</p>
-                        <div class="form-group">
-                            <label>Adicionar Imagem ao Portfólio</label>
-                            <input type="text" id="portfolioImageUrl" placeholder="URL da imagem">
-                            <input type="text" id="portfolioImageTitle" placeholder="Título (opcional)" style="margin-top: 0.5rem;">
-                            <textarea id="portfolioImageDesc" placeholder="Descrição (opcional)" rows="2" style="margin-top: 0.5rem;"></textarea>
-                            <button class="btn btn-primary" onclick="addPortfolioImageAdmin()" style="margin-top: 0.5rem;">Adicionar Imagem</button>
-                        </div>
-                        <div id="portfolioImagesGrid" class="admin-image-grid" style="margin-top: 1.5rem;">
-                            <!-- Portfolio images will be loaded here -->
-                        </div>
-                    </div>
-
-                    <div class="settings-section">
-                        <h3>Certificados</h3>
-                        <p style="margin-bottom: 1rem; color: #666;">Gerir certificados exibidos no rodapé do site.</p>
-                        <div class="form-group">
-                            <label>Adicionar Certificado</label>
-                            <input type="text" id="certificateImageUrl" placeholder="URL da imagem do certificado">
-                            <input type="text" id="certificateTitle" placeholder="Título do certificado" style="margin-top: 0.5rem;">
-                            <input type="text" id="certificateYear" placeholder="Ano (opcional)" style="margin-top: 0.5rem;">
-                            <button class="btn btn-primary" onclick="addCertificateAdmin()" style="margin-top: 0.5rem;">Adicionar Certificado</button>
-                        </div>
-                        <div id="certificatesGrid" class="admin-image-grid" style="margin-top: 1.5rem;">
-                            <!-- Certificates will be loaded here -->
-                        </div>
-                    </div>
-
-                    <div class="settings-section">
-                        <h3>Formação & Certificações</h3>
-                        <p style="margin-bottom: 1.5rem; color: #666;">Gerir formação académica e certificações profissionais exibidas no site.</p>
-                        
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem;">
-                            <!-- Formação Académica -->
-                            <div>
-                                <h4 style="margin-bottom: 1rem; color: #0b0b0d;">Formação Académica</h4>
-                                <div class="form-group">
-                                    <label>Adicionar Formação</label>
-                                    <input type="text" id="newFormacao" placeholder="Ex: Curso Profissional de Maquilhagem - Escola de Moda de Lisboa">
-                                    <button class="btn btn-sm btn-primary" onclick="addFormacao()" style="margin-top: 0.5rem;">Adicionar</button>
-                                </div>
-                                <div id="formacaoList" style="margin-top: 1rem;">
-                                    <!-- Lista de formações -->
-                                </div>
-                            </div>
-                            
-                            <!-- Certificações -->
-                            <div>
-                                <h4 style="margin-bottom: 1rem; color: #0b0b0d;">Certificações</h4>
-                                <div class="form-group">
-                                    <label>Adicionar Certificação</label>
-                                    <input type="text" id="newCertificacao" placeholder="Ex: Maquilhadora Profissional Certificada">
-                                    <button class="btn btn-sm btn-primary" onclick="addCertificacao()" style="margin-top: 0.5rem;">Adicionar</button>
-                                </div>
-                                <div id="certificacaoList" style="margin-top: 1rem;">
-                                    <!-- Lista de certificações -->
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="settings-section">
-                        <h3>Analytics e Visitas</h3>
-                        <div id="analyticsStats">
-                            <!-- Analytics stats will be loaded here -->
-                        </div>
-                        <div style="margin-top: 1.5rem;">
-                            <h4>Visitas por Página</h4>
-                            <div id="pageVisitsChart" style="margin-top: 1rem;">
-                                <!-- Page visits chart -->
-                            </div>
-                        </div>
-                        <div style="margin-top: 1.5rem;">
-                            <h4>Avaliações do Google</h4>
-                            <p style="color: #666; margin-top: 0.5rem;">Para integrar avaliações do Google, adicione o widget do Google My Business no seu site.</p>
-                            <a href="https://www.google.com/business/" target="_blank" class="btn btn-outline" style="margin-top: 0.5rem;">Acessar Google My Business</a>
-                        </div>
-                    </div>
-
-                    <div class="settings-section">
-                        <h3>Dados do Sistema</h3>
-                        <p style="margin-bottom: 1rem; color: #666;">Gerir dados armazenados localmente.</p>
-                        <button class="btn btn-outline" onclick="resetData()">Repor Dados Iniciais</button>
-                        <button class="btn btn-outline" onclick="exportData()" style="margin-left: 0.5rem;">Exportar Dados</button>
-                    </div>
-                </section>
+        <!-- Content Area -->
+        <div class="admin-content">
+          <!-- Dashboard -->
+          <section id="dashboardSection" class="admin-section active">
+            <h2 style="margin-bottom: 1.5rem">Dashboard</h2>
+            <div
+              class="alert alert-info"
+              style="
+                margin-bottom: 1.5rem;
+                padding: 1rem;
+                background: #e8f4f8;
+                border-left: 4px solid #0066cc;
+                border-radius: 4px;
+              "
+            >
+              <strong>📊 Visão Geral:</strong> Aqui você encontra um resumo das
+              principais estatísticas do site, incluindo total de serviços,
+              marcasções, produtos e posts. As últimas marcações e encomendas
+              são exibidas para acompanhamento rápido.
             </div>
+            <div class="stats-grid" id="statsGrid">
+              <!-- Stats serão carregadas via JS -->
+            </div>
+
+            <div class="grid grid-2" style="margin-top: 2rem">
+              <div class="admin-table-container">
+                <div class="admin-table-header">
+                  <h3 class="admin-table-title">Últimas Marcações</h3>
+                </div>
+                <div id="recentBookings" style="padding: 1rem">
+                  <!-- Marcações recentes -->
+                </div>
+              </div>
+              <div class="admin-table-container">
+                <div class="admin-table-header">
+                  <h3 class="admin-table-title">Últimas Encomendas</h3>
+                </div>
+                <div id="recentOrders" style="padding: 1rem">
+                  <!-- Encomendas recentes -->
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Marcações -->
+          <section id="bookingsSection" class="admin-section">
+            <h2 style="margin-bottom: 1.5rem">Gestão de Marcações</h2>
+            <div
+              class="alert alert-info"
+              style="
+                margin-bottom: 1.5rem;
+                padding: 1rem;
+                background: #e8f4f8;
+                border-left: 4px solid #0066cc;
+                border-radius: 4px;
+              "
+            >
+              <strong>📅 Como usar:</strong> Visualize e gerencie todas as
+              marcações de serviços, workshops e eventos. Ao
+              <strong>confirmar</strong> uma marcação, o sistema abre
+              automaticamente o WhatsApp com uma mensagem pré-formatada para o
+              cliente. Use os filtros para ver apenas marcações pendentes,
+              confirmadas, concluídas ou canceladas.
+            </div>
+            <div class="filters" style="margin-bottom: 1rem">
+              <select id="bookingStatusFilter" onchange="loadAdminBookings()">
+                <option value="">Todos os Estados</option>
+                <option value="pending">Pendentes</option>
+                <option value="confirmed">Confirmadas</option>
+                <option value="completed">Concluídas</option>
+                <option value="cancelled">Canceladas</option>
+              </select>
+            </div>
+            <div class="admin-table-container">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>Cliente</th>
+                    <th>Serviço</th>
+                    <th>Data/Hora</th>
+                    <th>Estado</th>
+                    <th>Ações</th>
+                  </tr>
+                </thead>
+                <tbody id="bookingsTableBody">
+                  <!-- Linhas serão carregadas via JS -->
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <!-- Encomendas -->
+          <section id="ordersSection" class="admin-section">
+            <h2 style="margin-bottom: 1.5rem">Gestão de Encomendas</h2>
+            <div
+              class="alert alert-info"
+              style="
+                margin-bottom: 1.5rem;
+                padding: 1rem;
+                background: #e8f4f8;
+                border-left: 4px solid #0066cc;
+                border-radius: 4px;
+              "
+            >
+              <strong>🛒 Como usar:</strong> Gerencie todas as encomendas da
+              loja online. Atualize o estado de cada encomenda (Pendente → Em
+              Processamento → Enviada → Entregue). Use os filtros para
+              visualizar encomendas por estado.
+            </div>
+            <div class="filters" style="margin-bottom: 1rem">
+              <select id="orderStatusFilter" onchange="loadAdminOrders()">
+                <option value="">Todos os Estados</option>
+                <option value="pending">Pendentes</option>
+                <option value="processing">Em Processamento</option>
+                <option value="shipped">Enviadas</option>
+                <option value="delivered">Entregues</option>
+                <option value="cancelled">Canceladas</option>
+              </select>
+            </div>
+            <div class="admin-table-container">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Cliente</th>
+                    <th>Total</th>
+                    <th>Estado</th>
+                    <th>Data</th>
+                    <th>Ações</th>
+                  </tr>
+                </thead>
+                <tbody id="ordersTableBody">
+                  <!-- Linhas serão carregadas via JS -->
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <!-- Serviços -->
+          <section id="servicesSection" class="admin-section">
+            <div
+              class="alert alert-info"
+              style="
+                margin-bottom: 1.5rem;
+                padding: 1rem;
+                background: #e8f4f8;
+                border-left: 4px solid #0066cc;
+                border-radius: 4px;
+              "
+            >
+              <strong>💄 Como usar:</strong> Adicione, edite ou remova serviços
+              de maquilhagem. Cada serviço pode ter nome, descrição, preço,
+              duração e imagem. Clique em "+ Novo Serviço" para adicionar. Use
+              "Editar" para alterar informações ou "Eliminar" para remover.
+            </div>
+            <div
+              style="
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 1.5rem;
+              "
+            >
+              <h2>Gestão de Serviços</h2>
+              <button
+                class="btn btn-primary btn-sm"
+                onclick="openServiceModal()"
+              >
+                + Novo Serviço
+              </button>
+            </div>
+            <div class="admin-table-container">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>Nome</th>
+                    <th>Categoria</th>
+                    <th>Preço</th>
+                    <th>Duração</th>
+                    <th>Ações</th>
+                  </tr>
+                </thead>
+                <tbody id="servicesTableBody">
+                  <!-- Linhas serão carregadas via JS -->
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <!-- Workshops -->
+          <section id="workshopsSection" class="admin-section">
+            <div
+              class="alert alert-info"
+              style="
+                margin-bottom: 1.5rem;
+                padding: 1rem;
+                background: #e8f4f8;
+                border-left: 4px solid #0066cc;
+                border-radius: 4px;
+              "
+            >
+              <strong>🎯 Como usar:</strong> Crie e gerencie workshops de
+              maquilhagem (presenciais ou online). Defina nome, descrição,
+              preço, número de vagas, duração e modalidade. Os clientes podem
+              fazer marcações através do site.
+            </div>
+            <div
+              style="
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 1.5rem;
+              "
+            >
+              <h2>Gestão de Workshops</h2>
+              <button
+                class="btn btn-primary btn-sm"
+                onclick="openWorkshopModal()"
+              >
+                + Novo Workshop
+              </button>
+            </div>
+            <div class="admin-table-container">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>Nome</th>
+                    <th>Modalidade</th>
+                    <th>Preço</th>
+                    <th>Vagas</th>
+                    <th>Ações</th>
+                  </tr>
+                </thead>
+                <tbody id="workshopsTableBody">
+                  <!-- Linhas serão carregadas via JS -->
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <!-- Produtos -->
+          <section id="productsSection" class="admin-section">
+            <div
+              class="alert alert-info"
+              style="
+                margin-bottom: 1.5rem;
+                padding: 1rem;
+                background: #e8f4f8;
+                border-left: 4px solid #0066cc;
+                border-radius: 4px;
+              "
+            >
+              <strong>🛍️ Como usar:</strong> Adicione produtos à loja online
+              (maquilhagem, pincéis, etc.). Defina nome, descrição, preço,
+              categoria, stock e imagem. <strong>Nota:</strong> A loja pode ser
+              ativada/desativada em Definições.
+            </div>
+            <div
+              style="
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 1.5rem;
+              "
+            >
+              <h2>Gestão de Produtos</h2>
+              <button
+                class="btn btn-primary btn-sm"
+                onclick="openProductModal()"
+              >
+                + Novo Produto
+              </button>
+            </div>
+            <div class="admin-table-container">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>Nome</th>
+                    <th>Categoria</th>
+                    <th>Preço</th>
+                    <th>Stock</th>
+                    <th>Ações</th>
+                  </tr>
+                </thead>
+                <tbody id="productsTableBody">
+                  <!-- Linhas serão carregadas via JS -->
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <!-- Blog -->
+          <section id="postsSection" class="admin-section">
+            <div
+              class="alert alert-info"
+              style="
+                margin-bottom: 1.5rem;
+                padding: 1rem;
+                background: #e8f4f8;
+                border-left: 4px solid #0066cc;
+                border-radius: 4px;
+              "
+            >
+              <strong>✍️ Como usar:</strong> Publique artigos no blog sobre
+              tendências, tutoriais, dicas de maquilhagem, etc. Cada artigo pode
+              ter título, conteúdo, categoria, imagem e data de publicação. Os
+              visitantes podem dar "like" nos artigos.
+            </div>
+            <div
+              style="
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 1.5rem;
+              "
+            >
+              <h2>Gestão do Blog</h2>
+              <button class="btn btn-primary btn-sm" onclick="openPostModal()">
+                + Novo Artigo
+              </button>
+            </div>
+            <div class="admin-table-container">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>Título</th>
+                    <th>Categoria</th>
+                    <th>Data</th>
+                    <th>Likes</th>
+                    <th>Ações</th>
+                  </tr>
+                </thead>
+                <tbody id="postsTableBody">
+                  <!-- Linhas serão carregadas via JS -->
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <!-- Eventos -->
+          <section id="eventsSection" class="admin-section">
+            <div
+              class="alert alert-info"
+              style="
+                margin-bottom: 1.5rem;
+                padding: 1rem;
+                background: #e8f4f8;
+                border-left: 4px solid #0066cc;
+                border-radius: 4px;
+              "
+            >
+              <strong>🎉 Como usar:</strong> Divulgue eventos especiais como
+              lançamentos, desfiles, sessões fotográficas, etc. Defina nome,
+              descrição, data, local e imagem. Os clientes podem fazer marcações
+              para participar.
+            </div>
+            <div
+              style="
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 1.5rem;
+              "
+            >
+              <h2>Gestão de Eventos</h2>
+              <button class="btn btn-primary btn-sm" onclick="openEventModal()">
+                + Novo Evento
+              </button>
+            </div>
+            <div class="admin-table-container">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>Nome</th>
+                    <th>Data</th>
+                    <th>Local</th>
+                    <th>Vagas</th>
+                    <th>Ações</th>
+                  </tr>
+                </thead>
+                <tbody id="eventsTableBody">
+                  <!-- Linhas serão carregadas via JS -->
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <!-- Utilizadores -->
+          <section id="usersSection" class="admin-section">
+            <h2 style="margin-bottom: 1.5rem">Gestão de Utilizadores</h2>
+            <div
+              class="alert alert-info"
+              style="
+                margin-bottom: 1.5rem;
+                padding: 1rem;
+                background: #e8f4f8;
+                border-left: 4px solid #0066cc;
+                border-radius: 4px;
+              "
+            >
+              <strong>👥 Como usar:</strong> Visualize todos os utilizadores
+              registados no site. Veja informações como nome, email, telefone e
+              data de registo. Os utilizadores podem fazer marcações e compras
+              após registo.
+            </div>
+            <div class="admin-table-container">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>Nome</th>
+                    <th>Email</th>
+                    <th>Telefone</th>
+                    <th>Tipo</th>
+                    <th>Data Registo</th>
+                  </tr>
+                </thead>
+                <tbody id="usersTableBody">
+                  <!-- Linhas serão carregadas via JS -->
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <!-- Mensagens -->
+          <section id="messagesSection" class="admin-section">
+            <h2 style="margin-bottom: 1.5rem">Mensagens de Contacto</h2>
+            <div
+              class="alert alert-info"
+              style="
+                margin-bottom: 1.5rem;
+                padding: 1rem;
+                background: #e8f4f8;
+                border-left: 4px solid #0066cc;
+                border-radius: 4px;
+              "
+            >
+              <strong>📧 Como usar:</strong> Visualize mensagens enviadas pelos
+              visitantes através do formulário de contacto. Marque como "Lida"
+              após responder. Clique em "Ver" para ler a mensagem completa.
+            </div>
+            <div class="admin-table-container">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>Nome</th>
+                    <th>Email</th>
+                    <th>Assunto</th>
+                    <th>Data</th>
+                    <th>Estado</th>
+                    <th>Ações</th>
+                  </tr>
+                </thead>
+                <tbody id="messagesTableBody">
+                  <!-- Linhas serão carregadas via JS -->
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <!-- Relatórios -->
+          <section id="reportsSection" class="admin-section">
+            <h2 style="margin-bottom: 1.5rem">Relatórios e Análises</h2>
+            <div
+              class="alert alert-info"
+              style="
+                margin-bottom: 1.5rem;
+                padding: 1rem;
+                background: #e8f4f8;
+                border-left: 4px solid #0066cc;
+                border-radius: 4px;
+              "
+            >
+              <strong>📈 Como usar:</strong> Visualize estatísticas detalhadas,
+              gráficos de desempenho e exporte relatórios em PDF ou Excel. Use
+              os filtros de período para analisar dados específicos.
+            </div>
+
+            <!-- Filtros de Período -->
+            <div class="settings-section">
+              <h3>Período de Análise</h3>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="reportStartDate">Data Início</label>
+                  <input type="date" id="reportStartDate" />
+                </div>
+                <div class="form-group">
+                  <label for="reportEndDate">Data Fim</label>
+                  <input type="date" id="reportEndDate" />
+                </div>
+                <div
+                  class="form-group"
+                  style="display: flex; align-items: flex-end"
+                >
+                  <button class="btn btn-primary" onclick="loadReports()">
+                    Atualizar Relatório
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Botões de Exportação -->
+            <div style="margin-bottom: 2rem; display: flex; gap: 1rem">
+              <button class="btn btn-primary" onclick="exportReportPDF()">
+                📄 Exportar PDF
+              </button>
+              <button class="btn btn-primary" onclick="exportReportExcel()">
+                📈 Exportar Excel
+              </button>
+            </div>
+
+            <!-- Estatísticas Gerais -->
+            <div class="settings-section">
+              <h3>Estatísticas Gerais</h3>
+              <div class="stats-grid" id="reportStatsGrid">
+                <!-- Stats serão carregadas via JS -->
+              </div>
+            </div>
+
+            <!-- Gráficos -->
+            <div class="settings-section">
+              <h3>Gráficos de Desempenho</h3>
+              <div class="grid grid-2" style="gap: 2rem">
+                <div>
+                  <h4 style="margin-bottom: 1rem; font-size: 1rem; color: #666">
+                    Marcações por Serviço
+                  </h4>
+                  <canvas id="servicesChart" style="max-height: 300px"></canvas>
+                </div>
+                <div>
+                  <h4 style="margin-bottom: 1rem; font-size: 1rem; color: #666">
+                    Receita por Mês
+                  </h4>
+                  <canvas id="revenueChart" style="max-height: 300px"></canvas>
+                </div>
+              </div>
+              <div class="grid grid-2" style="gap: 2rem; margin-top: 2rem">
+                <div>
+                  <h4 style="margin-bottom: 1rem; font-size: 1rem; color: #666">
+                    Status das Marcações
+                  </h4>
+                  <canvas
+                    id="bookingsStatusChart"
+                    style="max-height: 300px"
+                  ></canvas>
+                </div>
+                <div>
+                  <h4 style="margin-bottom: 1rem; font-size: 1rem; color: #666">
+                    Produtos Mais Vendidos
+                  </h4>
+                  <canvas
+                    id="topProductsChart"
+                    style="max-height: 300px"
+                  ></canvas>
+                </div>
+              </div>
+            </div>
+
+            <!-- Tabelas Detalhadas -->
+            <div class="settings-section">
+              <h3>Detalhamento de Serviços</h3>
+              <div class="admin-table-container">
+                <table class="admin-table">
+                  <thead>
+                    <tr>
+                      <th>Serviço</th>
+                      <th>Total Marcações</th>
+                      <th>Confirmadas</th>
+                      <th>Concluídas</th>
+                      <th>Canceladas</th>
+                      <th>Receita Total</th>
+                    </tr>
+                  </thead>
+                  <tbody id="servicesReportTable">
+                    <!-- Dados serão carregados via JS -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <!-- Gestão de Imagens -->
+          <section id="imagesSection" class="admin-section">
+            <h2 style="margin-bottom: 1.5rem">🖼️ Gestão de Imagens</h2>
+            <div
+              class="alert alert-info"
+              style="
+                margin-bottom: 1.5rem;
+                padding: 1rem;
+                background: #e8f4f8;
+                border-left: 4px solid #0066cc;
+                border-radius: 4px;
+              "
+            >
+              <strong>📸 Como usar:</strong> Visualize e edite todas as imagens
+              do site organizadas por secção. Clique em "Editar" para alterar a
+              URL da imagem. As imagens são exibidas com pré-visualização para
+              facilitar a identificação.
+            </div>
+
+            <!-- Serviços -->
+            <div class="settings-section" style="margin-bottom: 2rem">
+              <h3
+                style="
+                  margin-bottom: 1rem;
+                  color: var(--color-red);
+                  border-bottom: 2px solid var(--color-red);
+                  padding-bottom: 0.5rem;
+                "
+              >
+                💼 Serviços
+              </h3>
+              <div id="imagesServicesGrid" class="admin-image-preview-grid">
+                <!-- Carregado via JS -->
+              </div>
+            </div>
+
+            <!-- Workshops -->
+            <div class="settings-section" style="margin-bottom: 2rem">
+              <h3
+                style="
+                  margin-bottom: 1rem;
+                  color: var(--color-red);
+                  border-bottom: 2px solid var(--color-red);
+                  padding-bottom: 0.5rem;
+                "
+              >
+                🎯 Workshops & Cursos
+              </h3>
+              <div id="imagesWorkshopsGrid" class="admin-image-preview-grid">
+                <!-- Carregado via JS -->
+              </div>
+            </div>
+
+            <!-- Blog / Últimas Novidades -->
+            <div class="settings-section" style="margin-bottom: 2rem">
+              <h3
+                style="
+                  margin-bottom: 1rem;
+                  color: var(--color-red);
+                  border-bottom: 2px solid var(--color-red);
+                  padding-bottom: 0.5rem;
+                "
+              >
+                📰 Blog (Últimas Novidades)
+              </h3>
+              <div id="imagesPostsGrid" class="admin-image-preview-grid">
+                <!-- Carregado via JS -->
+              </div>
+            </div>
+
+            <!-- Tendências Verão 2025 -->
+            <div class="settings-section" style="margin-bottom: 2rem">
+              <h3
+                style="
+                  margin-bottom: 1rem;
+                  color: var(--color-red);
+                  border-bottom: 2px solid var(--color-red);
+                  padding-bottom: 0.5rem;
+                "
+              >
+                ☀️ Tendências de Maquilhagem Verão 2025
+              </h3>
+              <p style="font-size: 0.9rem; color: #666; margin-bottom: 1rem">
+                <em>Posts com categoria "Tendências"</em>
+              </p>
+              <div id="imagesTrendGrid" class="admin-image-preview-grid">
+                <!-- Carregado via JS -->
+              </div>
+            </div>
+
+            <!-- Guia Noivas -->
+            <div class="settings-section" style="margin-bottom: 2rem">
+              <h3
+                style="
+                  margin-bottom: 1rem;
+                  color: var(--color-red);
+                  border-bottom: 2px solid var(--color-red);
+                  padding-bottom: 0.5rem;
+                "
+              >
+                💍 Guia Completo: Maquilhagem para Noivas
+              </h3>
+              <p style="font-size: 0.9rem; color: #666; margin-bottom: 1rem">
+                <em>Posts com categoria "Tutorial"</em>
+              </p>
+              <div id="imagesBrideGrid" class="admin-image-preview-grid">
+                <!-- Carregado via JS -->
+              </div>
+            </div>
+
+            <!-- Erros Comuns -->
+            <div class="settings-section" style="margin-bottom: 2rem">
+              <h3
+                style="
+                  margin-bottom: 1rem;
+                  color: var(--color-red);
+                  border-bottom: 2px solid var(--color-red);
+                  padding-bottom: 0.5rem;
+                "
+              >
+                ⚠️ Os Erros Mais Comuns na Maquilhagem
+              </h3>
+              <p style="font-size: 0.9rem; color: #666; margin-bottom: 1rem">
+                <em>Posts com categoria "Dicas"</em>
+              </p>
+              <div id="imagesMistakesGrid" class="admin-image-preview-grid">
+                <!-- Carregado via JS -->
+              </div>
+            </div>
+
+            <!-- Pincéis Essenciais -->
+            <div class="settings-section" style="margin-bottom: 2rem">
+              <h3
+                style="
+                  margin-bottom: 1rem;
+                  color: var(--color-red);
+                  border-bottom: 2px solid var(--color-red);
+                  padding-bottom: 0.5rem;
+                "
+              >
+                🖌️ Pincéis Essenciais para Iniciantes
+              </h3>
+              <p style="font-size: 0.9rem; color: #666; margin-bottom: 1rem">
+                <em>Posts com categoria "Produtos"</em>
+              </p>
+              <div id="imagesBrushesGrid" class="admin-image-preview-grid">
+                <!-- Carregado via JS -->
+              </div>
+            </div>
+
+            <!-- Produtos -->
+            <div class="settings-section" style="margin-bottom: 2rem">
+              <h3
+                style="
+                  margin-bottom: 1rem;
+                  color: var(--color-red);
+                  border-bottom: 2px solid var(--color-red);
+                  padding-bottom: 0.5rem;
+                "
+              >
+                🛍️ Produtos
+              </h3>
+              <div id="imagesProductsGrid" class="admin-image-preview-grid">
+                <!-- Carregado via JS -->
+              </div>
+            </div>
+
+            <!-- Eventos -->
+            <div class="settings-section" style="margin-bottom: 2rem">
+              <h3
+                style="
+                  margin-bottom: 1rem;
+                  color: var(--color-red);
+                  border-bottom: 2px solid var(--color-red);
+                  padding-bottom: 0.5rem;
+                "
+              >
+                🎉 Eventos
+              </h3>
+              <div id="imagesEventsGrid" class="admin-image-preview-grid">
+                <!-- Carregado via JS -->
+              </div>
+            </div>
+          </section>
+
+          <!-- Definições -->
+          <section id="settingsSection" class="admin-section">
+            <h2 style="margin-bottom: 1.5rem">Definições do Site</h2>
+            <div
+              class="alert alert-info"
+              style="
+                margin-bottom: 1.5rem;
+                padding: 1rem;
+                background: #e8f4f8;
+                border-left: 4px solid #0066cc;
+                border-radius: 4px;
+              "
+            >
+              <strong>⚙️ Como usar:</strong> Configure todos os aspectos do
+              site: nome, loja online, imagens, portfólio, certificados e
+              analytics. Cada seção tem instruções específicas. Lembre-se de
+              clicar em "Guardar Alterações" após editar.
+            </div>
+
+            <div class="settings-section">
+              <h3>Nome do Site</h3>
+              <form id="siteNameForm">
+                <div class="form-group">
+                  <label for="siteTagline">Nome/Tagline do Site</label>
+                  <input
+                    type="text"
+                    id="siteTagline"
+                    value="Yemar Makeup Artist"
+                    placeholder="Ex: Yemar Makeup Artist"
+                  />
+                  <small style="color: #666; font-size: 0.8rem"
+                    >Este nome aparece no cabeçalho do site</small
+                  >
+                </div>
+                <button type="submit" class="btn btn-primary">
+                  Guardar Alterações
+                </button>
+              </form>
+            </div>
+
+            <div class="settings-section">
+              <h3>Loja Online</h3>
+              <form id="shopSettingsForm">
+                <div class="form-group">
+                  <label>
+                    <input type="checkbox" id="shopEnabled" checked />
+                    Ativar Loja Online
+                  </label>
+                  <small
+                    style="
+                      color: #666;
+                      font-size: 0.8rem;
+                      display: block;
+                      margin-top: 0.5rem;
+                    "
+                    >Quando desativada, a loja e produtos não aparecerão no
+                    site</small
+                  >
+                </div>
+                <button type="submit" class="btn btn-primary">
+                  Guardar Alterações
+                </button>
+              </form>
+            </div>
+
+            <div class="settings-section">
+              <h3>Hero Banner</h3>
+              <form id="heroSettingsForm">
+                <div class="form-group">
+                  <label for="heroTitle">Título</label>
+                  <input
+                    type="text"
+                    id="heroTitle"
+                    value="Realça a Tua Beleza Natural"
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="heroSubtitle">Subtítulo</label>
+                  <input
+                    type="text"
+                    id="heroSubtitle"
+                    value="Maquilhagem profissional para todos os momentos especiais da tua vida"
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="heroImage">URL da Imagem</label>
+                  <input
+                    type="url"
+                    id="heroImage"
+                    value="https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=1920"
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="heroCta">Texto do Botão</label>
+                  <input type="text" id="heroCta" value="Marcar Agora" />
+                </div>
+                <button type="submit" class="btn btn-primary">
+                  Guardar Alterações
+                </button>
+              </form>
+            </div>
+
+            <div class="settings-section">
+              <h3>Informações de Contacto</h3>
+              <form id="contactSettingsForm">
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="settingsEmail">Email</label>
+                    <input
+                      type="email"
+                      id="settingsContactEmail"
+                      value="yemarmk@gmail.com"
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label for="settingsPhone">Telefone</label>
+                    <input
+                      type="tel"
+                      id="settingsContactPhone"
+                      value="(+351) 933758731"
+                    />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="settingsAddress">Endereço</label>
+                  <input
+                    type="text"
+                    id="settingsAddress"
+                    placeholder="Ex: Rua das Flores, 123 - Lisboa"
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="settingsWhatsApp"
+                    >WhatsApp (apenas números)</label
+                  >
+                  <input
+                    type="text"
+                    id="settingsWhatsApp"
+                    placeholder="Ex: 351933758731"
+                    value="351933758731"
+                  />
+                  <small style="color: #666; font-size: 0.8rem"
+                    >Número com código do país, sem espaços ou caracteres
+                    especiais</small
+                  >
+                </div>
+                <div class="form-group">
+                  <label for="settingsMapUrl"
+                    >URL do Mapa (Google Maps Embed)</label
+                  >
+                  <input
+                    type="url"
+                    id="settingsMapUrl"
+                    placeholder="Cole aqui o link embed do Google Maps"
+                  />
+                  <small style="color: #666; font-size: 0.8rem"
+                    >Vá ao Google Maps, clique em "Partilhar" > "Incorporar um
+                    mapa" e copie o URL do src</small
+                  >
+                </div>
+                <button type="submit" class="btn btn-primary">
+                  Guardar Alterações
+                </button>
+              </form>
+            </div>
+
+            <div class="settings-section">
+              <h3>Mensagens WhatsApp</h3>
+              <form id="whatsappSettingsForm">
+                <div class="form-group">
+                  <label for="whatsappNotificationTemplate"
+                    >Mensagem de Notificação ao Admin</label
+                  >
+                  <textarea
+                    id="whatsappNotificationTemplate"
+                    rows="10"
+                    placeholder="Personalize a mensagem enviada ao admin quando cliente faz marcação"
+                  ></textarea>
+                  <small
+                    style="
+                      color: #666;
+                      font-size: 0.8rem;
+                      display: block;
+                      margin-top: 0.5rem;
+                    "
+                  >
+                    <strong>Variáveis disponíveis:</strong><br />
+                    {clienteNome} - Nome do cliente<br />
+                    {clienteEmail} - Email do cliente<br />
+                    {clienteTelefone} - Telefone do cliente<br />
+                    {tipoServico} - Tipo (Serviço, Workshop ou Evento)<br />
+                    {nomeServico} - Nome do serviço/workshop/evento<br />
+                    {data} - Data da marcação<br />
+                    {hora} - Hora da marcação
+                  </small>
+                </div>
+                <button type="submit" class="btn btn-primary">
+                  Guardar Alterações
+                </button>
+              </form>
+            </div>
+
+            <div class="settings-section">
+              <h3>Imagens do Site</h3>
+              <form id="imagesSettingsForm">
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="welcomeAvatarUrl"
+                      >Foto do Perfil (Seção Bem-Vindas)</label
+                    >
+                    <input
+                      type="url"
+                      id="welcomeAvatarUrl"
+                      placeholder="assets/images/logo.png"
+                    />
+                    <img
+                      id="welcomeAvatarPreview"
+                      src=""
+                      alt="Preview"
+                      style="
+                        max-width: 100px;
+                        margin-top: 10px;
+                        border-radius: 50%;
+                      "
+                      onerror="this.src='assets/images/logo.png'"
+                    />
+                    <small style="color: #666; font-size: 0.8rem"
+                      >Imagem circular que aparece na homepage</small
+                    >
+                  </div>
+                  <div class="form-group">
+                    <label for="aboutImageUrl">Foto da Página Sobre Mim</label>
+                    <input
+                      type="url"
+                      id="aboutImageUrl"
+                      placeholder="assets/images/capa.png"
+                    />
+                    <img
+                      id="aboutImagePreview"
+                      src=""
+                      alt="Preview"
+                      style="max-width: 100px; margin-top: 10px"
+                      onerror="this.src='assets/images/capa.png'"
+                    />
+                    <small style="color: #666; font-size: 0.8rem"
+                      >Imagem principal da página Sobre Mim</small
+                    >
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="footerAvatarUrl"
+                    >Foto do Rodapé (Seção Sobre Mim)</label
+                  >
+                  <input
+                    type="url"
+                    id="footerAvatarUrl"
+                    placeholder="assets/images/logo.png"
+                    value="assets/images/capa.png"
+                  />
+                  <img
+                    id="footerAvatarPreview"
+                    src=""
+                    alt="Preview"
+                    style="
+                      max-width: 100px;
+                      margin-top: 10px;
+                      border-radius: 50%;
+                    "
+                    onerror="this.src='assets/images/logo.png'"
+                  />
+                  <small style="color: #666; font-size: 0.8rem"
+                    >Foto circular que aparece no rodapé. Por padrão, usa a
+                    mesma da página Sobre Mim.</small
+                  >
+                </div>
+                <button type="submit" class="btn btn-primary">
+                  Guardar Alterações
+                </button>
+              </form>
+            </div>
+
+            <div class="settings-section">
+              <h3>Portfólio</h3>
+              <p style="margin-bottom: 1rem; color: #666">
+                Gerir imagens do portfólio.
+              </p>
+              <div class="form-group">
+                <label>Adicionar Imagem ao Portfólio</label>
+                <input
+                  type="text"
+                  id="portfolioImageUrl"
+                  placeholder="URL da imagem"
+                />
+                <input
+                  type="text"
+                  id="portfolioImageTitle"
+                  placeholder="Título (opcional)"
+                  style="margin-top: 0.5rem"
+                />
+                <textarea
+                  id="portfolioImageDesc"
+                  placeholder="Descrição (opcional)"
+                  rows="2"
+                  style="margin-top: 0.5rem"
+                ></textarea>
+                <button
+                  class="btn btn-primary"
+                  onclick="addPortfolioImageAdmin()"
+                  style="margin-top: 0.5rem"
+                >
+                  Adicionar Imagem
+                </button>
+              </div>
+              <div
+                id="portfolioImagesGrid"
+                class="admin-image-grid"
+                style="margin-top: 1.5rem"
+              >
+                <!-- Portfolio images will be loaded here -->
+              </div>
+            </div>
+
+            <div class="settings-section">
+              <h3>Certificados</h3>
+              <p style="margin-bottom: 1rem; color: #666">
+                Gerir certificados exibidos no rodapé do site.
+              </p>
+              <div class="form-group">
+                <label>Adicionar Certificado</label>
+                <input
+                  type="text"
+                  id="certificateImageUrl"
+                  placeholder="URL da imagem do certificado"
+                />
+                <input
+                  type="text"
+                  id="certificateTitle"
+                  placeholder="Título do certificado"
+                  style="margin-top: 0.5rem"
+                />
+                <input
+                  type="text"
+                  id="certificateYear"
+                  placeholder="Ano (opcional)"
+                  style="margin-top: 0.5rem"
+                />
+                <button
+                  class="btn btn-primary"
+                  onclick="addCertificateAdmin()"
+                  style="margin-top: 0.5rem"
+                >
+                  Adicionar Certificado
+                </button>
+              </div>
+              <div
+                id="certificatesGrid"
+                class="admin-image-grid"
+                style="margin-top: 1.5rem"
+              >
+                <!-- Certificates will be loaded here -->
+              </div>
+            </div>
+
+            <div class="settings-section">
+              <h3>Formação & Certificações</h3>
+              <p style="margin-bottom: 1.5rem; color: #666">
+                Gerir formação académica e certificações profissionais exibidas
+                no site.
+              </p>
+
+              <div
+                style="
+                  display: grid;
+                  grid-template-columns: 1fr 1fr;
+                  gap: 2rem;
+                  margin-bottom: 2rem;
+                "
+              >
+                <!-- Formação Académica -->
+                <div>
+                  <h4 style="margin-bottom: 1rem; color: #0b0b0d">
+                    Formação Académica
+                  </h4>
+                  <div class="form-group">
+                    <label>Adicionar Formação</label>
+                    <input
+                      type="text"
+                      id="newFormacao"
+                      placeholder="Ex: Curso Profissional de Maquilhagem - Escola de Moda de Lisboa"
+                    />
+                    <button
+                      class="btn btn-sm btn-primary"
+                      onclick="addFormacao()"
+                      style="margin-top: 0.5rem"
+                    >
+                      Adicionar
+                    </button>
+                  </div>
+                  <div id="formacaoList" style="margin-top: 1rem">
+                    <!-- Lista de formações -->
+                  </div>
+                </div>
+
+                <!-- Certificações -->
+                <div>
+                  <h4 style="margin-bottom: 1rem; color: #0b0b0d">
+                    Certificações
+                  </h4>
+                  <div class="form-group">
+                    <label>Adicionar Certificação</label>
+                    <input
+                      type="text"
+                      id="newCertificacao"
+                      placeholder="Ex: Maquilhadora Profissional Certificada"
+                    />
+                    <button
+                      class="btn btn-sm btn-primary"
+                      onclick="addCertificacao()"
+                      style="margin-top: 0.5rem"
+                    >
+                      Adicionar
+                    </button>
+                  </div>
+                  <div id="certificacaoList" style="margin-top: 1rem">
+                    <!-- Lista de certificações -->
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="settings-section">
+              <h3>Analytics e Visitas</h3>
+              <div id="analyticsStats">
+                <!-- Analytics stats will be loaded here -->
+              </div>
+              <div style="margin-top: 1.5rem">
+                <h4>Visitas por Página</h4>
+                <div id="pageVisitsChart" style="margin-top: 1rem">
+                  <!-- Page visits chart -->
+                </div>
+              </div>
+              <div style="margin-top: 1.5rem">
+                <h4>Avaliações do Google</h4>
+                <p style="color: #666; margin-top: 0.5rem">
+                  Para integrar avaliações do Google, adicione o widget do
+                  Google My Business no seu site.
+                </p>
+                <a
+                  href="https://www.google.com/business/"
+                  target="_blank"
+                  class="btn btn-outline"
+                  style="margin-top: 0.5rem"
+                  >Acessar Google My Business</a
+                >
+              </div>
+            </div>
+
+            <div class="settings-section">
+              <h3>Dados do Sistema</h3>
+              <p style="margin-bottom: 1rem; color: #666">
+                Gerir dados armazenados localmente.
+              </p>
+              <button class="btn btn-outline" onclick="resetData()">
+                Repor Dados Iniciais
+              </button>
+              <button
+                class="btn btn-outline"
+                onclick="exportData()"
+                style="margin-left: 0.5rem"
+              >
+                Exportar Dados
+              </button>
+            </div>
+          </section>
         </div>
+      </div>
     </main>
 
     <!-- Modal Container -->
     <div class="modal-overlay" id="modalOverlay">
-        <div class="modal large" id="modal">
-            <div class="modal-header">
-                <h3 class="modal-title" id="modalTitle">Modal</h3>
-                <button class="modal-close" onclick="closeModal()">&times;</button>
-            </div>
-            <div class="modal-body" id="modalBody">
-                <!-- Conteúdo do modal será carregado via JS -->
-            </div>
+      <div class="modal large" id="modal">
+        <div class="modal-header">
+          <h3 class="modal-title" id="modalTitle">Modal</h3>
+          <button class="modal-close" onclick="closeModal()">&times;</button>
         </div>
+        <div class="modal-body" id="modalBody">
+          <!-- Conteúdo do modal será carregado via JS -->
+        </div>
+      </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
@@ -776,9 +1363,9 @@
     <script src="js/ui.js" defer></script>
     <script src="js/app.js" defer></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            loadAdminPage();
-        });
+      document.addEventListener("DOMContentLoaded", function () {
+        loadAdminPage();
+      });
     </script>
-</body>
+  </body>
 </html>
