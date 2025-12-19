@@ -299,6 +299,18 @@ function applySiteSettings() {
       settings.aboutImageUrl ||
       "assets/images/capa.png";
   }
+
+  // Aplicar foto do perfil da homepage
+  const welcomeAvatar = document.getElementById("welcomeAvatar");
+  if (welcomeAvatar && settings.welcomeAvatarUrl) {
+    welcomeAvatar.src = settings.welcomeAvatarUrl;
+  }
+
+  // Aplicar foto da página sobre
+  const aboutImage = document.getElementById("aboutImage");
+  if (aboutImage && settings.aboutImageUrl) {
+    aboutImage.src = settings.aboutImageUrl;
+  }
 }
 
 // ============================================
@@ -2860,8 +2872,11 @@ function loadAdminSettingsPage() {
         footerAvatarUrl: document.getElementById("footerAvatarUrl").value,
       });
 
+      // Aplicar as configurações na página atual
+      applySiteSettings();
+
       showToast(
-        "Imagens guardadas! Recarregue a página para ver as alterações.",
+        "Imagens guardadas! Recarregue outras páginas para ver as alterações.",
         "success",
       );
     });
