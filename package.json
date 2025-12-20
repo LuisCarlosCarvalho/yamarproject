@@ -1,0 +1,17 @@
+{
+  "name": "yemar-makeup-artist",
+  "version": "1.0.0",
+  "description": "Website de Maquilhagem Profissional",
+  "main": "index.html",
+  "scripts": {
+    "build": "ng build"
+  },
+  "keywords": [
+    "maquilhagem",
+    "makeup",
+    "artist",
+    "yemar"
+  ],
+  "author": "",
+  "license": "ISC"
+}
