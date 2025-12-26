@@ -385,9 +385,9 @@ const SEED_SITE_SETTINGS = {
   bannerImagemUrl:
     "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=800",
   bannerCta: "Marcar Agora",
-  welcomeAvatarUrl: "assets/images/logo_name.png",
-  aboutImageUrl: "assets/images/capa.png",
-  footerAvatarUrl: "assets/images/capa.png",
+  welcomeAvatarUrl: "images/logo_name.png",
+  aboutImageUrl: "images/capa.png",
+  footerAvatarUrl: "images/logo_name.png",
   emailContacto: "yemarmk@gmail.com",
   telefone: "(+351) 933758731",
   whatsapp: "351933758731",
@@ -592,15 +592,13 @@ function initializeSeed() {
     // Atualizar portfólio e certificados se estiverem vazios
     const currentSettings = getData("siteSettings");
     if (
-      !currentSettings.portfolioImages ||
-      currentSettings.portfolioImages.length === 0
+      !currentSettings.portfolioImages
     ) {
       currentSettings.portfolioImages = SEED_SITE_SETTINGS.portfolioImages;
       setData("siteSettings", currentSettings);
     }
     if (
-      !currentSettings.certificates ||
-      currentSettings.certificates.length === 0
+      !currentSettings.certificates
     ) {
       currentSettings.certificates = SEED_SITE_SETTINGS.certificates || [];
       setData("siteSettings", currentSettings);

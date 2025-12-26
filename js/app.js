@@ -297,7 +297,7 @@ function applySiteSettings() {
     footerAvatar.src =
       settings.footerAvatarUrl ||
       settings.aboutImageUrl ||
-      "assets/images/capa.png";
+      "images/capa.png";
   }
 
   // Aplicar foto do perfil da homepage
@@ -2794,7 +2794,7 @@ function loadAdminSettingsPage() {
 
   // Form handlers
   const heroForm = document.getElementById("heroSettingsForm");
-  if (heroForm) {
+  if (heroForm && heroForm.dataset.initialized !== "true") {
     heroForm.addEventListener("submit", function (e) {
       e.preventDefault();
 
@@ -2809,10 +2809,11 @@ function loadAdminSettingsPage() {
 
       showToast("Configurações do banner guardadas!", "success");
     });
+    heroForm.dataset.initialized = "true";
   }
 
   const contactForm = document.getElementById("contactSettingsForm");
-  if (contactForm) {
+  if (contactForm && contactForm.dataset.initialized !== "true") {
     contactForm.addEventListener("submit", function (e) {
       e.preventDefault();
 
@@ -2828,6 +2829,7 @@ function loadAdminSettingsPage() {
 
       showToast("Informações de contacto guardadas!", "success");
     });
+    contactForm.dataset.initialized = "true";
   }
 
   // Carregar imagens existentes
@@ -2837,12 +2839,12 @@ function loadAdminSettingsPage() {
 
   if (welcomeAvatarUrl)
     welcomeAvatarUrl.value =
-      settings.welcomeAvatarUrl || "assets/images/logo.png";
+      settings.welcomeAvatarUrl || "images/logo_name.png";
   if (aboutImageUrl)
-    aboutImageUrl.value = settings.aboutImageUrl || "assets/images/capa.png";
+    aboutImageUrl.value = settings.aboutImageUrl || "images/capa.png";
   if (footerAvatarUrl)
     footerAvatarUrl.value =
-      settings.footerAvatarUrl || "assets/images/capa.png";
+      settings.footerAvatarUrl || "images/logo_name.png";
 
   // Atualizar previews das imagens
   updateImagePreviews();
@@ -2860,7 +2862,7 @@ function loadAdminSettingsPage() {
 
   // Form handler para imagens
   const imagesForm = document.getElementById("imagesSettingsForm");
-  if (imagesForm) {
+  if (imagesForm && imagesForm.dataset.initialized !== "true") {
     imagesForm.addEventListener("submit", function (e) {
       e.preventDefault();
 
@@ -2880,11 +2882,12 @@ function loadAdminSettingsPage() {
         "success",
       );
     });
+    imagesForm.dataset.initialized = "true";
   }
 
   // Form handler para mensagens WhatsApp
   const whatsappForm = document.getElementById("whatsappSettingsForm");
-  if (whatsappForm) {
+  if (whatsappForm && whatsappForm.dataset.initialized !== "true") {
     whatsappForm.addEventListener("submit", function (e) {
       e.preventDefault();
 
@@ -2898,6 +2901,7 @@ function loadAdminSettingsPage() {
 
       showToast("Mensagem WhatsApp guardada!", "success");
     });
+    whatsappForm.dataset.initialized = "true";
   }
 }
 
@@ -3213,7 +3217,7 @@ function loadPageVisitsChart(byPage) {
 function initAdminSettingsForms() {
   // Site Name Form
   const siteNameForm = document.getElementById("siteNameForm");
-  if (siteNameForm) {
+  if (siteNameForm && siteNameForm.dataset.initialized !== "true") {
     siteNameForm.addEventListener("submit", (e) => {
       e.preventDefault();
       const tagline = document.getElementById("siteTagline").value;
@@ -3221,17 +3225,19 @@ function initAdminSettingsForms() {
       showToast("Nome do site atualizado!", "success");
       applySiteSettings();
     });
+    siteNameForm.dataset.initialized = "true";
   }
 
   // Shop Settings Form
   const shopForm = document.getElementById("shopSettingsForm");
-  if (shopForm) {
+  if (shopForm && shopForm.dataset.initialized !== "true") {
     shopForm.addEventListener("submit", (e) => {
       e.preventDefault();
       const shopEnabled = document.getElementById("shopEnabled").checked;
       updateSiteSettings({ shopEnabled });
       showToast("Configurações da loja atualizadas!", "success");
     });
+    shopForm.dataset.initialized = "true";
   }
 
   // Load current settings
