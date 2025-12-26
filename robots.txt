@@ -1,0 +1,5 @@
+User-agent: *
+Disallow: /
+
+# Este site é privado e não deve ser indexado por motores de busca
+# Acesso restrito apenas para usuários autorizados
