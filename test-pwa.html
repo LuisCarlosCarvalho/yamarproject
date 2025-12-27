@@ -168,6 +168,7 @@
       <button class="btn" onclick="testBasicPWA()">🧪 Teste Básico PWA</button>
       <button class="btn" onclick="testCSSLoading()">🎨 Teste CSS</button>
       <button class="btn secondary" onclick="checkPWAStatus()">📱 Status PWA</button>
+      <button class="btn" onclick="testAdminMobile()">👨‍💼 Teste Admin Mobile</button>
       <button class="btn" onclick="testMediaQueries()">📏 Testar Media Queries</button>
     </div>
 
@@ -583,41 +584,58 @@
       alert(`CSS Test:\nScreen: ${window.innerWidth}px\nMQ 768px: ${mediaQuery768.matches}\nMQ 480px: ${mediaQuery480.matches}\nVer console para mais detalhes`);
     }
 
-    function testMediaQueries() {
-      const testEl = document.createElement('div');
-      testEl.style.display = 'none';
-      testEl.innerHTML = `
-        <div id="mq-test-768" style="width: 100px; height: 100px; background: red;"></div>
-        <div id="mq-test-480" style="width: 100px; height: 100px; background: blue;"></div>
-      `;
-      document.body.appendChild(testEl);
+    function testAdminMobile() {
+      console.log('=== TESTE ADMIN MOBILE ===');
 
-      // Forçar aplicação das media queries
-      const style = document.createElement('style');
-      style.textContent = `
-        @media (max-width: 768px) {
-          #mq-test-768 { background: green !important; }
-        }
-        @media (max-width: 480px) {
-          #mq-test-480 { background: yellow !important; }
-        }
+      // Simular layout admin
+      const testAdmin = document.createElement('div');
+      testAdmin.innerHTML = `
+        <div class="admin-layout">
+          <aside class="admin-sidebar" style="display: block;">Sidebar</aside>
+          <main class="admin-content">Content</main>
+        </div>
       `;
-      document.head.appendChild(style);
+      testAdmin.style.position = 'fixed';
+      testAdmin.style.top = '100px';
+      testAdmin.style.left = '10px';
+      testAdmin.style.width = '300px';
+      testAdmin.style.height = '200px';
+      testAdmin.style.background = 'white';
+      testAdmin.style.border = '1px solid #ccc';
+      testAdmin.style.zIndex = '9999';
+      document.body.appendChild(testAdmin);
 
+      // Testar media query
+      const mediaQuery = window.matchMedia('(max-width: 768px)');
+      console.log('Media Query 768px matches:', mediaQuery.matches);
+      console.log('Screen width:', window.innerWidth);
+
+      // Forçar mudança de layout
+      if (mediaQuery.matches) {
+        testAdmin.querySelector('.admin-sidebar').style.display = 'none';
+        testAdmin.querySelector('.admin-layout').style.gridTemplateColumns = '1fr';
+        console.log('Layout mobile aplicado');
+      } else {
+        console.log('Layout desktop mantido');
+      }
+
+      // Testar computed styles
+      const layout = testAdmin.querySelector('.admin-layout');
+      const sidebar = testAdmin.querySelector('.admin-sidebar');
+      const content = testAdmin.querySelector('.admin-content');
+
+      console.log('Layout computed style:', window.getComputedStyle(layout).gridTemplateColumns);
+      console.log('Sidebar display:', window.getComputedStyle(sidebar).display);
+      console.log('Content padding:', window.getComputedStyle(content).padding);
+
+      alert(`Admin Mobile Test:\nScreen: ${window.innerWidth}px\nMQ 768px: ${mediaQuery.matches}\nVer console para detalhes`);
+
+      // Remover teste após 5 segundos
       setTimeout(() => {
-        const el768 = document.getElementById('mq-test-768');
-        const el480 = document.getElementById('mq-test-480');
-        const computedStyle768 = window.getComputedStyle(el768);
-        const computedStyle480 = window.getComputedStyle(el480);
-
-        console.log('Media Query Test:', {
-          screenWidth: window.innerWidth,
-          mq768: computedStyle768.backgroundColor,
-          mq480: computedStyle480.backgroundColor
-        });
-
-        alert(`Media Query Test:\nScreen: ${window.innerWidth}px\nMQ 768px: ${computedStyle768.backgroundColor}\nMQ 480px: ${computedStyle480.backgroundColor}`);
-      }, 100);
+        if (testAdmin.parentNode) {
+          testAdmin.parentNode.removeChild(testAdmin);
+        }
+      }, 5000);
     }
   </script>
 </body>
