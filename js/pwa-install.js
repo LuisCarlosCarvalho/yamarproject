@@ -1,5 +1,12 @@
+console.log('[PWA] Script pwa-install.js carregado com sucesso');
+console.log('[PWA] UserAgent:', navigator.userAgent);
+console.log('[PWA] URL atual:', window.location.href);
+console.log('[PWA] Protocolo:', window.location.protocol);
+console.log('[PWA] Hostname:', window.location.hostname);
+
 class PWAInstall {
   constructor() {
+    console.log('[PWA] Constructor chamado');
     this.deferredPrompt = null;
     this.installBanner = null;
     this.isInstalled = false;
@@ -7,11 +14,17 @@ class PWAInstall {
   }
 
   init() {
+    console.log('[PWA] Inicializando PWA Install...');
+    console.log('[PWA] Document readyState:', document.readyState);
+    console.log('[PWA] Window loaded:', window.loaded);
+
     // Check if already installed
     this.checkIfInstalled();
+    console.log('[PWA] Check installed result:', this.isInstalled);
 
     // Listen for beforeinstallprompt
     window.addEventListener('beforeinstallprompt', (e) => {
+      console.log('[PWA] beforeinstallprompt disparado');
       e.preventDefault();
       this.deferredPrompt = e;
       this.showInstallBanner();
@@ -19,7 +32,7 @@ class PWAInstall {
 
     // Listen for app installed
     window.addEventListener('appinstalled', (evt) => {
-      console.log('App was installed successfully');
+      console.log('[PWA] App foi instalado com sucesso');
       this.isInstalled = true;
       this.hideInstallBanner();
       this.showSuccessMessage();
@@ -29,12 +42,16 @@ class PWAInstall {
     this.registerServiceWorker();
 
     // Show banner on mobile devices after a delay
-    if (this.isMobile() && !this.isInstalled) {
+    // Para desenvolvimento, mostrar também em desktop
+    const shouldShowBanner = this.isMobile() || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+    if (shouldShowBanner && !this.isInstalled) {
+      console.log('[PWA] Agendando banner (mobile ou desenvolvimento)...');
       setTimeout(() => {
-        if (!this.installBanner && this.deferredPrompt) {
-          this.showInstallBanner();
-        }
-      }, 3000);
+        console.log('[PWA] Timeout atingido, mostrando banner para testes...');
+        this.showInstallBanner();
+      }, 1000); // 1 segundo para desenvolvimento
+    } else {
+      console.log('[PWA] Banner não será mostrado:', { isMobile: this.isMobile(), isInstalled: this.isInstalled, hostname: window.location.hostname });
     }
   }
 
@@ -60,7 +77,19 @@ class PWAInstall {
   }
 
   isMobile() {
-    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    const userAgent = navigator.userAgent;
+    const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent);
+    const isSmallScreen = window.innerWidth <= 768;
+
+    console.log('[PWA] Verificando se é mobile:', {
+      userAgent: userAgent,
+      isMobileDevice: isMobileDevice,
+      screenWidth: window.innerWidth,
+      isSmallScreen: isSmallScreen
+    });
+
+    // Para desenvolvimento, considere mobile se tela pequena ou dispositivo mobile
+    return isMobileDevice || isSmallScreen;
   }
 
   isIOS() {
@@ -69,15 +98,18 @@ class PWAInstall {
 
   registerServiceWorker() {
     if ('serviceWorker' in navigator) {
+      console.log('[PWA] Registrando Service Worker...');
       navigator.serviceWorker.register('/sw.js')
         .then(registration => {
-          console.log('Service Worker registered successfully:', registration);
+          console.log('[PWA] Service Worker registrado com sucesso:', registration);
 
           // Check for updates
           registration.addEventListener('updatefound', () => {
+            console.log('[PWA] Update encontrado no Service Worker');
             const newWorker = registration.installing;
             if (newWorker) {
               newWorker.addEventListener('statechange', () => {
+                console.log('[PWA] Estado do SW mudou para:', newWorker.state);
                 if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
                   this.showUpdateNotification();
                 }
@@ -86,20 +118,27 @@ class PWAInstall {
           });
         })
         .catch(error => {
-          console.log('Service Worker registration failed:', error);
+          console.error('[PWA] Falha no registro do Service Worker:', error);
         });
+    } else {
+      console.warn('[PWA] Service Worker não suportado neste navegador');
     }
   }
 
   showInstallBanner() {
-    if (this.installBanner || this.isInstalled) return;
+    console.log('[PWA] Tentando mostrar banner de instalação');
+    if (this.installBanner || this.isInstalled) {
+      console.log('[PWA] Banner já existe ou app já instalado');
+      return;
+    }
 
+    console.log('[PWA] Criando banner de instalação');
     const banner = document.createElement('div');
     banner.id = 'pwa-install-banner';
     banner.innerHTML = `
       <div class="pwa-banner-content">
         <div class="pwa-banner-icon">
-          <img src="/assets/images/icon-96.png" alt="Yamar App" width="48" height="48">
+          <img src="/assets/images/icon-96.png" alt="Yamar App" width="48" height="48" onerror="console.log('[PWA] Erro ao carregar ícone')">
         </div>
         <div class="pwa-banner-text">
           <h3>Instalar Yamar App</h3>
@@ -119,7 +158,10 @@ class PWAInstall {
     this.installBanner = banner;
 
     // Animate in
-    setTimeout(() => banner.classList.add('show'), 100);
+    setTimeout(() => {
+      banner.classList.add('show');
+      console.log('[PWA] Banner exibido com sucesso');
+    }, 100);
   }
 
   hideInstallBanner() {
@@ -263,6 +305,12 @@ class PWAInstall {
 }
 
 // Initialize PWA install when DOM is ready
-document.addEventListener('DOMContentLoaded', () => {
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => {
+    console.log('[PWA] DOM pronto, inicializando PWA');
+    window.pwaInstall = new PWAInstall();
+  });
+} else {
+  console.log('[PWA] DOM já estava pronto, inicializando PWA');
   window.pwaInstall = new PWAInstall();
-});
+}

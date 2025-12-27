@@ -4,6 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Teste PWA - Yamar Project</title>
+  <!-- PWA Meta Tags -->
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#c9a227">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Yamar">
+  <link rel="stylesheet" href="css/styles.css">
+  <script src="js/pwa-install.js" defer></script>
   <style>
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -99,29 +107,74 @@
       margin-top: 0;
       color: #c9a227;
     }
+
+    .progress-container {
+      background: white;
+      border-radius: 8px;
+      padding: 20px;
+      margin: 20px 0;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 8px;
+      background: #e0e0e0;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 10px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: #c9a227;
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    .progress-text {
+      color: #666;
+      font-size: 14px;
+    }
   </style>
 </head>
 <body>
   <h1>🧪 Teste PWA - Yamar Project</h1>
   <p>Esta página testa todas as funcionalidades da Progressive Web App.</p>
 
-  <div class="progress-bar">
-    <div class="progress-fill" id="progressFill"></div>
-  </div>
+    <div class="test-section">
+      <h2>🔍 Informações do Dispositivo</h2>
+      <div id="deviceInfo"></div>
+    </div>
+
 
   <div id="testResults"></div>
+
+  <div class="progress-container">
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+    <div class="progress-text">Executando testes...</div>
+  </div>
 
   <div class="summary hidden" id="summary">
     <h3>📊 Resumo dos Testes</h3>
     <p id="summaryText"></p>
     <button class="btn" onclick="runAllTests()">🔄 Executar Todos os Testes</button>
     <button class="btn secondary" onclick="clearResults()">🗑️ Limpar Resultados</button>
-  </div>
+      <button class="btn" onclick="forceShowBanner()">🎯 Forçar Banner</button>
+      <button class="btn" onclick="testScriptLoading()">📜 Teste Carregamento</button>
+      <button class="btn" onclick="testBasicPWA()">🧪 Teste Básico PWA</button>
+      <button class="btn" onclick="testCSSLoading()">🎨 Teste CSS</button>
+      <button class="btn secondary" onclick="checkPWAStatus()">📱 Status PWA</button>
+      <button class="btn" onclick="testMediaQueries()">📏 Testar Media Queries</button>
+    </div>
 
   <script>
+    const totalTests = 12;
     let testResults = [];
     let completedTests = 0;
-    const totalTests = 12;
 
     // Test functions
     async function testHTTPS() {
@@ -431,8 +484,141 @@
 
     // Auto-run tests on page load
     window.addEventListener('load', () => {
+      showDeviceInfo();
       setTimeout(runAllTests, 500);
     });
+
+    function showDeviceInfo() {
+      const info = document.getElementById('deviceInfo');
+      info.innerHTML = `
+        <p><strong>User Agent:</strong> ${navigator.userAgent}</p>
+        <p><strong>Screen Size:</strong> ${window.innerWidth}x${window.innerHeight}</p>
+        <p><strong>Device Pixel Ratio:</strong> ${window.devicePixelRatio}</p>
+        <p><strong>Touch Support:</strong> ${('ontouchstart' in window) ? 'Yes' : 'No'}</p>
+        <p><strong>Service Worker:</strong> ${('serviceWorker' in navigator) ? 'Supported' : 'Not Supported'}</p>
+        <p><strong>Before Install Prompt:</strong> ${('onbeforeinstallprompt' in window) ? 'Supported' : 'Not Supported'}</p>
+        <p><strong>Standalone Mode:</strong> ${window.matchMedia('(display-mode: standalone)').matches ? 'Yes' : 'No'}</p>
+        <p><strong>iOS Standalone:</strong> ${window.navigator.standalone ? 'Yes' : 'No'}</p>
+        <p><strong>Protocol:</strong> ${location.protocol}</p>
+        <p><strong>Hostname:</strong> ${location.hostname}</p>
+      `;
+    }
+
+    function forceShowBanner() {
+      if (window.pwaInstall) {
+        console.log('Forçando exibição do banner...');
+        window.pwaInstall.showInstallBanner();
+      } else {
+        alert('PWA Install não está carregado');
+      }
+    }
+
+    function checkPWAStatus() {
+      const status = {
+        'PWA Install Loaded': !!window.pwaInstall,
+        'Deferred Prompt': !!window.pwaInstall?.deferredPrompt,
+        'Is Mobile': window.pwaInstall?.isMobile(),
+        'Is Installed': window.pwaInstall?.isInstalled,
+        'Banner Visible': !!document.getElementById('pwa-install-banner'),
+        'Screen Width': window.innerWidth,
+        'Screen Height': window.innerHeight,
+        'Device Pixel Ratio': window.devicePixelRatio,
+        'Touch Support': ('ontouchstart' in window),
+        'Protocol': location.protocol,
+        'Hostname': location.hostname
+      };
+
+      alert('Status PWA:\n' + Object.entries(status).map(([k, v]) => `${k}: ${v}`).join('\n'));
+      console.log('PWA Status:', status);
+    }
+
+    // Teste de carregamento do script
+    function testScriptLoading() {
+      console.log('=== TESTE DE CARREGAMENTO ===');
+      console.log('Scripts na página:', document.scripts.length);
+
+      for (let i = 0; i < document.scripts.length; i++) {
+        const script = document.scripts[i];
+        console.log(`Script ${i}:`, script.src, 'loaded:', !script.src || script.complete);
+      }
+
+      // Verificar se PWAInstall existe
+      console.log('PWAInstall class exists:', typeof PWAInstall);
+      console.log('window.pwaInstall exists:', typeof window.pwaInstall);
+
+      if (window.pwaInstall) {
+        console.log('pwaInstall methods:', Object.getOwnPropertyNames(Object.getPrototypeOf(window.pwaInstall)));
+      }
+
+      alert('Ver console para detalhes do carregamento');
+    }
+
+    function testCSSLoading() {
+      console.log('=== TESTE CSS ===');
+
+      // Criar elemento de teste
+      const testEl = document.createElement('div');
+      testEl.id = 'css-test-element';
+      testEl.textContent = 'TESTE CSS';
+      testEl.style.cssText = 'position: fixed; top: 50px; right: 10px; background: yellow; padding: 10px; z-index: 99999;';
+      document.body.appendChild(testEl);
+
+      // Testar variáveis CSS
+      const rootStyles = window.getComputedStyle(document.documentElement);
+      const colorBlack = rootStyles.getPropertyValue('--color-black');
+      const colorRed = rootStyles.getPropertyValue('--color-red');
+
+      console.log('CSS Variables:', { colorBlack, colorRed });
+
+      // Verificar se media queries estão funcionando
+      const mediaQuery768 = window.matchMedia('(max-width: 768px)');
+      const mediaQuery480 = window.matchMedia('(max-width: 480px)');
+
+      console.log('Media Queries:', {
+        'max-width: 768px': mediaQuery768.matches,
+        'max-width: 480px': mediaQuery480.matches,
+        screenWidth: window.innerWidth
+      });
+
+      alert(`CSS Test:\nScreen: ${window.innerWidth}px\nMQ 768px: ${mediaQuery768.matches}\nMQ 480px: ${mediaQuery480.matches}\nVer console para mais detalhes`);
+    }
+
+    function testMediaQueries() {
+      const testEl = document.createElement('div');
+      testEl.style.display = 'none';
+      testEl.innerHTML = `
+        <div id="mq-test-768" style="width: 100px; height: 100px; background: red;"></div>
+        <div id="mq-test-480" style="width: 100px; height: 100px; background: blue;"></div>
+      `;
+      document.body.appendChild(testEl);
+
+      // Forçar aplicação das media queries
+      const style = document.createElement('style');
+      style.textContent = `
+        @media (max-width: 768px) {
+          #mq-test-768 { background: green !important; }
+        }
+        @media (max-width: 480px) {
+          #mq-test-480 { background: yellow !important; }
+        }
+      `;
+      document.head.appendChild(style);
+
+      setTimeout(() => {
+        const el768 = document.getElementById('mq-test-768');
+        const el480 = document.getElementById('mq-test-480');
+        const computedStyle768 = window.getComputedStyle(el768);
+        const computedStyle480 = window.getComputedStyle(el480);
+
+        console.log('Media Query Test:', {
+          screenWidth: window.innerWidth,
+          mq768: computedStyle768.backgroundColor,
+          mq480: computedStyle480.backgroundColor
+        });
+
+        alert(`Media Query Test:\nScreen: ${window.innerWidth}px\nMQ 768px: ${computedStyle768.backgroundColor}\nMQ 480px: ${computedStyle480.backgroundColor}`);
+      }, 100);
+    }
   </script>
 </body>
 </html>
