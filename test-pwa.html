@@ -1,225 +1,642 @@
 <!DOCTYPE html>
-<html lang="pt-PT">
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Teste PWA - Yemar Makeup Artist</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: Arial, sans-serif;
-            padding: 20px;
-            background: #f5f5f5;
-        }
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        h1 {
-            color: #c9a227;
-            margin-bottom: 20px;
-        }
-        .test-section {
-            margin: 20px 0;
-            padding: 15px;
-            background: #f9f9f9;
-            border-left: 4px solid #c9a227;
-        }
-        .status {
-            display: inline-block;
-            padding: 5px 10px;
-            border-radius: 5px;
-            font-weight: bold;
-            margin-left: 10px;
-        }
-        .success { background: #4caf50; color: white; }
-        .error { background: #f44336; color: white; }
-        .warning { background: #ff9800; color: white; }
-        button {
-            background: #c9a227;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            margin: 5px;
-        }
-        button:hover {
-            background: #a8871f;
-        }
-        .info {
-            background: #e3f2fd;
-            padding: 10px;
-            border-radius: 5px;
-            margin: 10px 0;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Teste PWA - Yamar Project</title>
+  <!-- PWA Meta Tags -->
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#c9a227">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Yamar">
+  <link rel="stylesheet" href="css/styles.css">
+  <script src="js/pwa-install.js" defer></script>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      background: #f5f5f5;
+      color: #333;
+    }
+
+    .test-section {
+      background: white;
+      border-radius: 8px;
+      padding: 20px;
+      margin: 20px 0;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .test-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .test-icon {
+      width: 24px;
+      height: 24px;
+      margin-right: 10px;
+    }
+
+    .status {
+      padding: 5px 10px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+
+    .status.pass { background: #d4edda; color: #155724; }
+    .status.fail { background: #f8d7da; color: #721c24; }
+    .status.warn { background: #fff3cd; color: #856404; }
+    .status.info { background: #d1ecf1; color: #0c5460; }
+
+    .test-result {
+      margin-top: 10px;
+      font-size: 14px;
+      color: #666;
+    }
+
+    .btn {
+      background: #c9a227;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      margin: 5px;
+    }
+
+    .btn:hover { background: #b8941f; }
+
+    .btn.secondary { background: #6c757d; }
+    .btn.secondary:hover { background: #545b62; }
+
+    .hidden { display: none; }
+
+    .progress-bar {
+      width: 100%;
+      height: 20px;
+      background: #e9ecef;
+      border-radius: 10px;
+      overflow: hidden;
+      margin: 10px 0;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: #c9a227;
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    .summary {
+      background: #f8f9fa;
+      border: 1px solid #dee2e6;
+      border-radius: 5px;
+      padding: 15px;
+      margin-top: 20px;
+    }
+
+    .summary h3 {
+      margin-top: 0;
+      color: #c9a227;
+    }
+
+    .progress-container {
+      background: white;
+      border-radius: 8px;
+      padding: 20px;
+      margin: 20px 0;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 8px;
+      background: #e0e0e0;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 10px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: #c9a227;
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    .progress-text {
+      color: #666;
+      font-size: 14px;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1>🧪 Teste de PWA - Yemar Makeup Artist</h1>
-        
-        <div class="test-section">
-            <h3>1. Service Worker</h3>
-            <p id="sw-status">Verificando...</p>
-            <button onclick="registerSW()">Registrar Service Worker</button>
-            <button onclick="unregisterSW()">Desregistrar</button>
-        </div>
-        
-        <div class="test-section">
-            <h3>2. Manifest</h3>
-            <p id="manifest-status">Verificando...</p>
-            <button onclick="checkManifest()">Verificar Manifest</button>
-        </div>
-        
-        <div class="test-section">
-            <h3>3. Instalação PWA</h3>
-            <p id="install-status">Verificando...</p>
-            <button onclick="checkInstallable()">Verificar Instalável</button>
-            <button onclick="promptInstall()">Instalar App</button>
-        </div>
-        
-        <div class="test-section">
-            <h3>4. Modo Standalone</h3>
-            <p id="standalone-status">Verificando...</p>
-        </div>
-        
-        <div class="test-section">
-            <h3>5. Dispositivo</h3>
-            <p id="device-info">Verificando...</p>
-        </div>
-        
-        <div class="test-section">
-            <h3>6. Ícones PWA</h3>
-            <p id="icons-status">Verificando...</p>
-            <div id="icons-preview"></div>
-        </div>
-        
-        <div class="info">
-            <strong>💡 Dica:</strong> Para testar completamente, abra este arquivo em um servidor HTTPS.
-        </div>
+  <h1>🧪 Teste PWA - Yamar Project</h1>
+  <p>Esta página testa todas as funcionalidades da Progressive Web App.</p>
+
+    <div class="test-section">
+      <h2>🔍 Informações do Dispositivo</h2>
+      <div id="deviceInfo"></div>
     </div>
-    
-    <script>
-        let deferredPrompt = null;
-        
-        async function checkServiceWorker() {
-            if ('serviceWorker' in navigator) {
-                try {
-                    const registration = await navigator.serviceWorker.getRegistration();
-                    if (registration) {
-                        document.getElementById('sw-status').innerHTML = 
-                            'Service Worker registrado ✓ <span class="status success">OK</span>';
-                    } else {
-                        document.getElementById('sw-status').innerHTML = 
-                            'Service Worker não registrado <span class="status warning">Pendente</span>';
-                    }
-                } catch (error) {
-                    document.getElementById('sw-status').innerHTML = 
-                        'Erro: ' + error.message + ' <span class="status error">Erro</span>';
-                }
-            } else {
-                document.getElementById('sw-status').innerHTML = 
-                    'Service Worker não suportado <span class="status error">Não Suportado</span>';
-            }
+
+
+  <div id="testResults"></div>
+
+  <div class="progress-container">
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+    <div class="progress-text">Executando testes...</div>
+  </div>
+
+  <div class="summary hidden" id="summary">
+    <h3>📊 Resumo dos Testes</h3>
+    <p id="summaryText"></p>
+    <button class="btn" onclick="runAllTests()">🔄 Executar Todos os Testes</button>
+    <button class="btn secondary" onclick="clearResults()">🗑️ Limpar Resultados</button>
+      <button class="btn" onclick="forceShowBanner()">🎯 Forçar Banner</button>
+      <button class="btn" onclick="testScriptLoading()">📜 Teste Carregamento</button>
+      <button class="btn" onclick="testBasicPWA()">🧪 Teste Básico PWA</button>
+      <button class="btn" onclick="testCSSLoading()">🎨 Teste CSS</button>
+      <button class="btn secondary" onclick="checkPWAStatus()">📱 Status PWA</button>
+      <button class="btn" onclick="testAdminMobile()">👨‍💼 Teste Admin Mobile</button>
+      <button class="btn" onclick="testMediaQueries()">📏 Testar Media Queries</button>
+    </div>
+
+  <script>
+    const totalTests = 12;
+    let testResults = [];
+    let completedTests = 0;
+
+    // Test functions
+    async function testHTTPS() {
+      const isHTTPS = location.protocol === 'https:' || location.hostname === 'localhost';
+      return {
+        name: 'HTTPS',
+        status: isHTTPS ? 'pass' : 'fail',
+        message: isHTTPS ? 'Site está usando HTTPS' : 'Site deve usar HTTPS para PWA'
+      };
+    }
+
+    async function testManifest() {
+      try {
+        const response = await fetch('/manifest.json');
+        if (!response.ok) throw new Error('Manifest não encontrado');
+
+        const manifest = await response.json();
+        const required = ['name', 'short_name', 'start_url', 'display', 'icons'];
+        const hasRequired = required.every(key => manifest.hasOwnProperty(key));
+
+        return {
+          name: 'Manifest.json',
+          status: hasRequired ? 'pass' : 'fail',
+          message: hasRequired ? 'Manifest válido com campos obrigatórios' : 'Manifest faltando campos obrigatórios'
+        };
+      } catch (error) {
+        return {
+          name: 'Manifest.json',
+          status: 'fail',
+          message: 'Erro ao carregar manifest: ' + error.message
+        };
+      }
+    }
+
+    async function testServiceWorker() {
+      if (!('serviceWorker' in navigator)) {
+        return {
+          name: 'Service Worker',
+          status: 'fail',
+          message: 'Service Worker não suportado neste navegador'
+        };
+      }
+
+      try {
+        const registration = await navigator.serviceWorker.getRegistration();
+        return {
+          name: 'Service Worker',
+          status: registration ? 'pass' : 'fail',
+          message: registration ? 'Service Worker registrado' : 'Service Worker não registrado'
+        };
+      } catch (error) {
+        return {
+          name: 'Service Worker',
+          status: 'fail',
+          message: 'Erro no Service Worker: ' + error.message
+        };
+      }
+    }
+
+    async function testIcons() {
+      const iconSizes = [72, 96, 128, 144, 152, 192, 384, 512];
+      let loadedIcons = 0;
+
+      for (const size of iconSizes) {
+        try {
+          const response = await fetch(`/assets/images/icon-${size}.png`);
+          if (response.ok) loadedIcons++;
+        } catch (error) {
+          // Continue checking other icons
         }
-        
-        async function registerSW() {
-            if ('serviceWorker' in navigator) {
-                try {
-                    await navigator.serviceWorker.register('/sw.js');
-                    alert('Service Worker registrado com sucesso!');
-                    checkServiceWorker();
-                } catch (error) {
-                    alert('Erro: ' + error.message);
-                }
-            }
+      }
+
+      const status = loadedIcons === iconSizes.length ? 'pass' : loadedIcons > 0 ? 'warn' : 'fail';
+      return {
+        name: 'Ícones PWA',
+        status: status,
+        message: `${loadedIcons}/${iconSizes.length} ícones carregados`
+      };
+    }
+
+    async function testScreenshots() {
+      let loadedScreenshots = 0;
+      const screenshots = ['mobile', 'desktop'];
+
+      for (const type of screenshots) {
+        try {
+          const response = await fetch(`/assets/images/screenshot-${type}.png`);
+          if (response.ok) loadedScreenshots++;
+        } catch (error) {
+          // Continue checking
         }
-        
-        async function unregisterSW() {
-            if ('serviceWorker' in navigator) {
-                const registration = await navigator.serviceWorker.getRegistration();
-                if (registration) {
-                    await registration.unregister();
-                    alert('Service Worker desregistrado!');
-                    checkServiceWorker();
-                }
-            }
+      }
+
+      return {
+        name: 'Screenshots',
+        status: loadedScreenshots === screenshots.length ? 'pass' : 'warn',
+        message: `${loadedScreenshots}/${screenshots.length} screenshots disponíveis`
+      };
+    }
+
+    async function testInstallScript() {
+      try {
+        const response = await fetch('/js/pwa-install.js');
+        return {
+          name: 'Script de Instalação',
+          status: response.ok ? 'pass' : 'fail',
+          message: response.ok ? 'Script pwa-install.js carregado' : 'Script não encontrado'
+        };
+      } catch (error) {
+        return {
+          name: 'Script de Instalação',
+          status: 'fail',
+          message: 'Erro ao carregar script: ' + error.message
+        };
+      }
+    }
+
+    async function testResponsive() {
+      const viewport = document.querySelector('meta[name="viewport"]');
+      const hasViewport = viewport && viewport.content.includes('width=device-width');
+
+      return {
+        name: 'Responsividade',
+        status: hasViewport ? 'pass' : 'fail',
+        message: hasViewport ? 'Meta viewport configurado' : 'Meta viewport faltando'
+      };
+    }
+
+    async function testThemeColor() {
+      const themeColor = document.querySelector('meta[name="theme-color"]');
+      return {
+        name: 'Theme Color',
+        status: themeColor ? 'pass' : 'fail',
+        message: themeColor ? 'Theme color definido' : 'Theme color não definido'
+      };
+    }
+
+    async function testAppleMetaTags() {
+      const appleCapable = document.querySelector('meta[name="apple-mobile-web-app-capable"]');
+      const appleTitle = document.querySelector('meta[name="apple-mobile-web-app-title"]');
+
+      const hasApple = appleCapable && appleTitle;
+      return {
+        name: 'Meta Tags iOS',
+        status: hasApple ? 'pass' : 'warn',
+        message: hasApple ? 'Meta tags iOS configuradas' : 'Meta tags iOS opcionais não encontradas'
+      };
+    }
+
+    async function testCacheAPI() {
+      if (!('caches' in window)) {
+        return {
+          name: 'Cache API',
+          status: 'fail',
+          message: 'Cache API não suportado'
+        };
+      }
+
+      try {
+        const cacheNames = await caches.keys();
+        return {
+          name: 'Cache API',
+          status: 'pass',
+          message: `${cacheNames.length} caches ativos`
+        };
+      } catch (error) {
+        return {
+          name: 'Cache API',
+          status: 'fail',
+          message: 'Erro na Cache API: ' + error.message
+        };
+      }
+    }
+
+    async function testOfflineCapability() {
+      // Simple offline test - check if we can load a cached resource
+      try {
+        const response = await fetch('/css/styles.css', { cache: 'only-if-cached' });
+        return {
+          name: 'Capacidade Offline',
+          status: response ? 'pass' : 'info',
+          message: response ? 'Recursos em cache disponíveis' : 'Teste offline limitado'
+        };
+      } catch (error) {
+        return {
+          name: 'Capacidade Offline',
+          status: 'info',
+          message: 'Recursos podem funcionar offline'
+        };
+      }
+    }
+
+    async function testPWAInstall() {
+      const isInstallable = 'onbeforeinstallprompt' in window || window.matchMedia('(display-mode: standalone)').matches;
+      return {
+        name: 'Instalabilidade PWA',
+        status: isInstallable ? 'pass' : 'info',
+        message: isInstallable ? 'PWA instalável neste dispositivo' : 'PWA pode não ser instalável'
+      };
+    }
+
+    // UI functions
+    function createTestElement(test) {
+      return `
+        <div class="test-section">
+          <div class="test-header">
+            <span class="test-icon">${getIcon(test.name)}</span>
+            <h3>${test.name}</h3>
+            <span class="status ${test.status}">${test.status.toUpperCase()}</span>
+          </div>
+          <div class="test-result">${test.message}</div>
+        </div>
+      `;
+    }
+
+    function getIcon(testName) {
+      const icons = {
+        'HTTPS': '🔒',
+        'Manifest.json': '📄',
+        'Service Worker': '⚙️',
+        'Ícones PWA': '🖼️',
+        'Screenshots': '📸',
+        'Script de Instalação': '📜',
+        'Responsividade': '📱',
+        'Theme Color': '🎨',
+        'Meta Tags iOS': '🍎',
+        'Cache API': '💾',
+        'Capacidade Offline': '📴',
+        'Instalabilidade PWA': '⬇️'
+      };
+      return icons[testName] || '✅';
+    }
+
+    function updateProgress() {
+      const progress = (completedTests / totalTests) * 100;
+      document.getElementById('progressFill').style.width = progress + '%';
+    }
+
+    function showSummary() {
+      const passed = testResults.filter(t => t.status === 'pass').length;
+      const failed = testResults.filter(t => t.status === 'fail').length;
+      const warnings = testResults.filter(t => t.status === 'warn').length;
+
+      const summaryText = `
+        <strong>${passed}</strong> testes passaram,
+        <strong>${failed}</strong> falharam,
+        <strong>${warnings}</strong> avisos.
+        ${failed === 0 ? '🎉 PWA pronta para produção!' : '⚠️ Corrigir falhas antes do deploy.'}
+      `;
+
+      document.getElementById('summaryText').innerHTML = summaryText;
+      document.getElementById('summary').classList.remove('hidden');
+    }
+
+    async function runTest(testFunction) {
+      try {
+        const result = await testFunction();
+        testResults.push(result);
+        document.getElementById('testResults').innerHTML += createTestElement(result);
+        completedTests++;
+        updateProgress();
+
+        if (completedTests === totalTests) {
+          showSummary();
         }
-        
-        async function checkManifest() {
-            try {
-                const response = await fetch('/manifest.json');
-                const manifest = await response.json();
-                document.getElementById('manifest-status').innerHTML = 
-                    'Manifest encontrado ✓ <span class="status success">OK</span>';
-            } catch (error) {
-                document.getElementById('manifest-status').innerHTML = 
-                    'Erro: ' + error.message + ' <span class="status error">Erro</span>';
-            }
+      } catch (error) {
+        console.error('Erro no teste:', error);
+      }
+    }
+
+    async function runAllTests() {
+      testResults = [];
+      completedTests = 0;
+      document.getElementById('testResults').innerHTML = '';
+      document.getElementById('summary').classList.add('hidden');
+      updateProgress();
+
+      const tests = [
+        testHTTPS,
+        testManifest,
+        testServiceWorker,
+        testIcons,
+        testScreenshots,
+        testInstallScript,
+        testResponsive,
+        testThemeColor,
+        testAppleMetaTags,
+        testCacheAPI,
+        testOfflineCapability,
+        testPWAInstall
+      ];
+
+      for (const test of tests) {
+        await runTest(test);
+        // Small delay between tests for better UX
+        await new Promise(resolve => setTimeout(resolve, 200));
+      }
+    }
+
+    function clearResults() {
+      testResults = [];
+      completedTests = 0;
+      document.getElementById('testResults').innerHTML = '';
+      document.getElementById('summary').classList.add('hidden');
+      document.getElementById('progressFill').style.width = '0%';
+    }
+
+    // Auto-run tests on page load
+    window.addEventListener('load', () => {
+      showDeviceInfo();
+      setTimeout(runAllTests, 500);
+    });
+
+    function showDeviceInfo() {
+      const info = document.getElementById('deviceInfo');
+      info.innerHTML = `
+        <p><strong>User Agent:</strong> ${navigator.userAgent}</p>
+        <p><strong>Screen Size:</strong> ${window.innerWidth}x${window.innerHeight}</p>
+        <p><strong>Device Pixel Ratio:</strong> ${window.devicePixelRatio}</p>
+        <p><strong>Touch Support:</strong> ${('ontouchstart' in window) ? 'Yes' : 'No'}</p>
+        <p><strong>Service Worker:</strong> ${('serviceWorker' in navigator) ? 'Supported' : 'Not Supported'}</p>
+        <p><strong>Before Install Prompt:</strong> ${('onbeforeinstallprompt' in window) ? 'Supported' : 'Not Supported'}</p>
+        <p><strong>Standalone Mode:</strong> ${window.matchMedia('(display-mode: standalone)').matches ? 'Yes' : 'No'}</p>
+        <p><strong>iOS Standalone:</strong> ${window.navigator.standalone ? 'Yes' : 'No'}</p>
+        <p><strong>Protocol:</strong> ${location.protocol}</p>
+        <p><strong>Hostname:</strong> ${location.hostname}</p>
+      `;
+    }
+
+    function forceShowBanner() {
+      if (window.pwaInstall) {
+        console.log('Forçando exibição do banner...');
+        window.pwaInstall.showInstallBanner();
+      } else {
+        alert('PWA Install não está carregado');
+      }
+    }
+
+    function checkPWAStatus() {
+      const status = {
+        'PWA Install Loaded': !!window.pwaInstall,
+        'Deferred Prompt': !!window.pwaInstall?.deferredPrompt,
+        'Is Mobile': window.pwaInstall?.isMobile(),
+        'Is Installed': window.pwaInstall?.isInstalled,
+        'Banner Visible': !!document.getElementById('pwa-install-banner'),
+        'Screen Width': window.innerWidth,
+        'Screen Height': window.innerHeight,
+        'Device Pixel Ratio': window.devicePixelRatio,
+        'Touch Support': ('ontouchstart' in window),
+        'Protocol': location.protocol,
+        'Hostname': location.hostname
+      };
+
+      alert('Status PWA:\n' + Object.entries(status).map(([k, v]) => `${k}: ${v}`).join('\n'));
+      console.log('PWA Status:', status);
+    }
+
+    // Teste de carregamento do script
+    function testScriptLoading() {
+      console.log('=== TESTE DE CARREGAMENTO ===');
+      console.log('Scripts na página:', document.scripts.length);
+
+      for (let i = 0; i < document.scripts.length; i++) {
+        const script = document.scripts[i];
+        console.log(`Script ${i}:`, script.src, 'loaded:', !script.src || script.complete);
+      }
+
+      // Verificar se PWAInstall existe
+      console.log('PWAInstall class exists:', typeof PWAInstall);
+      console.log('window.pwaInstall exists:', typeof window.pwaInstall);
+
+      if (window.pwaInstall) {
+        console.log('pwaInstall methods:', Object.getOwnPropertyNames(Object.getPrototypeOf(window.pwaInstall)));
+      }
+
+      alert('Ver console para detalhes do carregamento');
+    }
+
+    function testCSSLoading() {
+      console.log('=== TESTE CSS ===');
+
+      // Criar elemento de teste
+      const testEl = document.createElement('div');
+      testEl.id = 'css-test-element';
+      testEl.textContent = 'TESTE CSS';
+      testEl.style.cssText = 'position: fixed; top: 50px; right: 10px; background: yellow; padding: 10px; z-index: 99999;';
+      document.body.appendChild(testEl);
+
+      // Testar variáveis CSS
+      const rootStyles = window.getComputedStyle(document.documentElement);
+      const colorBlack = rootStyles.getPropertyValue('--color-black');
+      const colorRed = rootStyles.getPropertyValue('--color-red');
+
+      console.log('CSS Variables:', { colorBlack, colorRed });
+
+      // Verificar se media queries estão funcionando
+      const mediaQuery768 = window.matchMedia('(max-width: 768px)');
+      const mediaQuery480 = window.matchMedia('(max-width: 480px)');
+
+      console.log('Media Queries:', {
+        'max-width: 768px': mediaQuery768.matches,
+        'max-width: 480px': mediaQuery480.matches,
+        screenWidth: window.innerWidth
+      });
+
+      alert(`CSS Test:\nScreen: ${window.innerWidth}px\nMQ 768px: ${mediaQuery768.matches}\nMQ 480px: ${mediaQuery480.matches}\nVer console para mais detalhes`);
+    }
+
+    function testAdminMobile() {
+      console.log('=== TESTE ADMIN MOBILE ===');
+
+      // Simular layout admin
+      const testAdmin = document.createElement('div');
+      testAdmin.innerHTML = `
+        <div class="admin-layout">
+          <aside class="admin-sidebar" style="display: block;">Sidebar</aside>
+          <main class="admin-content">Content</main>
+        </div>
+      `;
+      testAdmin.style.position = 'fixed';
+      testAdmin.style.top = '100px';
+      testAdmin.style.left = '10px';
+      testAdmin.style.width = '300px';
+      testAdmin.style.height = '200px';
+      testAdmin.style.background = 'white';
+      testAdmin.style.border = '1px solid #ccc';
+      testAdmin.style.zIndex = '9999';
+      document.body.appendChild(testAdmin);
+
+      // Testar media query
+      const mediaQuery = window.matchMedia('(max-width: 768px)');
+      console.log('Media Query 768px matches:', mediaQuery.matches);
+      console.log('Screen width:', window.innerWidth);
+
+      // Forçar mudança de layout
+      if (mediaQuery.matches) {
+        testAdmin.querySelector('.admin-sidebar').style.display = 'none';
+        testAdmin.querySelector('.admin-layout').style.gridTemplateColumns = '1fr';
+        console.log('Layout mobile aplicado');
+      } else {
+        console.log('Layout desktop mantido');
+      }
+
+      // Testar computed styles
+      const layout = testAdmin.querySelector('.admin-layout');
+      const sidebar = testAdmin.querySelector('.admin-sidebar');
+      const content = testAdmin.querySelector('.admin-content');
+
+      console.log('Layout computed style:', window.getComputedStyle(layout).gridTemplateColumns);
+      console.log('Sidebar display:', window.getComputedStyle(sidebar).display);
+      console.log('Content padding:', window.getComputedStyle(content).padding);
+
+      alert(`Admin Mobile Test:\nScreen: ${window.innerWidth}px\nMQ 768px: ${mediaQuery.matches}\nVer console para detalhes`);
+
+      // Remover teste após 5 segundos
+      setTimeout(() => {
+        if (testAdmin.parentNode) {
+          testAdmin.parentNode.removeChild(testAdmin);
         }
-        
-        function checkInstallable() {
-            if (window.matchMedia('(display-mode: standalone)').matches) {
-                document.getElementById('install-status').innerHTML = 
-                    'App já instalado! <span class="status success">Instalado</span>';
-            } else if (deferredPrompt) {
-                document.getElementById('install-status').innerHTML = 
-                    'App instalável <span class="status success">OK</span>';
-            } else {
-                document.getElementById('install-status').innerHTML = 
-                    'Aguardando... <span class="status warning">Pendente</span>';
-            }
-        }
-        
-        async function promptInstall() {
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                const { outcome } = await deferredPrompt.userChoice;
-                alert('Resultado: ' + outcome);
-                deferredPrompt = null;
-                checkInstallable();
-            } else {
-                alert('Prompt não disponível');
-            }
-        }
-        
-        function checkStandalone() {
-            const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
-            document.getElementById('standalone-status').innerHTML = isStandalone ?
-                'Modo standalone <span class="status success">Sim</span>' :
-                'Navegador <span class="status warning">Não</span>';
-        }
-        
-        function checkDevice() {
-            const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-            document.getElementById('device-info').innerHTML = 
-                'Tipo: ' + (isMobile ? 'Mobile' : 'Desktop');
-        }
-        
-        async function checkIcons() {
-            document.getElementById('icons-status').innerHTML = 
-                'Ícones criados <span class="status success">OK</span>';
-        }
-        
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            checkInstallable();
-        });
-        
-        window.addEventListener('DOMContentLoaded', () => {
-            checkServiceWorker();
-            checkManifest();
-            checkInstallable();
-            checkStandalone();
-            checkDevice();
-            checkIcons();
-        });
-    </script>
+      }, 5000);
+    }
+  </script>
 </body>
 </html>

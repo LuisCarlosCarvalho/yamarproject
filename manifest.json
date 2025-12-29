@@ -1,61 +1,60 @@
 {
-  "name": "Yemar Makeup Artist",
-  "short_name": "Yemar",
-  "description": "Maquilhadora Profissional - Serviços de maquilhagem para noivas, eventos sociais, workshops e cursos profissionais",
-  "start_url": "/index.html",
+  "name": "Yamar Project",
+  "short_name": "Yamar",
+  "description": "Plataforma completa para serviços, workshops e loja online",
+  "start_url": "./",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#c9a227",
   "orientation": "portrait-primary",
-  "scope": "/",
-  "lang": "pt-PT",
-  "dir": "ltr",
-  "categories": ["beauty", "lifestyle", "business"],
+  "scope": "./",
+  "lang": "pt-BR",
+  "categories": ["business", "productivity", "shopping"],
   "icons": [
     {
-      "src": "assets/images/icon-72x72.png",
+      "src": "assets/images/icon-72.png",
       "sizes": "72x72",
       "type": "image/png",
-      "purpose": "any"
+      "purpose": "any maskable"
     },
     {
-      "src": "assets/images/icon-96x96.png",
+      "src": "assets/images/icon-96.png",
       "sizes": "96x96",
       "type": "image/png",
-      "purpose": "any"
+      "purpose": "any maskable"
     },
     {
-      "src": "assets/images/icon-128x128.png",
+      "src": "assets/images/icon-128.png",
       "sizes": "128x128",
       "type": "image/png",
-      "purpose": "any"
+      "purpose": "any maskable"
     },
     {
-      "src": "assets/images/icon-144x144.png",
+      "src": "assets/images/icon-144.png",
       "sizes": "144x144",
       "type": "image/png",
-      "purpose": "any"
+      "purpose": "any maskable"
     },
     {
-      "src": "assets/images/icon-152x152.png",
+      "src": "assets/images/icon-152.png",
       "sizes": "152x152",
       "type": "image/png",
-      "purpose": "any"
+      "purpose": "any maskable"
     },
     {
-      "src": "assets/images/icon-192x192.png",
+      "src": "assets/images/icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "assets/images/icon-384x384.png",
+      "src": "assets/images/icon-384.png",
       "sizes": "384x384",
       "type": "image/png",
-      "purpose": "any"
+      "purpose": "any maskable"
     },
     {
-      "src": "assets/images/icon-512x512.png",
+      "src": "assets/images/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
@@ -64,7 +63,7 @@
   "screenshots": [
     {
       "src": "assets/images/screenshot-mobile.png",
-      "sizes": "540x720",
+      "sizes": "390x844",
       "type": "image/png",
       "form_factor": "narrow"
     },
@@ -81,50 +80,28 @@
       "short_name": "Serviços",
       "description": "Ver todos os serviços disponíveis",
       "url": "/servicos.html",
-      "icons": [
-        {
-          "src": "assets/images/icon-192x192.png",
-          "sizes": "192x192"
-        }
-      ]
+      "icons": [{ "src": "assets/images/icon-96.png", "sizes": "96x96" }]
     },
     {
       "name": "Workshops",
       "short_name": "Workshops",
-      "description": "Ver workshops e cursos",
+      "description": "Ver workshops disponíveis",
       "url": "/workshops.html",
-      "icons": [
-        {
-          "src": "assets/images/icon-192x192.png",
-          "sizes": "192x192"
-        }
-      ]
+      "icons": [{ "src": "assets/images/icon-96.png", "sizes": "96x96" }]
     },
     {
       "name": "Loja",
       "short_name": "Loja",
-      "description": "Ver produtos disponíveis",
+      "description": "Comprar produtos",
       "url": "/produtos.html",
-      "icons": [
-        {
-          "src": "assets/images/icon-192x192.png",
-          "sizes": "192x192"
-        }
-      ]
+      "icons": [{ "src": "assets/images/icon-96.png", "sizes": "96x96" }]
     },
     {
       "name": "Contacto",
       "short_name": "Contacto",
-      "description": "Entre em contacto",
+      "description": "Entrar em contacto",
       "url": "/contacto.html",
-      "icons": [
-        {
-          "src": "assets/images/icon-192x192.png",
-          "sizes": "192x192"
-        }
-      ]
+      "icons": [{ "src": "assets/images/icon-96.png", "sizes": "96x96" }]
     }
-  ],
-  "related_applications": [],
-  "prefer_related_applications": false
+  ]
 }
