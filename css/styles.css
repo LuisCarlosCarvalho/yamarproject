@@ -2636,3 +2636,556 @@ h1, h2, h3, h4, h5, h6 {
 /* ============================================
    FORMS
    ============================================ */
+/* ============================================
+   MOBILE IMPROVEMENTS - PWA READY
+   ============================================ */
+
+/* Melhorias gerais para mobile */
+@media (max-width: 768px) {
+    /* Melhorar espaçamento do header mobile */
+    .top-bar {
+        padding: var(--spacing-sm);
+    }
+    
+    /* Garantir que o logo seja legível em mobile */
+    .logo-section {
+        padding: var(--spacing-md) 0;
+    }
+    
+    .logo-img {
+        max-height: 60px !important;
+        height: 60px !important;
+        width: auto;
+        margin: 0 auto;
+    }
+    
+    .logo-text {
+        font-size: 1.5rem;
+        letter-spacing: 0.2em;
+    }
+    
+    .tagline {
+        font-size: 0.6rem;
+        letter-spacing: 0.2em;
+    }
+    
+    .tagline::before,
+    .tagline::after {
+        width: 30px;
+    }
+    
+    /* Melhorar cards em mobile */
+    .card {
+        margin-bottom: var(--spacing-md);
+    }
+    
+    /* Melhorar botões em mobile */
+    .btn {
+        width: 100%;
+        text-align: center;
+        justify-content: center;
+    }
+    
+    /* Melhorar formulários em mobile */
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+        font-size: 16px; /* Evita zoom automático no iOS */
+    }
+    
+    /* Melhorar tabelas em mobile */
+    table {
+        display: block;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    /* Melhorar modal em mobile */
+    .modal-content {
+        max-height: 90vh;
+        overflow-y: auto;
+    }
+    
+    /* Melhorar dropdown mobile */
+    .dropdown-menu {
+        position: relative;
+        min-width: 100%;
+        box-shadow: none;
+        border: none;
+        border-top: 1px solid var(--color-gray-200);
+    }
+    
+    /* Melhorar hero em mobile */
+    .hero-content {
+        padding: var(--spacing-md);
+    }
+    
+    /* Melhorar seções em mobile */
+    .section {
+        padding: var(--spacing-lg) 0;
+    }
+    
+    /* Melhorar grid de produtos em mobile */
+    .products-grid,
+    .services-grid,
+    .workshops-grid,
+    .events-grid {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-md);
+    }
+    
+    /* Melhorar imagens em mobile */
+    .card-image {
+        height: 250px;
+        object-fit: cover;
+    }
+    
+    /* Melhorar footer em mobile */
+    .footer {
+        padding: var(--spacing-lg) 0;
+    }
+    
+    /* Melhorar menu mobile */
+    .mobile-menu {
+        max-width: 100%;
+    }
+    
+    /* Melhorar admin em mobile */
+    .admin-content {
+        padding: var(--spacing-md);
+    }
+    
+    .admin-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-sm);
+    }
+    
+    /* Melhorar carrinho em mobile */
+    .cart-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .cart-item-image {
+        width: 100%;
+        max-width: 200px;
+        margin: 0 auto;
+    }
+    
+    /* Melhorar detalhes de produto em mobile */
+    .product-detail-grid,
+    .service-detail-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    /* Melhorar navegação de conta em mobile */
+    .account-tabs {
+        flex-direction: column;
+        gap: 0;
+    }
+    
+    .account-tabs button {
+        width: 100%;
+        border-radius: 0;
+        border-bottom: 1px solid var(--color-gray-200);
+    }
+}
+
+/* Melhorias específicas para telas muito pequenas */
+@media (max-width: 480px) {
+    :root {
+        --spacing-xs: 0.375rem;
+        --spacing-sm: 0.75rem;
+        --spacing-md: 1rem;
+        --spacing-lg: 1.5rem;
+        --spacing-xl: 2rem;
+    }
+    
+    .hero-title {
+        font-size: 1.5rem;
+    }
+    
+    .section-title {
+        font-size: 1.25rem;
+    }
+    
+    .card-title {
+        font-size: 1rem;
+    }
+    
+    /* Melhorar touch targets */
+    button,
+    a.btn,
+    input[type="submit"] {
+        min-height: 44px;
+        min-width: 44px;
+    }
+    
+    /* Melhorar espaçamento de cards */
+    .card {
+        padding: var(--spacing-md);
+    }
+}
+
+/* Otimizações para PWA */
+@media (display-mode: standalone) {
+    /* Quando o app está instalado */
+    .header {
+        position: fixed;
+        width: 100%;
+        top: 0;
+    }
+    
+    body {
+        padding-top: var(--header-height);
+    }
+    
+    /* Adicionar safe area para dispositivos com notch */
+    .header {
+        padding-top: env(safe-area-inset-top);
+    }
+    
+    .footer {
+        padding-bottom: env(safe-area-inset-bottom);
+    }
+}
+
+/* Suporte para landscape em mobile */
+@media (max-width: 768px) and (orientation: landscape) {
+    .hero {
+        height: 100vh;
+        min-height: 300px;
+    }
+    
+    .hero-title {
+        font-size: 1.75rem;
+    }
+}
+
+/* Melhorar performance em mobile */
+@media (max-width: 768px) {
+    /* Reduzir animações em mobile para melhor performance */
+    * {
+        animation-duration: 0.2s !important;
+        transition-duration: 0.2s !important;
+    }
+    
+    /* Otimizar imagens */
+    img {
+        image-rendering: -webkit-optimize-contrast;
+    }
+}
+
+/* ============================================
+   PWA INSTALL BANNER & MODAL
+   ============================================ */
+
+/* Banner de instalação PWA */
+.pwa-install-banner {
+    position: fixed;
+    bottom: -200px;
+    left: 0;
+    right: 0;
+    background: linear-gradient(135deg, var(--color-black) 0%, var(--color-gray-600) 100%);
+    color: var(--color-white);
+    padding: var(--spacing-md);
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
+    z-index: 9999;
+    transition: bottom 0.3s ease;
+}
+
+.pwa-install-banner.show {
+    bottom: 0;
+}
+
+.pwa-banner-content {
+    max-width: var(--container-max);
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+}
+
+.pwa-banner-icon {
+    font-size: 2.5rem;
+    flex-shrink: 0;
+}
+
+.pwa-banner-text {
+    flex: 1;
+}
+
+.pwa-banner-text strong {
+    display: block;
+    font-size: 1.1rem;
+    margin-bottom: 0.25rem;
+    color: var(--color-red);
+}
+
+.pwa-banner-text p {
+    margin: 0;
+    font-size: 0.9rem;
+    opacity: 0.9;
+    line-height: 1.4;
+}
+
+.pwa-banner-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.pwa-install-btn {
+    background: var(--color-red);
+    color: var(--color-white);
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--border-radius);
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    white-space: nowrap;
+}
+
+.pwa-install-btn:hover {
+    background: var(--color-red-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(201, 162, 39, 0.3);
+}
+
+.pwa-close-btn {
+    background: transparent;
+    color: var(--color-white);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    font-size: 1.5rem;
+    line-height: 1;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pwa-close-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+/* Modal de instruções iOS */
+.pwa-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    padding: var(--spacing-md);
+}
+
+.pwa-modal.show {
+    opacity: 1;
+}
+
+.pwa-modal-content {
+    background: var(--color-white);
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-xl);
+    max-width: 500px;
+    width: 100%;
+    position: relative;
+    box-shadow: var(--shadow-lg);
+}
+
+.pwa-modal-close {
+    position: absolute;
+    top: var(--spacing-md);
+    right: var(--spacing-md);
+    background: transparent;
+    border: none;
+    font-size: 2rem;
+    line-height: 1;
+    color: var(--color-gray-400);
+    cursor: pointer;
+    transition: color var(--transition-fast);
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pwa-modal-close:hover {
+    color: var(--color-black);
+}
+
+.pwa-modal-content h3 {
+    margin: 0 0 var(--spacing-md);
+    color: var(--color-black);
+    font-size: 1.5rem;
+}
+
+.pwa-instructions {
+    list-style: none;
+    counter-reset: step-counter;
+    padding: 0;
+    margin: var(--spacing-md) 0;
+}
+
+.pwa-instructions li {
+    counter-increment: step-counter;
+    padding: var(--spacing-md);
+    margin-bottom: var(--spacing-sm);
+    background: var(--color-gray-100);
+    border-radius: var(--border-radius);
+    position: relative;
+    padding-left: 3.5rem;
+}
+
+.pwa-instructions li::before {
+    content: counter(step-counter);
+    position: absolute;
+    left: var(--spacing-md);
+    top: 50%;
+    transform: translateY(-50%);
+    background: var(--color-red);
+    color: var(--color-white);
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+/* Notificação de atualização */
+.pwa-update-notification {
+    position: fixed;
+    top: -100px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--color-black);
+    color: var(--color-white);
+    padding: var(--spacing-md) var(--spacing-lg);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-lg);
+    z-index: 9999;
+    transition: top 0.3s ease;
+    max-width: 400px;
+    width: calc(100% - 2rem);
+}
+
+.pwa-update-notification.show {
+    top: var(--spacing-md);
+}
+
+.pwa-update-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-md);
+}
+
+.pwa-update-content p {
+    margin: 0;
+    flex: 1;
+}
+
+.pwa-update-btn {
+    background: var(--color-red);
+    color: var(--color-white);
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: var(--border-radius);
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    white-space: nowrap;
+}
+
+.pwa-update-btn:hover {
+    background: var(--color-red-dark);
+}
+
+/* Responsivo para mobile */
+@media (max-width: 768px) {
+    .pwa-banner-content {
+        flex-direction: column;
+        text-align: center;
+        gap: var(--spacing-sm);
+    }
+    
+    .pwa-banner-icon {
+        font-size: 2rem;
+    }
+    
+    .pwa-banner-actions {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .pwa-install-btn {
+        flex: 1;
+    }
+    
+    .pwa-modal-content {
+        padding: var(--spacing-lg);
+    }
+    
+    .pwa-modal-content h3 {
+        font-size: 1.25rem;
+        padding-right: var(--spacing-xl);
+    }
+    
+    .pwa-instructions li {
+        padding: var(--spacing-sm);
+        padding-left: 3rem;
+        font-size: 0.9rem;
+    }
+    
+    .pwa-instructions li::before {
+        width: 28px;
+        height: 28px;
+        font-size: 0.9rem;
+        left: var(--spacing-sm);
+    }
+}
+
+@media (max-width: 480px) {
+    .pwa-install-banner {
+        padding: var(--spacing-sm);
+    }
+    
+    .pwa-banner-text strong {
+        font-size: 1rem;
+    }
+    
+    .pwa-banner-text p {
+        font-size: 0.85rem;
+    }
+    
+    .pwa-install-btn {
+        padding: 0.625rem 1.25rem;
+        font-size: 0.85rem;
+    }
+}
+
+/* Esconder banner quando em modo standalone (já instalado) */
+@media (display-mode: standalone) {
+    .pwa-install-banner {
+        display: none !important;
+    }
+}

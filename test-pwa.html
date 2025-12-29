@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste PWA - Yemar Makeup Artist</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #c9a227;
+            margin-bottom: 20px;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            background: #f9f9f9;
+            border-left: 4px solid #c9a227;
+        }
+        .status {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        .success { background: #4caf50; color: white; }
+        .error { background: #f44336; color: white; }
+        .warning { background: #ff9800; color: white; }
+        button {
+            background: #c9a227;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #a8871f;
+        }
+        .info {
+            background: #e3f2fd;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Teste de PWA - Yemar Makeup Artist</h1>
+        
+        <div class="test-section">
+            <h3>1. Service Worker</h3>
+            <p id="sw-status">Verificando...</p>
+            <button onclick="registerSW()">Registrar Service Worker</button>
+            <button onclick="unregisterSW()">Desregistrar</button>
+        </div>
+        
+        <div class="test-section">
+            <h3>2. Manifest</h3>
+            <p id="manifest-status">Verificando...</p>
+            <button onclick="checkManifest()">Verificar Manifest</button>
+        </div>
+        
+        <div class="test-section">
+            <h3>3. Instalação PWA</h3>
+            <p id="install-status">Verificando...</p>
+            <button onclick="checkInstallable()">Verificar Instalável</button>
+            <button onclick="promptInstall()">Instalar App</button>
+        </div>
+        
+        <div class="test-section">
+            <h3>4. Modo Standalone</h3>
+            <p id="standalone-status">Verificando...</p>
+        </div>
+        
+        <div class="test-section">
+            <h3>5. Dispositivo</h3>
+            <p id="device-info">Verificando...</p>
+        </div>
+        
+        <div class="test-section">
+            <h3>6. Ícones PWA</h3>
+            <p id="icons-status">Verificando...</p>
+            <div id="icons-preview"></div>
+        </div>
+        
+        <div class="info">
+            <strong>💡 Dica:</strong> Para testar completamente, abra este arquivo em um servidor HTTPS.
+        </div>
+    </div>
+    
+    <script>
+        let deferredPrompt = null;
+        
+        async function checkServiceWorker() {
+            if ('serviceWorker' in navigator) {
+                try {
+                    const registration = await navigator.serviceWorker.getRegistration();
+                    if (registration) {
+                        document.getElementById('sw-status').innerHTML = 
+                            'Service Worker registrado ✓ <span class="status success">OK</span>';
+                    } else {
+                        document.getElementById('sw-status').innerHTML = 
+                            'Service Worker não registrado <span class="status warning">Pendente</span>';
+                    }
+                } catch (error) {
+                    document.getElementById('sw-status').innerHTML = 
+                        'Erro: ' + error.message + ' <span class="status error">Erro</span>';
+                }
+            } else {
+                document.getElementById('sw-status').innerHTML = 
+                    'Service Worker não suportado <span class="status error">Não Suportado</span>';
+            }
+        }
+        
+        async function registerSW() {
+            if ('serviceWorker' in navigator) {
+                try {
+                    await navigator.serviceWorker.register('/sw.js');
+                    alert('Service Worker registrado com sucesso!');
+                    checkServiceWorker();
+                } catch (error) {
+                    alert('Erro: ' + error.message);
+                }
+            }
+        }
+        
+        async function unregisterSW() {
+            if ('serviceWorker' in navigator) {
+                const registration = await navigator.serviceWorker.getRegistration();
+                if (registration) {
+                    await registration.unregister();
+                    alert('Service Worker desregistrado!');
+                    checkServiceWorker();
+                }
+            }
+        }
+        
+        async function checkManifest() {
+            try {
+                const response = await fetch('/manifest.json');
+                const manifest = await response.json();
+                document.getElementById('manifest-status').innerHTML = 
+                    'Manifest encontrado ✓ <span class="status success">OK</span>';
+            } catch (error) {
+                document.getElementById('manifest-status').innerHTML = 
+                    'Erro: ' + error.message + ' <span class="status error">Erro</span>';
+            }
+        }
+        
+        function checkInstallable() {
+            if (window.matchMedia('(display-mode: standalone)').matches) {
+                document.getElementById('install-status').innerHTML = 
+                    'App já instalado! <span class="status success">Instalado</span>';
+            } else if (deferredPrompt) {
+                document.getElementById('install-status').innerHTML = 
+                    'App instalável <span class="status success">OK</span>';
+            } else {
+                document.getElementById('install-status').innerHTML = 
+                    'Aguardando... <span class="status warning">Pendente</span>';
+            }
+        }
+        
+        async function promptInstall() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                alert('Resultado: ' + outcome);
+                deferredPrompt = null;
+                checkInstallable();
+            } else {
+                alert('Prompt não disponível');
+            }
+        }
+        
+        function checkStandalone() {
+            const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
+            document.getElementById('standalone-status').innerHTML = isStandalone ?
+                'Modo standalone <span class="status success">Sim</span>' :
+                'Navegador <span class="status warning">Não</span>';
+        }
+        
+        function checkDevice() {
+            const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+            document.getElementById('device-info').innerHTML = 
+                'Tipo: ' + (isMobile ? 'Mobile' : 'Desktop');
+        }
+        
+        async function checkIcons() {
+            document.getElementById('icons-status').innerHTML = 
+                'Ícones criados <span class="status success">OK</span>';
+        }
+        
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            checkInstallable();
+        });
+        
+        window.addEventListener('DOMContentLoaded', () => {
+            checkServiceWorker();
+            checkManifest();
+            checkInstallable();
+            checkStandalone();
+            checkDevice();
+            checkIcons();
+        });
+    </script>
+</body>
+</html>

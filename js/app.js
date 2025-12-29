@@ -59,13 +59,26 @@ function initMobileMenu() {
   // Fechar ao clicar em link
   const mobileLinks = document.querySelectorAll(".mobile-nav a");
   mobileLinks.forEach((link) => {
-    link.addEventListener("click", () => {
-      if (mobileMenu) {
+    link.addEventListener("click", (e) => {
+      // Fechar menu após pequeno delay para melhor UX
+      setTimeout(() => {
+        if (mobileMenu) {
+          mobileMenu.classList.remove("open");
+          document.body.style.overflow = "";
+        }
+      }, 100);
+    });
+  });
+  
+  // Fechar ao clicar fora do menu
+  if (mobileMenu) {
+    mobileMenu.addEventListener("click", (e) => {
+      if (e.target === mobileMenu) {
         mobileMenu.classList.remove("open");
         document.body.style.overflow = "";
       }
     });
-  });
+  }
 }
 
 // ============================================
