@@ -2819,14 +2819,25 @@ function updateImagePreviews() {
   const aboutPreview = document.getElementById("aboutImagePreview");
   const footerPreview = document.getElementById("footerAvatarPreview");
 
-  if (welcomeAvatarUrl && welcomePreview) {
-    welcomePreview.src = welcomeAvatarUrl.value || welcomeAvatarUrl.placeholder;
+  if (welcomeAvatarUrl && welcomePreview && welcomeAvatarUrl.value) {
+    welcomePreview.src = welcomeAvatarUrl.value;
+    welcomePreview.style.display = 'block';
+  } else if (welcomePreview) {
+    welcomePreview.style.display = 'none';
   }
-  if (aboutImageUrl && aboutPreview) {
-    aboutPreview.src = aboutImageUrl.value || aboutImageUrl.placeholder;
+  
+  if (aboutImageUrl && aboutPreview && aboutImageUrl.value) {
+    aboutPreview.src = aboutImageUrl.value;
+    aboutPreview.style.display = 'block';
+  } else if (aboutPreview) {
+    aboutPreview.style.display = 'none';
   }
-  if (footerAvatarUrl && footerPreview) {
-    footerPreview.src = footerAvatarUrl.value || footerAvatarUrl.placeholder;
+  
+  if (footerAvatarUrl && footerPreview && footerAvatarUrl.value) {
+    footerPreview.src = footerAvatarUrl.value;
+    footerPreview.style.display = 'block';
+  } else if (footerPreview) {
+    footerPreview.style.display = 'none';
   }
 }
 
