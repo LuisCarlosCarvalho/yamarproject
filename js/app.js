@@ -238,6 +238,13 @@ function checkRouteProtection() {
 
 function applySiteSettings() {
   const settings = getSiteSettings();
+  console.log('🔧 applySiteSettings() executado');
+  console.log('📋 Settings carregadas:', {
+    welcomeAvatarUrl: settings.welcomeAvatarUrl,
+    aboutImageUrl: settings.aboutImageUrl,
+    footerAvatarUrl: settings.footerAvatarUrl,
+    bannerImagemUrl: settings.bannerImagemUrl
+  });
 
   // Aplicar logo
   const logoElements = document.querySelectorAll(".logo-text");
@@ -285,6 +292,7 @@ function applySiteSettings() {
   if (settings.logoUrl) {
     const logoImgs = document.querySelectorAll(".logo-img");
     const logoUrl = getImageUrl({imagemUrl: settings.logoUrl}, 'assets/images/logo-default.png');
+    console.log('🖼️ Aplicando logo:', logoUrl, 'em', logoImgs.length, 'elementos');
     logoImgs.forEach((img) => {
       img.src = logoUrl;
       img.style.display = "block";
@@ -300,42 +308,63 @@ function applySiteSettings() {
   if (footerAvatars.length > 0 && (settings.footerAvatarUrl || settings.aboutImageUrl)) {
     const avatarUrlRaw = settings.footerAvatarUrl || settings.aboutImageUrl;
     const avatarUrl = getImageUrl({imagemUrl: avatarUrlRaw});
+    console.log('👤 Aplicando footer avatar:', avatarUrl, 'em', footerAvatars.length, 'elementos');
     footerAvatars.forEach(img => {
       img.src = avatarUrl;
       img.style.display = 'block';
+      img.onload = function() {
+        console.log('✅ Footer avatar carregou:', this.src);
+      };
       img.onerror = function() {
+        console.error('❌ Erro ao carregar footer avatar:', this.src);
         this.onerror = null;
         this.style.display = 'none';
       };
     });
+  } else {
+    console.log('⚠️ Footer: Nenhuma URL configurada ou elementos não encontrados');
   }
 
   // Aplicar foto do perfil da homepage
   const welcomeAvatars = document.querySelectorAll("#welcomeAvatar, .welcome-avatar");
   if (welcomeAvatars.length > 0 && settings.welcomeAvatarUrl) {
     const welcomeUrl = getImageUrl({imagemUrl: settings.welcomeAvatarUrl});
+    console.log('👤 Aplicando welcome avatar:', welcomeUrl, 'em', welcomeAvatars.length, 'elementos');
     welcomeAvatars.forEach(img => {
       img.src = welcomeUrl;
       img.style.display = 'block';
+      img.onload = function() {
+        console.log('✅ Welcome avatar carregou:', this.src);
+      };
       img.onerror = function() {
+        console.error('❌ Erro ao carregar welcome avatar:', this.src);
         this.onerror = null;
         this.style.display = 'none';
       };
     });
+  } else {
+    console.log('⚠️ Welcome: Nenhuma URL configurada ou elementos não encontrados');
   }
 
   // Aplicar foto da página sobre
   const aboutImages = document.querySelectorAll("#aboutImage, .about-image");
   if (aboutImages.length > 0 && settings.aboutImageUrl) {
     const aboutUrl = getImageUrl({imagemUrl: settings.aboutImageUrl});
+    console.log('👤 Aplicando about image:', aboutUrl, 'em', aboutImages.length, 'elementos');
     aboutImages.forEach(img => {
       img.src = aboutUrl;
       img.style.display = 'block';
+      img.onload = function() {
+        console.log('✅ About image carregou:', this.src);
+      };
       img.onerror = function() {
+        console.error('❌ Erro ao carregar about image:', this.src);
         this.onerror = null;
         this.style.display = 'none';
       };
     });
+  } else {
+    console.log('⚠️ About: Nenhuma URL configurada ou elementos não encontrados');
   }
 }
 
