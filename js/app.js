@@ -3,11 +3,14 @@
  * Estado global, autenticação, guards, handlers e inicialização
  */
 
+console.log('🚀 app.js CARREGADO - Versão:', new Date().toISOString());
+
 // ============================================
 // INICIALIZAÇÃO
 // ============================================
 
 document.addEventListener("DOMContentLoaded", function () {
+  console.log('✅ DOMContentLoaded DISPARADO');
   // Inicializar storage/seed
   initializeSeed();
 
