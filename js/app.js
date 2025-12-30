@@ -302,6 +302,7 @@ function applySiteSettings() {
     const avatarUrl = getImageUrl({imagemUrl: avatarUrlRaw});
     footerAvatars.forEach(img => {
       img.src = avatarUrl;
+      img.style.display = 'block';
       img.onerror = function() {
         this.onerror = null;
         this.style.display = 'none';
@@ -315,6 +316,7 @@ function applySiteSettings() {
     const welcomeUrl = getImageUrl({imagemUrl: settings.welcomeAvatarUrl});
     welcomeAvatars.forEach(img => {
       img.src = welcomeUrl;
+      img.style.display = 'block';
       img.onerror = function() {
         this.onerror = null;
         this.style.display = 'none';
@@ -328,6 +330,7 @@ function applySiteSettings() {
     const aboutUrl = getImageUrl({imagemUrl: settings.aboutImageUrl});
     aboutImages.forEach(img => {
       img.src = aboutUrl;
+      img.style.display = 'block';
       img.onerror = function() {
         this.onerror = null;
         this.style.display = 'none';
@@ -2911,12 +2914,12 @@ function loadAdminSettingsPage() {
 
   if (welcomeAvatarUrl)
     welcomeAvatarUrl.value =
-      settings.welcomeAvatarUrl || "images/logo_name.png";
+      settings.welcomeAvatarUrl || "";
   if (aboutImageUrl)
-    aboutImageUrl.value = settings.aboutImageUrl || "images/capa.png";
+    aboutImageUrl.value = settings.aboutImageUrl || "";
   if (footerAvatarUrl)
     footerAvatarUrl.value =
-      settings.footerAvatarUrl || "images/logo_name.png";
+      settings.footerAvatarUrl || "";
 
   // Atualizar previews das imagens
   updateImagePreviews();
