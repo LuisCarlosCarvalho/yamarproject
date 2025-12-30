@@ -400,15 +400,10 @@ function preventClickjacking() {
  * Adiciona meta tags de segurança
  */
 function addSecurityHeaders() {
-  // DESABILITADO TEMPORARIAMENTE PARA TESTE
-  // Todos os headers de segurança foram removidos para identificar o problema
-  console.log('⚠️ Security headers desabilitados para teste');
-  return;
-  
   const head = document.head;
   
-  // CSP é gerenciado pelo vercel.json para evitar conflitos
-  // Mantemos apenas headers básicos aqui
+  // CSP NÃO é definido aqui para permitir imagens externas (Imgur)
+  // Apenas headers básicos de segurança
   
   // X-Content-Type-Options
   const xcto = document.createElement('meta');
@@ -433,6 +428,8 @@ function addSecurityHeaders() {
   pp.httpEquiv = 'Permissions-Policy';
   pp.content = 'geolocation=(), microphone=(), camera=()';
   head.appendChild(pp);
+  
+  console.log('✅ Security headers ativados (sem CSP para permitir Imgur)');
 }
 
 // ============================================
