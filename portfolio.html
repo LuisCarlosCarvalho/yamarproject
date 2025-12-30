@@ -96,6 +96,7 @@
 
     <script src="js/storage.js"></script>
     <script src="js/ui.js"></script>
+    <script src="js/app.js"></script>
     <script>
         // Load portfolio images
         function loadPortfolio() {
@@ -124,11 +125,11 @@
 
         // Initialize
         document.addEventListener('DOMContentLoaded', () => {
-            trackPageVisit('portfolio');
+            if (typeof trackPageVisit === 'function') trackPageVisit('portfolio');
             loadPortfolio();
-            updateCartBadge();
-            updateAuthUI();
-            loadSiteSettings();
+            if (typeof updateCartBadge === 'function') updateCartBadge();
+            if (typeof updateAuthUI === 'function') updateAuthUI();
+            if (typeof loadSiteSettings === 'function') loadSiteSettings();
         });
     </script>
 </body>
