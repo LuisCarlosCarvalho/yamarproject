@@ -510,29 +510,18 @@ function cancelUserBooking(bookingId) {
 function handleContactSubmit(event) {
   event.preventDefault();
 
-  const nome = document.getElementById("contactName").value.trim();
-  const email = document.getElementById("contactEmail").value.trim();
-  const telefone = document.getElementById("contactPhone").value.trim();
-  const assunto = document.getElementById("contactSubject").value;
-  const mensagem = document.getElementById("contactMessage").value.trim();
-
-  // Salvar mensagem
-  const messageData = {
-    nome,
-    email,
-    telefone,
-    assunto,
-    mensagem,
-  };
-  createMessage(messageData);
+  const form = event.target;
+  const nome = form.nome.value.trim();
+  const email = form.email.value.trim();
+  const assunto = form.assunto.value.trim();
+  const mensagem = form.mensagem.value.trim();
 
   // Simular envio
   showToast(
     "Mensagem enviada com sucesso! Entraremos em contacto em breve.",
     "success",
   );
-  // Reset form
-  document.getElementById("contactForm").reset();
+  form.reset();
 }
 
 // ============================================
@@ -2724,7 +2713,7 @@ function loadAdminMessages() {
   if (container) {
     const messages = getMessages ? getMessages() : [];
     if (messages.length === 0) {
-      container.innerHTML = '<tr><td colspan="7">Sem mensagens.</td></tr>';
+      container.innerHTML = '<tr><td colspan="6">Sem mensagens.</td></tr>';
     } else {
       container.innerHTML = messages
         .map(
@@ -2732,7 +2721,6 @@ function loadAdminMessages() {
                 <tr>
                     <td>${m.nome}</td>
                     <td>${m.email}</td>
-                    <td>${m.telefone || ''}</td>
                     <td>${m.assunto}</td>
                     <td>${formatDate(new Date(m.createdAt))}</td>
                     <td><span class="status-badge ${m.lida ? "status-confirmed" : "status-pending"}">${m.lida ? "Lida" : "Nova"}</span></td>
@@ -2744,31 +2732,6 @@ function loadAdminMessages() {
         )
         .join("");
     }
-  }
-}
-
-function viewMessage(id) {
-  const messages = getMessages();
-  const message = messages.find(m => m.id === id);
-  if (message) {
-    // Marcar como lida
-    markMessageAsRead(id);
-    
-    // Mostrar modal ou alert com a mensagem
-    const messageText = `
-Nome: ${message.nome}
-Email: ${message.email}
-Telefone: ${message.telefone || 'N/A'}
-Assunto: ${message.assunto}
-Data: ${formatDateTime(new Date(message.createdAt))}
-
-Mensagem:
-${message.mensagem}
-    `;
-    alert(messageText);
-    
-    // Recarregar a lista para atualizar o status
-    loadAdminMessages();
   }
 }
 
