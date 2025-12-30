@@ -19,16 +19,6 @@
         "Expires": "0"
       },
       "dest": "/dados.json"
-    },
-    {
-      "src": "/images/capa.png",
-      "status": 404,
-      "dest": "/assets/images/logo.png"
-    },
-    {
-      "src": "/images/(.*)",
-      "status": 404,
-      "dest": "/assets/images/logo.png"
     }
   ],
   "headers": [
