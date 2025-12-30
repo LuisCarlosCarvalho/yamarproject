@@ -14,6 +14,11 @@
  * @returns {string} URL normalizada
  */
 function getImageUrl(item, fallback = 'assets/images/placeholder.jpg') {
+  // Se item não é um objeto ou é null/undefined, retorna fallback
+  if (!item || typeof item !== 'object') {
+    return fallback;
+  }
+  
   // Prioridade: imagemUrl > imagem
   const imageField = item.imagemUrl || item.imagem;
   
@@ -42,7 +47,7 @@ function applyImageWithFallback(selector, imageUrl) {
       // Fallback se imagem falhar ao carregar
       el.onerror = function() {
         this.onerror = null; // Previne loop infinito
-        this.src = 'assets/images/placeholder.jpg';
+        this.style.display = 'none'; // Esconde imagem quebrada
       };
     } else {
       el.style.backgroundImage = `url(${imageUrl})`;
