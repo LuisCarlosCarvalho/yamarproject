@@ -106,7 +106,8 @@ function handleModalEsc(e) {
 }
 
 function closeModal() {
-    const modal = document.getElementById('modal');
+    // Usa querySelector ao invés de getElementById para compatibilidade
+    const modal = document.querySelector('.modal-overlay');
     if (modal) {
         modal.classList.remove('show');
         setTimeout(() => {
@@ -122,7 +123,8 @@ function closeModal() {
 // ============================================
 
 function showLoader() {
-    if (document.getElementById('loader')) return;
+    // Usa querySelector ao invés de getElementById para compatibilidade
+    if (document.querySelector('.loader-overlay')) return;
     
     const loader = document.createElement('div');
     loader.id = 'loader';
@@ -138,7 +140,8 @@ function showLoader() {
 }
 
 function hideLoader() {
-    const loader = document.getElementById('loader');
+    // Usa querySelector ao invés de getElementById para compatibilidade
+    const loader = document.querySelector('.loader-overlay');
     if (loader) {
         loader.remove();
     }
@@ -718,10 +721,13 @@ function renderMiniCart() {
 }
 
 function updateCartBadge() {
-    const badge = document.getElementById('cartBadge');
-    if (badge) {
+    // Usa querySelectorAll para atualizar TODOS os badges (desktop + mobile)
+    const badges = document.querySelectorAll('#cartBadge, .cart-badge');
+    if (badges.length > 0) {
         const count = getCartItemCount();
-        badge.textContent = count;
-        badge.style.display = count > 0 ? 'flex' : 'none';
+        badges.forEach(badge => {
+            badge.textContent = count;
+            badge.style.display = count > 0 ? 'flex' : 'none';
+        });
     }
 }

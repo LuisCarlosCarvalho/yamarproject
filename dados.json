@@ -1,0 +1,238 @@
+{
+  "version": "1.0.0",
+  "lastUpdate": "2025-12-30T12:00:00Z",
+  "site": {
+    "nome": "Yemar Makeup Artist",
+    "tagline": "Maquilhadora Profissional",
+    "email": "yemar@makeup.com",
+    "telefone": "+351 912 345 678",
+    "morada": "Lisboa, Portugal",
+    "redesSociais": {
+      "instagram": "https://instagram.com/yemarmakeup",
+      "facebook": "https://facebook.com/yemarmakeup",
+      "whatsapp": "+351912345678"
+    }
+  },
+  "servicos": [
+    {
+      "id": "servico-1",
+      "tipo": "Maquilhagem",
+      "titulo": "Maquilhagem de Noiva",
+      "descricao": "Maquilhagem personalizada para o dia mais importante da sua vida. Inclui prova de maquilhagem.",
+      "preco": 150.00,
+      "duracao": "2-3 horas",
+      "categoria": "noivas",
+      "imagem": "images/noiva.jpg",
+      "destaque": true,
+      "disponivel": true
+    },
+    {
+      "id": "servico-2",
+      "tipo": "Maquilhagem",
+      "titulo": "Maquilhagem Social",
+      "descricao": "Maquilhagem para eventos sociais, festas e ocasiões especiais.",
+      "preco": 80.00,
+      "duracao": "1-2 horas",
+      "categoria": "social",
+      "imagem": "images/social.jpg",
+      "destaque": true,
+      "disponivel": true
+    },
+    {
+      "id": "servico-3",
+      "tipo": "Maquilhagem",
+      "titulo": "Sessão Fotográfica",
+      "descricao": "Maquilhagem profissional para sessões fotográficas e editoriais.",
+      "preco": 120.00,
+      "duracao": "2 horas",
+      "categoria": "editorial",
+      "imagem": "images/fotografia.jpg",
+      "destaque": false,
+      "disponivel": true
+    }
+  ],
+  "workshops": [
+    {
+      "id": "workshop-1",
+      "titulo": "Workshop de Maquilhagem Básica",
+      "descricao": "Aprenda técnicas básicas de maquilhagem para o dia a dia.",
+      "preco": 80.00,
+      "duracao": "4 horas",
+      "vagas": 10,
+      "nivel": "Iniciante",
+      "proxima_data": "2025-02-15",
+      "imagem": "images/workshop-basico.jpg",
+      "inclui": [
+        "Material de apoio",
+        "Certificado",
+        "Kit básico de maquilhagem"
+      ],
+      "disponivel": true
+    },
+    {
+      "id": "workshop-2",
+      "titulo": "Workshop de Maquilhagem para Noivas",
+      "descricao": "Técnicas avançadas de maquilhagem para noivas e eventos especiais.",
+      "preco": 150.00,
+      "duracao": "6 horas",
+      "vagas": 8,
+      "nivel": "Intermediário",
+      "proxima_data": "2025-03-10",
+      "imagem": "images/workshop-noivas.jpg",
+      "inclui": [
+        "Material completo",
+        "Certificado profissional",
+        "Kit avançado"
+      ],
+      "disponivel": true
+    }
+  ],
+  "produtos": [
+    {
+      "id": "produto-1",
+      "nome": "Base Líquida HD",
+      "marca": "Professional Makeup",
+      "descricao": "Base de alta cobertura com acabamento natural. Perfeita para todos os tipos de pele.",
+      "preco": 45.00,
+      "preco_original": 60.00,
+      "categoria": "Base",
+      "imagem": "images/base-hd.jpg",
+      "stock": 15,
+      "em_promocao": true,
+      "destaque": true,
+      "disponivel": true
+    },
+    {
+      "id": "produto-2",
+      "nome": "Paleta de Sombras Nude",
+      "marca": "Yemar Collection",
+      "descricao": "12 cores neutras e versáteis para criar looks naturais ou sofisticados.",
+      "preco": 35.00,
+      "preco_original": null,
+      "categoria": "Sombras",
+      "imagem": "images/paleta-nude.jpg",
+      "stock": 8,
+      "em_promocao": false,
+      "destaque": true,
+      "disponivel": true
+    },
+    {
+      "id": "produto-3",
+      "nome": "Batom Mate Longa Duração",
+      "marca": "Professional Makeup",
+      "descricao": "Batom matte com duração de até 12 horas. Disponível em 10 cores.",
+      "preco": 25.00,
+      "preco_original": null,
+      "categoria": "Lábios",
+      "imagem": "images/batom-mate.jpg",
+      "stock": 20,
+      "em_promocao": false,
+      "destaque": false,
+      "disponivel": true
+    }
+  ],
+  "blog": [
+    {
+      "id": "post-1",
+      "titulo": "Tendências de Maquilhagem 2025",
+      "resumo": "Descubra as principais tendências de maquilhagem para este ano.",
+      "conteudo": "<p>As tendências de maquilhagem para 2025 apostam em looks naturais com foco na pele saudável...</p>",
+      "autor": "Yemar",
+      "data": "2025-01-15",
+      "categoria": "Tendências",
+      "imagem": "images/tendencias-2025.jpg",
+      "tags": ["tendências", "maquilhagem", "2025"],
+      "destaque": true,
+      "publicado": true
+    }
+  ],
+  "eventos": [
+    {
+      "id": "evento-1",
+      "titulo": "Masterclass: Maquilhagem para Pele Negra",
+      "descricao": "Aprenda técnicas específicas para valorizar a beleza da pele negra.",
+      "data": "2025-02-20",
+      "horario": "14:00",
+      "local": "Studio Yemar, Lisboa",
+      "preco": 120.00,
+      "vagas": 15,
+      "imagem": "images/masterclass-pele-negra.jpg",
+      "inscricoes_abertas": true
+    }
+  ],
+  "depoimentos": [
+    {
+      "id": "depoimento-1",
+      "nome": "Maria Silva",
+      "servico": "Maquilhagem de Noiva",
+      "avaliacao": 5,
+      "comentario": "Profissional incrível! Fiquei linda no meu casamento. Super recomendo!",
+      "data": "2024-12-10",
+      "foto": "images/depoimento-maria.jpg",
+      "aprovado": true
+    },
+    {
+      "id": "depoimento-2",
+      "nome": "Ana Costa",
+      "servico": "Workshop Básico",
+      "avaliacao": 5,
+      "comentario": "Aprendi muito! A Yemar é excelente professora e muito paciente.",
+      "data": "2024-11-25",
+      "foto": null,
+      "aprovado": true
+    }
+  ],
+  "galeria": [
+    {
+      "id": "galeria-1",
+      "titulo": "Noiva Romântica",
+      "categoria": "noivas",
+      "imagem": "images/portfolio/noiva-1.jpg",
+      "descricao": "Maquilhagem suave e romântica",
+      "destaque": true
+    },
+    {
+      "id": "galeria-2",
+      "titulo": "Editorial Fashion",
+      "categoria": "editorial",
+      "imagem": "images/portfolio/editorial-1.jpg",
+      "descricao": "Produção editorial com maquilhagem criativa",
+      "destaque": true
+    }
+  ],
+  "configuracoes": {
+    "taxaEntrega": 5.00,
+    "entregaGratisAcima": 50.00,
+    "moedaPadrao": "EUR",
+    "idiomasPadrrao": ["pt-PT", "en"],
+    "horarioAtendimento": {
+      "segunda": "09:00-18:00",
+      "terca": "09:00-18:00",
+      "quarta": "09:00-18:00",
+      "quinta": "09:00-18:00",
+      "sexta": "09:00-18:00",
+      "sabado": "10:00-14:00",
+      "domingo": "Fechado"
+    },
+    "formasPagamento": ["Multibanco", "MBWay", "Transferência", "Dinheiro"],
+    "politicaCancelamento": "Cancelamento gratuito até 48h antes do serviço."
+  },
+  "promocoes": [
+    {
+      "id": "promo-1",
+      "titulo": "Desconto Noivas 2025",
+      "descricao": "15% de desconto em pacotes de noiva reservados até março",
+      "codigo": "NOIVA2025",
+      "desconto": 15,
+      "tipo": "percentual",
+      "validade": "2025-03-31",
+      "ativo": true
+    }
+  ],
+  "estatisticas": {
+    "totalClientes": 250,
+    "totalServicos": 450,
+    "avaliacaoMedia": 4.9,
+    "anosFundacao": 2020
+  }
+}
