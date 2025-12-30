@@ -3400,725 +3400,8 @@ function stopCertificatesAutoplay() {
 // RELATÓRIOS E ANÁLISES
 // ============================================
 
-let reportsCharts = {
-  services: null,
-  revenue: null,
-  bookingsStatus: null,
-  topProducts: null,
-};
-
-function loadReports() {
-  const startDate = document.getElementById("reportStartDate").value;
-  const endDate = document.getElementById("reportEndDate").value;
-
-  // Gerar estatísticas
-  const stats = generateReportStats(startDate, endDate);
-  displayReportStats(stats);
-
-  // Gerar gráficos
-  generateServicesChart(startDate, endDate);
-  generateRevenueChart(startDate, endDate);
-  generateBookingsStatusChart(startDate, endDate);
-  generateTopProductsChart(startDate, endDate);
-
-  // Gerar tabela de serviços
-  generateServicesTable(startDate, endDate);
-}
-
-function generateReportStats(startDate, endDate) {
-  const bookings = filterByDateRange(getBookings(), startDate, endDate);
-  const orders = filterByDateRange(getOrders(), startDate, endDate);
-
-  const totalBookings = bookings.length;
-  const confirmedBookings = bookings.filter(
-    (b) => b.status === "Confirmada",
-  ).length;
-  const completedBookings = bookings.filter(
-    (b) => b.status === "Concluída",
-  ).length;
-  const cancelledBookings = bookings.filter(
-    (b) => b.status === "Cancelada",
-  ).length;
-
-  const totalOrders = orders.length;
-  const completedOrders = orders.filter((o) => o.status === "Entregue").length;
-
-  // Calcular receita
-  let bookingsRevenue = 0;
-  bookings.forEach((booking) => {
-    if (booking.status === "Concluída") {
-      if (booking.serviceId) {
-        const service = getServiceById(booking.serviceId);
-        if (service) bookingsRevenue += parseFloat(service.preco) || 0;
-      } else if (booking.workshopId) {
-        const workshop = getWorkshopById(booking.workshopId);
-        if (workshop) bookingsRevenue += parseFloat(workshop.preco) || 0;
-      }
-    }
-  });
-
-  let ordersRevenue = 0;
-  orders.forEach((order) => {
-    if (order.status === "Entregue") {
-      ordersRevenue += parseFloat(order.total) || 0;
-    }
-  });
-
-  const totalRevenue = bookingsRevenue + ordersRevenue;
-
-  return {
-    totalBookings,
-    confirmedBookings,
-    completedBookings,
-    cancelledBookings,
-    totalOrders,
-    completedOrders,
-    bookingsRevenue,
-    ordersRevenue,
-    totalRevenue,
-  };
-}
-
-function displayReportStats(stats) {
-  const statsGrid = document.getElementById("reportStatsGrid");
-  if (!statsGrid) return;
-
-  statsGrid.innerHTML = `
-        <div class="stat-card">
-            <div class="stat-value">${stats.totalBookings}</div>
-            <div class="stat-label">Total Marcações</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-value">${stats.completedBookings}</div>
-            <div class="stat-label">Marcações Concluídas</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-value">${stats.totalOrders}</div>
-            <div class="stat-label">Total Encomendas</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-value">€${stats.totalRevenue.toFixed(2)}</div>
-            <div class="stat-label">Receita Total</div>
-        </div>
-    `;
-}
-
-function filterByDateRange(items, startDate, endDate) {
-  if (!startDate && !endDate) return items;
-
-  return items.filter((item) => {
-    const itemDate = new Date(item.createdAt || item.data);
-    const start = startDate ? new Date(startDate) : new Date("1900-01-01");
-    const end = endDate ? new Date(endDate) : new Date("2100-12-31");
-
-    return itemDate >= start && itemDate <= end;
-  });
-}
-
-function generateServicesChart(startDate, endDate) {
-  const bookings = filterByDateRange(getBookings(), startDate, endDate);
-  const services = getServices();
-
-  const serviceCounts = {};
-  services.forEach((service) => {
-    serviceCounts[service.nome] = 0;
-  });
-
-  bookings.forEach((booking) => {
-    if (booking.serviceId) {
-      const service = getServiceById(booking.serviceId);
-      if (service && serviceCounts[service.nome] !== undefined) {
-        serviceCounts[service.nome]++;
-      }
-    }
-  });
-
-  const labels = Object.keys(serviceCounts);
-  const data = Object.values(serviceCounts);
-
-  const ctx = document.getElementById("servicesChart");
-  if (!ctx) return;
-
-  if (reportsCharts.services) {
-    reportsCharts.services.destroy();
-  }
-
-  reportsCharts.services = new Chart(ctx, {
-    type: "bar",
-    data: {
-      labels: labels,
-      datasets: [
-        {
-          label: "Número de Marcações",
-          data: data,
-          backgroundColor: "#c9a227",
-          borderColor: "#c9a227",
-          borderWidth: 1,
-        },
-      ],
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: true,
-      plugins: {
-        legend: {
-          display: false,
-        },
-      },
-      scales: {
-        y: {
-          beginAtZero: true,
-          ticks: {
-            stepSize: 1,
-          },
-        },
-      },
-    },
-  });
-}
-
-function generateRevenueChart(startDate, endDate) {
-  const bookings = filterByDateRange(getBookings(), startDate, endDate);
-  const orders = filterByDateRange(getOrders(), startDate, endDate);
-
-  // Agrupar por mês
-  const monthlyRevenue = {};
-
-  bookings.forEach((booking) => {
-    if (booking.status === "Concluída" && booking.createdAt) {
-      const month = booking.createdAt.substring(0, 7); // YYYY-MM
-      if (!monthlyRevenue[month]) monthlyRevenue[month] = 0;
-
-      if (booking.serviceId) {
-        const service = getServiceById(booking.serviceId);
-        if (service) monthlyRevenue[month] += parseFloat(service.preco) || 0;
-      } else if (booking.workshopId) {
-        const workshop = getWorkshopById(booking.workshopId);
-        if (workshop) monthlyRevenue[month] += parseFloat(workshop.preco) || 0;
-      }
-    }
-  });
-
-  orders.forEach((order) => {
-    if (order.status === "Entregue" && order.createdAt) {
-      const month = order.createdAt.substring(0, 7);
-      if (!monthlyRevenue[month]) monthlyRevenue[month] = 0;
-      monthlyRevenue[month] += parseFloat(order.total) || 0;
-    }
-  });
-
-  const labels = Object.keys(monthlyRevenue).sort();
-  const data = labels.map((month) => monthlyRevenue[month]);
-
-  const ctx = document.getElementById("revenueChart");
-  if (!ctx) return;
-
-  if (reportsCharts.revenue) {
-    reportsCharts.revenue.destroy();
-  }
-
-  reportsCharts.revenue = new Chart(ctx, {
-    type: "line",
-    data: {
-      labels: labels,
-      datasets: [
-        {
-          label: "Receita (€)",
-          data: data,
-          backgroundColor: "rgba(201, 162, 39, 0.2)",
-          borderColor: "#c9a227",
-          borderWidth: 2,
-          tension: 0.4,
-          fill: true,
-        },
-      ],
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: true,
-      plugins: {
-        legend: {
-          display: true,
-        },
-      },
-      scales: {
-        y: {
-          beginAtZero: true,
-        },
-      },
-    },
-  });
-}
-
-function generateBookingsStatusChart(startDate, endDate) {
-  const bookings = filterByDateRange(getBookings(), startDate, endDate);
-
-  const statusCounts = {
-    Pendente: 0,
-    Confirmada: 0,
-    Concluída: 0,
-    Cancelada: 0,
-  };
-
-  bookings.forEach((booking) => {
-    if (statusCounts[booking.status] !== undefined) {
-      statusCounts[booking.status]++;
-    }
-  });
-
-  const ctx = document.getElementById("bookingsStatusChart");
-  if (!ctx) return;
-
-  if (reportsCharts.bookingsStatus) {
-    reportsCharts.bookingsStatus.destroy();
-  }
-
-  reportsCharts.bookingsStatus = new Chart(ctx, {
-    type: "doughnut",
-    data: {
-      labels: Object.keys(statusCounts),
-      datasets: [
-        {
-          data: Object.values(statusCounts),
-          backgroundColor: ["#ffc107", "#4caf50", "#2196f3", "#f44336"],
-        },
-      ],
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: true,
-      plugins: {
-        legend: {
-          position: "bottom",
-        },
-      },
-    },
-  });
-}
-
-function generateTopProductsChart(startDate, endDate) {
-  const orders = filterByDateRange(getOrders(), startDate, endDate);
-  const products = getProducts();
-
-  const productSales = {};
-  products.forEach((product) => {
-    productSales[product.nome] = 0;
-  });
-
-  orders.forEach((order) => {
-    if (order.items && Array.isArray(order.items)) {
-      order.items.forEach((item) => {
-        const product = getProductById(item.productId);
-        if (product && productSales[product.nome] !== undefined) {
-          productSales[product.nome] += item.quantity || 0;
-        }
-      });
-    }
-  });
-
-  // Pegar top 5
-  const sorted = Object.entries(productSales)
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, 5);
-
-  const labels = sorted.map((item) => item[0]);
-  const data = sorted.map((item) => item[1]);
-
-  const ctx = document.getElementById("topProductsChart");
-  if (!ctx) return;
-
-  if (reportsCharts.topProducts) {
-    reportsCharts.topProducts.destroy();
-  }
-
-  reportsCharts.topProducts = new Chart(ctx, {
-    type: "bar",
-    data: {
-      labels: labels,
-      datasets: [
-        {
-          label: "Unidades Vendidas",
-          data: data,
-          backgroundColor: "#c9a227",
-          borderColor: "#c9a227",
-          borderWidth: 1,
-        },
-      ],
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: true,
-      indexAxis: "y",
-      plugins: {
-        legend: {
-          display: false,
-        },
-      },
-      scales: {
-        x: {
-          beginAtZero: true,
-          ticks: {
-            stepSize: 1,
-          },
-        },
-      },
-    },
-  });
-}
-
-function generateServicesTable(startDate, endDate) {
-  const bookings = filterByDateRange(getBookings(), startDate, endDate);
-  const services = getServices();
-
-  const serviceStats = {};
-  services.forEach((service) => {
-    serviceStats[service.id] = {
-      nome: service.nome,
-      preco: parseFloat(service.preco) || 0,
-      total: 0,
-      confirmadas: 0,
-      concluidas: 0,
-      canceladas: 0,
-      receita: 0,
-    };
-  });
-
-  bookings.forEach((booking) => {
-    if (booking.serviceId && serviceStats[booking.serviceId]) {
-      const stats = serviceStats[booking.serviceId];
-      stats.total++;
-
-      if (booking.status === "Confirmada") stats.confirmadas++;
-      if (booking.status === "Concluída") {
-        stats.concluidas++;
-        stats.receita += stats.preco;
-      }
-      if (booking.status === "Cancelada") stats.canceladas++;
-    }
-  });
-
-  const tbody = document.getElementById("servicesReportTable");
-  if (!tbody) return;
-
-  tbody.innerHTML = Object.values(serviceStats)
-    .sort((a, b) => b.total - a.total)
-    .map(
-      (stats) => `
-            <tr>
-                <td>${stats.nome}</td>
-                <td>${stats.total}</td>
-                <td>${stats.confirmadas}</td>
-                <td>${stats.concluidas}</td>
-                <td>${stats.canceladas}</td>
-                <td>€${stats.receita.toFixed(2)}</td>
-            </tr>
-        `,
-    )
-    .join("");
-}
-
-// Inicializar datas padrão (últimos 30 dias)
-function initializeReportDates() {
-  const endDate = new Date();
-  const startDate = new Date();
-  startDate.setDate(startDate.getDate() - 30);
-
-  const startInput = document.getElementById("reportStartDate");
-  const endInput = document.getElementById("reportEndDate");
-
-  if (startInput) startInput.value = startDate.toISOString().split("T")[0];
-  if (endInput) endInput.value = endDate.toISOString().split("T")[0];
-}
-
-// ============================================
-// EXPORTAÇÃO DE RELATÓRIOS
-// ============================================
-
-function exportReportPDF() {
-  const startDate = document.getElementById("reportStartDate").value;
-  const endDate = document.getElementById("reportEndDate").value;
-
-  const stats = generateReportStats(startDate, endDate);
-  const bookings = filterByDateRange(getBookings(), startDate, endDate);
-  const services = getServices();
-
-  // Gerar conteúdo HTML para PDF
-  const content = `
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>Relatório - Yemar Makeup Artist</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 40px;
-            color: #333;
-        }
-        h1 {
-            color: #c9a227;
-            border-bottom: 3px solid #c9a227;
-            padding-bottom: 10px;
-        }
-        h2 {
-            color: #666;
-            margin-top: 30px;
-            border-bottom: 1px solid #ddd;
-            padding-bottom: 5px;
-        }
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        .period {
-            text-align: center;
-            color: #666;
-            margin-bottom: 20px;
-        }
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 20px;
-            margin: 20px 0;
-        }
-        .stat-card {
-            border: 1px solid #ddd;
-            padding: 15px;
-            text-align: center;
-            border-radius: 4px;
-        }
-        .stat-value {
-            font-size: 24px;
-            font-weight: bold;
-            color: #c9a227;
-        }
-        .stat-label {
-            font-size: 12px;
-            color: #666;
-            margin-top: 5px;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 12px;
-            text-align: left;
-        }
-        th {
-            background-color: #c9a227;
-            color: white;
-        }
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-        .footer {
-            margin-top: 40px;
-            text-align: center;
-            font-size: 12px;
-            color: #999;
-        }
-    </style>
-</head>
-<body>
-    <div class="header">
-        <h1>Relatório de Desempenho</h1>
-        <p style="font-size: 18px; color: #c9a227;">Yemar Makeup Artist</p>
-    </div>
-    
-    <div class="period">
-        <strong>Período:</strong> ${startDate || "Início"} até ${endDate || "Hoje"}
-    </div>
-    
-    <h2>Estatísticas Gerais</h2>
-    <div class="stats-grid">
-        <div class="stat-card">
-            <div class="stat-value">${stats.totalBookings}</div>
-            <div class="stat-label">Total Marcações</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-value">${stats.completedBookings}</div>
-            <div class="stat-label">Marcações Concluídas</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-value">${stats.totalOrders}</div>
-            <div class="stat-label">Total Encomendas</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-value">€${stats.totalRevenue.toFixed(2)}</div>
-            <div class="stat-label">Receita Total</div>
-        </div>
-    </div>
-    
-    <h2>Detalhamento de Serviços</h2>
-    <table>
-        <thead>
-            <tr>
-                <th>Serviço</th>
-                <th>Total Marcações</th>
-                <th>Confirmadas</th>
-                <th>Concluídas</th>
-                <th>Canceladas</th>
-                <th>Receita Total</th>
-            </tr>
-        </thead>
-        <tbody>
-            ${generateServicesTableHTML(startDate, endDate)}
-        </tbody>
-    </table>
-    
-    <div class="footer">
-        <p>Relatório gerado em ${new Date().toLocaleString("pt-PT")}</p>
-        <p>Yemar Makeup Artist - Maquilhagem Profissional</p>
-    </div>
-</body>
-</html>
-    `;
-
-  // Criar blob e download
-  const blob = new Blob([content], { type: "text/html" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = `relatorio_${startDate || "inicio"}_${endDate || "hoje"}.html`;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-
-  showToast(
-    'Relatório HTML gerado! Abra o arquivo e use "Imprimir > Salvar como PDF" no navegador.',
-    "success",
-  );
-}
-
-function generateServicesTableHTML(startDate, endDate) {
-  const bookings = filterByDateRange(getBookings(), startDate, endDate);
-  const services = getServices();
-
-  const serviceStats = {};
-  services.forEach((service) => {
-    serviceStats[service.id] = {
-      nome: service.nome,
-      preco: parseFloat(service.preco) || 0,
-      total: 0,
-      confirmadas: 0,
-      concluidas: 0,
-      canceladas: 0,
-      receita: 0,
-    };
-  });
-
-  bookings.forEach((booking) => {
-    if (booking.serviceId && serviceStats[booking.serviceId]) {
-      const stats = serviceStats[booking.serviceId];
-      stats.total++;
-
-      if (booking.status === "Confirmada") stats.confirmadas++;
-      if (booking.status === "Concluída") {
-        stats.concluidas++;
-        stats.receita += stats.preco;
-      }
-      if (booking.status === "Cancelada") stats.canceladas++;
-    }
-  });
-
-  return Object.values(serviceStats)
-    .sort((a, b) => b.total - a.total)
-    .map(
-      (stats) => `
-            <tr>
-                <td>${stats.nome}</td>
-                <td>${stats.total}</td>
-                <td>${stats.confirmadas}</td>
-                <td>${stats.concluidas}</td>
-                <td>${stats.canceladas}</td>
-                <td>€${stats.receita.toFixed(2)}</td>
-            </tr>
-        `,
-    )
-    .join("");
-}
-
-function exportReportExcel() {
-  const startDate = document.getElementById("reportStartDate").value;
-  const endDate = document.getElementById("reportEndDate").value;
-
-  const stats = generateReportStats(startDate, endDate);
-  const bookings = filterByDateRange(getBookings(), startDate, endDate);
-  const services = getServices();
-
-  // Gerar conteúdo CSV
-  let csv = "RELATÓRIO DE DESEMPENHO - YEMAR MAKEUP ARTIST\n";
-  csv += `Período: ${startDate || "Início"} até ${endDate || "Hoje"}\n`;
-  csv += `Gerado em: ${new Date().toLocaleString("pt-PT")}\n\n`;
-
-  csv += "ESTATÍSTICAS GERAIS\n";
-  csv += "Métrica,Valor\n";
-  csv += `Total Marcações,${stats.totalBookings}\n`;
-  csv += `Marcações Confirmadas,${stats.confirmedBookings}\n`;
-  csv += `Marcações Concluídas,${stats.completedBookings}\n`;
-  csv += `Marcações Canceladas,${stats.cancelledBookings}\n`;
-  csv += `Total Encomendas,${stats.totalOrders}\n`;
-  csv += `Encomendas Entregues,${stats.completedOrders}\n`;
-  csv += `Receita Marcações,€${stats.bookingsRevenue.toFixed(2)}\n`;
-  csv += `Receita Encomendas,€${stats.ordersRevenue.toFixed(2)}\n`;
-  csv += `Receita Total,€${stats.totalRevenue.toFixed(2)}\n\n`;
-
-  csv += "DETALHAMENTO DE SERVIÇOS\n";
-  csv +=
-    "Serviço,Total Marcações,Confirmadas,Concluídas,Canceladas,Receita Total\n";
-
-  const serviceStats = {};
-  services.forEach((service) => {
-    serviceStats[service.id] = {
-      nome: service.nome,
-      preco: parseFloat(service.preco) || 0,
-      total: 0,
-      confirmadas: 0,
-      concluidas: 0,
-      canceladas: 0,
-      receita: 0,
-    };
-  });
-
-  bookings.forEach((booking) => {
-    if (booking.serviceId && serviceStats[booking.serviceId]) {
-      const s = serviceStats[booking.serviceId];
-      s.total++;
-      if (booking.status === "Confirmada") s.confirmadas++;
-      if (booking.status === "Concluída") {
-        s.concluidas++;
-        s.receita += s.preco;
-      }
-      if (booking.status === "Cancelada") s.canceladas++;
-    }
-  });
-
-  Object.values(serviceStats)
-    .sort((a, b) => b.total - a.total)
-    .forEach((s) => {
-      csv += `${s.nome},${s.total},${s.confirmadas},${s.concluidas},${s.canceladas},€${s.receita.toFixed(2)}\n`;
-    });
-
-  // Criar blob e download
-  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = `relatorio_${startDate || "inicio"}_${endDate || "hoje"}.csv`;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-
-  showToast(
-    "Relatório CSV exportado! Abra com Excel ou Google Sheets.",
-    "success",
-  );
-}
+// Nota: As funções de relatórios foram movidas para o final do arquivo
+// para melhor organização e compatibilidade com a nova interface
 
 // ============================================
 // FUNÇÕES ADMIN - MARCAÇÕES
@@ -4998,14 +4281,16 @@ function calculateReportStats(orders, bookings, messages) {
   let revenue = 0;
 
   orders.forEach(order => {
-    if (order.status === 'completed' || order.status === 'paid') {
+    const status = order.status?.toLowerCase() || '';
+    if (status === 'completed' || status === 'paid' || status === 'entregue' || status === 'concluída') {
       revenue += parseFloat(order.total || 0);
     }
   });
 
   bookings.forEach(booking => {
-    if (booking.status === 'completed' || booking.status === 'confirmed') {
-      revenue += parseFloat(booking.price || 0);
+    const status = booking.status?.toLowerCase() || '';
+    if (status === 'completed' || status === 'confirmed' || status === 'concluída' || status === 'confirmada') {
+      revenue += parseFloat(booking.price || booking.preco || 0);
     }
   });
 
@@ -5044,17 +4329,20 @@ function loadSalesByCategoryChart(orders, bookings) {
   };
 
   orders.forEach(order => {
-    if (order.status === 'completed' || order.status === 'paid') {
+    const status = order.status?.toLowerCase() || '';
+    if (status === 'completed' || status === 'paid' || status === 'entregue' || status === 'concluída') {
       categories['Produtos'] += parseFloat(order.total || 0);
     }
   });
 
   bookings.forEach(booking => {
-    if (booking.status === 'completed' || booking.status === 'confirmed') {
-      const price = parseFloat(booking.price || 0);
-      if (booking.type === 'workshop') {
+    const status = booking.status?.toLowerCase() || '';
+    if (status === 'completed' || status === 'confirmed' || status === 'concluída' || status === 'confirmada') {
+      const price = parseFloat(booking.price || booking.preco || 0);
+      const type = (booking.type || booking.tipo || '').toLowerCase();
+      if (type === 'workshop') {
         categories['Workshops'] += price;
-      } else if (booking.type === 'event') {
+      } else if (type === 'event' || type === 'evento') {
         categories['Eventos'] += price;
       } else {
         categories['Serviços'] += price;
@@ -5124,7 +4412,8 @@ function loadRevenueExpensesChart(orders, bookings) {
   };
 
   orders.forEach(order => {
-    if (order.status === 'completed' || order.status === 'paid') {
+    const status = order.status?.toLowerCase() || '';
+    if (status === 'completed' || status === 'paid' || status === 'entregue' || status === 'concluída') {
       const revenue = parseFloat(order.total || 0);
       const expense = revenue * 0.3; // Estimativa de 30% de custos
       addToMonth(order.data || order.createdAt, revenue, expense);
@@ -5132,8 +4421,9 @@ function loadRevenueExpensesChart(orders, bookings) {
   });
 
   bookings.forEach(booking => {
-    if (booking.status === 'completed' || booking.status === 'confirmed') {
-      const revenue = parseFloat(booking.price || 0);
+    const status = booking.status?.toLowerCase() || '';
+    if (status === 'completed' || status === 'confirmed' || status === 'concluída' || status === 'confirmada') {
+      const revenue = parseFloat(booking.price || booking.preco || 0);
       const expense = revenue * 0.25; // Estimativa de 25% de custos
       addToMonth(booking.data || booking.createdAt, revenue, expense);
     }
@@ -5209,7 +4499,8 @@ function loadTopProductsTable(orders) {
   let totalRevenue = 0;
 
   orders.forEach(order => {
-    if (order.status === 'completed' || order.status === 'paid') {
+    const status = order.status?.toLowerCase() || '';
+    if (status === 'completed' || status === 'paid' || status === 'entregue' || status === 'concluída') {
       (order.items || []).forEach(item => {
         const key = item.productId || item.nome;
         if (!productSales[key]) {
@@ -5219,9 +4510,11 @@ function loadTopProductsTable(orders) {
             revenue: 0
           };
         }
-        productSales[key].quantity += item.quantidade || 1;
-        productSales[key].revenue += parseFloat(item.preco || 0) * (item.quantidade || 1);
-        totalRevenue += parseFloat(item.preco || 0) * (item.quantidade || 1);
+        const qty = item.quantidade || item.quantity || 1;
+        const price = parseFloat(item.preco || item.price || 0);
+        productSales[key].quantity += qty;
+        productSales[key].revenue += price * qty;
+        totalRevenue += price * qty;
       });
     }
   });
@@ -5252,17 +4545,19 @@ function loadServicesReportTable(bookings, services) {
   const serviceSales = {};
 
   bookings.forEach(booking => {
-    if ((booking.status === 'completed' || booking.status === 'confirmed') && booking.type === 'service') {
+    const status = booking.status?.toLowerCase() || '';
+    const type = (booking.type || booking.tipo || '').toLowerCase();
+    if ((status === 'completed' || status === 'confirmed' || status === 'concluída' || status === 'confirmada') && (type === 'service' || type === 'serviço')) {
       const key = booking.serviceId || booking.serviceName || 'Serviço';
       if (!serviceSales[key]) {
         serviceSales[key] = {
-          name: booking.serviceName || 'Serviço',
+          name: booking.serviceName || booking.nomeServico || 'Serviço',
           count: 0,
           revenue: 0
         };
       }
       serviceSales[key].count++;
-      serviceSales[key].revenue += parseFloat(booking.price || 0);
+      serviceSales[key].revenue += parseFloat(booking.price || booking.preco || 0);
     }
   });
 
@@ -5290,17 +4585,19 @@ function loadWorkshopsReportTable(bookings, workshops) {
   const workshopSales = {};
 
   bookings.forEach(booking => {
-    if ((booking.status === 'completed' || booking.status === 'confirmed') && booking.type === 'workshop') {
+    const status = booking.status?.toLowerCase() || '';
+    const type = (booking.type || booking.tipo || '').toLowerCase();
+    if ((status === 'completed' || status === 'confirmed' || status === 'concluída' || status === 'confirmada') && type === 'workshop') {
       const key = booking.workshopId || booking.workshopName || 'Workshop';
       if (!workshopSales[key]) {
         workshopSales[key] = {
-          name: booking.workshopName || 'Workshop',
+          name: booking.workshopName || booking.nomeWorkshop || 'Workshop',
           participants: 0,
           revenue: 0
         };
       }
       workshopSales[key].participants++;
-      workshopSales[key].revenue += parseFloat(booking.price || 0);
+      workshopSales[key].revenue += parseFloat(booking.price || booking.preco || 0);
     }
   });
 
@@ -5328,7 +4625,8 @@ function loadFinancialAnalysis(orders, bookings) {
 
   // Processar encomendas
   orders.forEach(order => {
-    if (order.status === 'completed' || order.status === 'paid') {
+    const status = order.status?.toLowerCase() || '';
+    if (status === 'completed' || status === 'paid' || status === 'entregue' || status === 'concluída') {
       const revenue = parseFloat(order.total || 0);
       totalRevenue += revenue;
 
@@ -5356,16 +4654,18 @@ function loadFinancialAnalysis(orders, bookings) {
 
   // Processar marcações
   bookings.forEach(booking => {
-    if (booking.status === 'completed' || booking.status === 'confirmed') {
-      const revenue = parseFloat(booking.price || 0);
+    const status = booking.status?.toLowerCase() || '';
+    if (status === 'completed' || status === 'confirmed' || status === 'concluída' || status === 'confirmada') {
+      const revenue = parseFloat(booking.price || booking.preco || 0);
       totalRevenue += revenue;
 
-      const category = booking.type === 'workshop' ? 'Workshop' : 
-                      booking.type === 'event' ? 'Evento' : 'Serviço';
+      const type = (booking.type || booking.tipo || '').toLowerCase();
+      const category = type === 'workshop' ? 'Workshop' : 
+                      (type === 'event' || type === 'evento') ? 'Evento' : 'Serviço';
 
       transactions.push({
         date: booking.data || booking.createdAt,
-        description: `${category} - ${booking.serviceName || booking.workshopName || 'N/A'}`,
+        description: `${category} - ${booking.serviceName || booking.workshopName || booking.nomeServico || booking.nomeWorkshop || 'N/A'}`,
         type: 'Entrada',
         category: `Receitas de ${category}`,
         amount: revenue
