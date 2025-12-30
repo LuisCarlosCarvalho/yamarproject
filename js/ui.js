@@ -18,18 +18,18 @@ function getImageUrl(item, fallback = 'assets/images/placeholder.jpg') {
   if (!item || typeof item !== 'object') {
     return fallback;
   }
-  
+
   // Prioridade: imagemUrl > imagem
   const imageField = item.imagemUrl || item.imagem;
-  
+
   // Se não tem imagem, retorna fallback
   if (!imageField) return fallback;
-  
+
   // Se é URL externa (começa com http:// ou https://), retorna diretamente
   if (imageField.startsWith('http://') || imageField.startsWith('https://')) {
     return imageField;
   }
-  
+
   // Se é caminho local, retorna como está (relativo à raiz do site)
   return imageField;
 }
