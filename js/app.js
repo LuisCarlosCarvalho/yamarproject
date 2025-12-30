@@ -297,16 +297,14 @@ function applySiteSettings() {
 
   // Aplicar foto do rodapé
   const footerAvatars = document.querySelectorAll("#footerAvatar, .footer-avatar");
-  if (footerAvatars.length > 0) {
-    const avatarUrlRaw = settings.footerAvatarUrl ||
-                         settings.aboutImageUrl ||
-                         "images/capa.png";
-    const avatarUrl = getImageUrl({imagemUrl: avatarUrlRaw}, 'assets/images/placeholder.jpg');
+  if (footerAvatars.length > 0 && (settings.footerAvatarUrl || settings.aboutImageUrl)) {
+    const avatarUrlRaw = settings.footerAvatarUrl || settings.aboutImageUrl;
+    const avatarUrl = getImageUrl({imagemUrl: avatarUrlRaw});
     footerAvatars.forEach(img => {
       img.src = avatarUrl;
       img.onerror = function() {
         this.onerror = null;
-        this.src = 'assets/images/placeholder.jpg';
+        this.style.display = 'none';
       };
     });
   }
@@ -314,12 +312,12 @@ function applySiteSettings() {
   // Aplicar foto do perfil da homepage
   const welcomeAvatars = document.querySelectorAll("#welcomeAvatar, .welcome-avatar");
   if (welcomeAvatars.length > 0 && settings.welcomeAvatarUrl) {
-    const welcomeUrl = getImageUrl({imagemUrl: settings.welcomeAvatarUrl}, 'assets/images/placeholder.jpg');
+    const welcomeUrl = getImageUrl({imagemUrl: settings.welcomeAvatarUrl});
     welcomeAvatars.forEach(img => {
       img.src = welcomeUrl;
       img.onerror = function() {
         this.onerror = null;
-        this.src = 'assets/images/placeholder.jpg';
+        this.style.display = 'none';
       };
     });
   }
@@ -327,12 +325,12 @@ function applySiteSettings() {
   // Aplicar foto da página sobre
   const aboutImages = document.querySelectorAll("#aboutImage, .about-image");
   if (aboutImages.length > 0 && settings.aboutImageUrl) {
-    const aboutUrl = getImageUrl({imagemUrl: settings.aboutImageUrl}, 'assets/images/placeholder.jpg');
+    const aboutUrl = getImageUrl({imagemUrl: settings.aboutImageUrl});
     aboutImages.forEach(img => {
       img.src = aboutUrl;
       img.onerror = function() {
         this.onerror = null;
-        this.src = 'assets/images/placeholder.jpg';
+        this.style.display = 'none';
       };
     });
   }
