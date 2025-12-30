@@ -400,6 +400,11 @@ function preventClickjacking() {
  * Adiciona meta tags de segurança
  */
 function addSecurityHeaders() {
+  // DESABILITADO TEMPORARIAMENTE PARA TESTE
+  // Todos os headers de segurança foram removidos para identificar o problema
+  console.log('⚠️ Security headers desabilitados para teste');
+  return;
+  
   const head = document.head;
   
   // CSP é gerenciado pelo vercel.json para evitar conflitos
