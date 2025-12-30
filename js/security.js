@@ -402,11 +402,8 @@ function preventClickjacking() {
 function addSecurityHeaders() {
   const head = document.head;
   
-  // Content Security Policy
-  const csp = document.createElement('meta');
-  csp.httpEquiv = 'Content-Security-Policy';
-  csp.content = "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://images.unsplash.com https://i.imgur.com https://*.imgur.com; connect-src 'self'";
-  head.appendChild(csp);
+  // CSP é gerenciado pelo vercel.json para evitar conflitos
+  // Mantemos apenas headers básicos aqui
   
   // X-Content-Type-Options
   const xcto = document.createElement('meta');
