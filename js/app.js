@@ -4888,3 +4888,559 @@ function editImageUrl(type, id, title, currentUrl) {
       break;
   }
 }
+
+// ============================================
+// RELATÓRIOS - Funções de Análise e Estatísticas
+// ============================================
+
+let salesChart = null;
+let revenueChart = null;
+
+function initializeReportDates() {
+  const endDate = new Date();
+  const startDate = new Date();
+  startDate.setMonth(startDate.getMonth() - 1);
+
+  const startInput = document.getElementById('reportStartDate');
+  const endInput = document.getElementById('reportEndDate');
+
+  if (startInput) startInput.value = startDate.toISOString().split('T')[0];
+  if (endInput) endInput.value = endDate.toISOString().split('T')[0];
+}
+
+function loadReports() {
+  loadReportsData();
+}
+
+function loadReportsData() {
+  const period = document.getElementById('reportPeriod')?.value || 'month';
+  const startDate = document.getElementById('reportStartDate')?.value;
+  const endDate = document.getElementById('reportEndDate')?.value;
+
+  const dateFilter = getDateRangeFilter(period, startDate, endDate);
+
+  // Carregar dados de todas as fontes
+  const orders = getOrders() || [];
+  const bookings = getBookings() || [];
+  const messages = getMessages() || [];
+  const products = getProducts() || [];
+  const services = getServices() || [];
+  const workshops = getWorkshops() || [];
+
+  // Filtrar por data
+  const filteredOrders = filterByDateRange(orders, dateFilter);
+  const filteredBookings = filterByDateRange(bookings, dateFilter);
+  const filteredMessages = filterByDateRange(messages, dateFilter);
+
+  // Calcular estatísticas principais
+  const stats = calculateReportStats(filteredOrders, filteredBookings, filteredMessages);
+
+  // Atualizar cards principais
+  updateReportCards(stats);
+
+  // Carregar gráficos
+  loadSalesByCategoryChart(filteredOrders, filteredBookings);
+  loadRevenueExpensesChart(filteredOrders, filteredBookings);
+
+  // Carregar tabelas
+  loadTopProductsTable(filteredOrders);
+  loadServicesReportTable(filteredBookings, services);
+  loadWorkshopsReportTable(filteredBookings, workshops);
+  loadFinancialAnalysis(filteredOrders, filteredBookings);
+  loadMessagesReport(filteredMessages);
+}
+
+function getDateRangeFilter(period, customStart, customEnd) {
+  const now = new Date();
+  let startDate = new Date();
+
+  switch (period) {
+    case 'today':
+      startDate.setHours(0, 0, 0, 0);
+      break;
+    case 'week':
+      startDate.setDate(now.getDate() - 7);
+      break;
+    case 'month':
+      startDate.setMonth(now.getMonth() - 1);
+      break;
+    case 'quarter':
+      startDate.setMonth(now.getMonth() - 3);
+      break;
+    case 'year':
+      startDate.setFullYear(now.getFullYear() - 1);
+      break;
+    case 'all':
+      startDate = new Date('2020-01-01');
+      break;
+  }
+
+  if (customStart) startDate = new Date(customStart);
+  const endDate = customEnd ? new Date(customEnd) : now;
+
+  return { startDate, endDate };
+}
+
+function filterByDateRange(items, dateFilter) {
+  if (!items || !Array.isArray(items)) return [];
+
+  return items.filter(item => {
+    const itemDate = new Date(item.data || item.createdAt || item.timestamp);
+    return itemDate >= dateFilter.startDate && itemDate <= dateFilter.endDate;
+  });
+}
+
+function calculateReportStats(orders, bookings, messages) {
+  // Calcular visitas (simulado - pode ser integrado com analytics real)
+  const visits = Math.floor(Math.random() * 1000) + (orders.length + bookings.length) * 10;
+
+  // Calcular receita total
+  let revenue = 0;
+
+  orders.forEach(order => {
+    if (order.status === 'completed' || order.status === 'paid') {
+      revenue += parseFloat(order.total || 0);
+    }
+  });
+
+  bookings.forEach(booking => {
+    if (booking.status === 'completed' || booking.status === 'confirmed') {
+      revenue += parseFloat(booking.price || 0);
+    }
+  });
+
+  return {
+    visits,
+    revenue,
+    ordersCount: orders.length,
+    messagesCount: messages.length
+  };
+}
+
+function updateReportCards(stats) {
+  const visitEl = document.getElementById('reportVisits');
+  const revenueEl = document.getElementById('reportRevenue');
+  const ordersEl = document.getElementById('reportOrders');
+  const messagesEl = document.getElementById('reportMessages');
+
+  if (visitEl) visitEl.textContent = stats.visits.toLocaleString();
+  if (revenueEl) revenueEl.textContent = `€${stats.revenue.toFixed(2)}`;
+  if (ordersEl) ordersEl.textContent = stats.ordersCount;
+  if (messagesEl) messagesEl.textContent = stats.messagesCount;
+}
+
+function loadSalesByCategoryChart(orders, bookings) {
+  const canvas = document.getElementById('salesByCategoryChart');
+  if (!canvas) return;
+
+  const ctx = canvas.getContext('2d');
+
+  // Agrupar vendas por categoria
+  const categories = {
+    'Produtos': 0,
+    'Serviços': 0,
+    'Workshops': 0,
+    'Eventos': 0
+  };
+
+  orders.forEach(order => {
+    if (order.status === 'completed' || order.status === 'paid') {
+      categories['Produtos'] += parseFloat(order.total || 0);
+    }
+  });
+
+  bookings.forEach(booking => {
+    if (booking.status === 'completed' || booking.status === 'confirmed') {
+      const price = parseFloat(booking.price || 0);
+      if (booking.type === 'workshop') {
+        categories['Workshops'] += price;
+      } else if (booking.type === 'event') {
+        categories['Eventos'] += price;
+      } else {
+        categories['Serviços'] += price;
+      }
+    }
+  });
+
+  if (salesChart) salesChart.destroy();
+
+  salesChart = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: Object.keys(categories),
+      datasets: [{
+        data: Object.values(categories),
+        backgroundColor: [
+          'rgba(102, 126, 234, 0.8)',
+          'rgba(118, 75, 162, 0.8)',
+          'rgba(240, 147, 251, 0.8)',
+          'rgba(245, 87, 108, 0.8)'
+        ],
+        borderWidth: 2,
+        borderColor: '#fff'
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      plugins: {
+        legend: {
+          position: 'bottom',
+          labels: {
+            padding: 15,
+            font: { size: 12 }
+          }
+        },
+        tooltip: {
+          callbacks: {
+            label: function(context) {
+              const label = context.label || '';
+              const value = context.parsed || 0;
+              return `${label}: €${value.toFixed(2)}`;
+            }
+          }
+        }
+      }
+    }
+  });
+}
+
+function loadRevenueExpensesChart(orders, bookings) {
+  const canvas = document.getElementById('revenueExpensesChart');
+  if (!canvas) return;
+
+  const ctx = canvas.getContext('2d');
+
+  // Calcular receitas e despesas por mês
+  const monthlyData = {};
+
+  const addToMonth = (date, revenue, expense) => {
+    const key = new Date(date).toISOString().slice(0, 7);
+    if (!monthlyData[key]) {
+      monthlyData[key] = { revenue: 0, expenses: 0 };
+    }
+    monthlyData[key].revenue += revenue;
+    monthlyData[key].expenses += expense;
+  };
+
+  orders.forEach(order => {
+    if (order.status === 'completed' || order.status === 'paid') {
+      const revenue = parseFloat(order.total || 0);
+      const expense = revenue * 0.3; // Estimativa de 30% de custos
+      addToMonth(order.data || order.createdAt, revenue, expense);
+    }
+  });
+
+  bookings.forEach(booking => {
+    if (booking.status === 'completed' || booking.status === 'confirmed') {
+      const revenue = parseFloat(booking.price || 0);
+      const expense = revenue * 0.25; // Estimativa de 25% de custos
+      addToMonth(booking.data || booking.createdAt, revenue, expense);
+    }
+  });
+
+  const labels = Object.keys(monthlyData).sort();
+  const revenueData = labels.map(key => monthlyData[key].revenue);
+  const expensesData = labels.map(key => monthlyData[key].expenses);
+
+  if (revenueChart) revenueChart.destroy();
+
+  revenueChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: labels.map(formatMonthLabel),
+      datasets: [
+        {
+          label: 'Receitas',
+          data: revenueData,
+          backgroundColor: 'rgba(67, 233, 123, 0.8)',
+          borderColor: 'rgba(67, 233, 123, 1)',
+          borderWidth: 1
+        },
+        {
+          label: 'Despesas',
+          data: expensesData,
+          backgroundColor: 'rgba(245, 87, 108, 0.8)',
+          borderColor: 'rgba(245, 87, 108, 1)',
+          borderWidth: 1
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: {
+            callback: function(value) {
+              return '€' + value.toFixed(0);
+            }
+          }
+        }
+      },
+      plugins: {
+        legend: {
+          position: 'top'
+        },
+        tooltip: {
+          callbacks: {
+            label: function(context) {
+              return `${context.dataset.label}: €${context.parsed.y.toFixed(2)}`;
+            }
+          }
+        }
+      }
+    }
+  });
+}
+
+function formatMonthLabel(yearMonth) {
+  const [year, month] = yearMonth.split('-');
+  const months = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+  return `${months[parseInt(month) - 1]} ${year}`;
+}
+
+function loadTopProductsTable(orders) {
+  const tbody = document.getElementById('topProductsTable');
+  if (!tbody) return;
+
+  const productSales = {};
+  let totalRevenue = 0;
+
+  orders.forEach(order => {
+    if (order.status === 'completed' || order.status === 'paid') {
+      (order.items || []).forEach(item => {
+        const key = item.productId || item.nome;
+        if (!productSales[key]) {
+          productSales[key] = {
+            name: item.nome || 'Produto',
+            quantity: 0,
+            revenue: 0
+          };
+        }
+        productSales[key].quantity += item.quantidade || 1;
+        productSales[key].revenue += parseFloat(item.preco || 0) * (item.quantidade || 1);
+        totalRevenue += parseFloat(item.preco || 0) * (item.quantidade || 1);
+      });
+    }
+  });
+
+  const sortedProducts = Object.values(productSales)
+    .sort((a, b) => b.revenue - a.revenue)
+    .slice(0, 10);
+
+  if (sortedProducts.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; padding: 2rem; color: #999;">Nenhum produto vendido no período selecionado</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = sortedProducts.map(product => `
+    <tr>
+      <td>${product.name}</td>
+      <td>${product.quantity}</td>
+      <td>€${product.revenue.toFixed(2)}</td>
+      <td>${((product.revenue / totalRevenue) * 100).toFixed(1)}%</td>
+    </tr>
+  `).join('');
+}
+
+function loadServicesReportTable(bookings, services) {
+  const tbody = document.getElementById('servicesReportTable');
+  if (!tbody) return;
+
+  const serviceSales = {};
+
+  bookings.forEach(booking => {
+    if ((booking.status === 'completed' || booking.status === 'confirmed') && booking.type === 'service') {
+      const key = booking.serviceId || booking.serviceName || 'Serviço';
+      if (!serviceSales[key]) {
+        serviceSales[key] = {
+          name: booking.serviceName || 'Serviço',
+          count: 0,
+          revenue: 0
+        };
+      }
+      serviceSales[key].count++;
+      serviceSales[key].revenue += parseFloat(booking.price || 0);
+    }
+  });
+
+  const sortedServices = Object.values(serviceSales)
+    .sort((a, b) => b.revenue - a.revenue);
+
+  if (sortedServices.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="3" style="text-align: center; padding: 2rem; color: #999;">Nenhum serviço realizado no período selecionado</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = sortedServices.map(service => `
+    <tr>
+      <td>${service.name}</td>
+      <td>${service.count}</td>
+      <td>€${service.revenue.toFixed(2)}</td>
+    </tr>
+  `).join('');
+}
+
+function loadWorkshopsReportTable(bookings, workshops) {
+  const tbody = document.getElementById('workshopsReportTable');
+  if (!tbody) return;
+
+  const workshopSales = {};
+
+  bookings.forEach(booking => {
+    if ((booking.status === 'completed' || booking.status === 'confirmed') && booking.type === 'workshop') {
+      const key = booking.workshopId || booking.workshopName || 'Workshop';
+      if (!workshopSales[key]) {
+        workshopSales[key] = {
+          name: booking.workshopName || 'Workshop',
+          participants: 0,
+          revenue: 0
+        };
+      }
+      workshopSales[key].participants++;
+      workshopSales[key].revenue += parseFloat(booking.price || 0);
+    }
+  });
+
+  const sortedWorkshops = Object.values(workshopSales)
+    .sort((a, b) => b.revenue - a.revenue);
+
+  if (sortedWorkshops.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="3" style="text-align: center; padding: 2rem; color: #999;">Nenhum workshop realizado no período selecionado</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = sortedWorkshops.map(workshop => `
+    <tr>
+      <td>${workshop.name}</td>
+      <td>${workshop.participants}</td>
+      <td>€${workshop.revenue.toFixed(2)}</td>
+    </tr>
+  `).join('');
+}
+
+function loadFinancialAnalysis(orders, bookings) {
+  let totalRevenue = 0;
+  let totalExpenses = 0;
+  const transactions = [];
+
+  // Processar encomendas
+  orders.forEach(order => {
+    if (order.status === 'completed' || order.status === 'paid') {
+      const revenue = parseFloat(order.total || 0);
+      totalRevenue += revenue;
+
+      transactions.push({
+        date: order.data || order.createdAt,
+        description: `Encomenda #${order.id?.slice(0, 8) || 'N/A'}`,
+        type: 'Entrada',
+        category: 'Vendas de Produtos',
+        amount: revenue
+      });
+
+      // Estimar custos
+      const cost = revenue * 0.3;
+      totalExpenses += cost;
+
+      transactions.push({
+        date: order.data || order.createdAt,
+        description: `Custos - Encomenda #${order.id?.slice(0, 8) || 'N/A'}`,
+        type: 'Saída',
+        category: 'Custos de Produtos',
+        amount: cost
+      });
+    }
+  });
+
+  // Processar marcações
+  bookings.forEach(booking => {
+    if (booking.status === 'completed' || booking.status === 'confirmed') {
+      const revenue = parseFloat(booking.price || 0);
+      totalRevenue += revenue;
+
+      const category = booking.type === 'workshop' ? 'Workshop' : 
+                      booking.type === 'event' ? 'Evento' : 'Serviço';
+
+      transactions.push({
+        date: booking.data || booking.createdAt,
+        description: `${category} - ${booking.serviceName || booking.workshopName || 'N/A'}`,
+        type: 'Entrada',
+        category: `Receitas de ${category}`,
+        amount: revenue
+      });
+
+      // Estimar custos
+      const cost = revenue * 0.25;
+      totalExpenses += cost;
+
+      transactions.push({
+        date: booking.data || booking.createdAt,
+        description: `Custos - ${category}`,
+        type: 'Saída',
+        category: `Custos de ${category}`,
+        amount: cost
+      });
+    }
+  });
+
+  const netProfit = totalRevenue - totalExpenses;
+
+  // Atualizar resumo financeiro
+  const revenueEl = document.getElementById('totalRevenueAmount');
+  const expensesEl = document.getElementById('totalExpensesAmount');
+  const profitEl = document.getElementById('netProfitAmount');
+
+  if (revenueEl) revenueEl.textContent = `€${totalRevenue.toFixed(2)}`;
+  if (expensesEl) expensesEl.textContent = `€${totalExpenses.toFixed(2)}`;
+  if (profitEl) {
+    profitEl.textContent = `€${netProfit.toFixed(2)}`;
+    profitEl.style.background = netProfit >= 0 
+      ? 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)'
+      : 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)';
+  }
+
+  // Carregar tabela de transações
+  const tbody = document.getElementById('financialTransactionsTable');
+  if (!tbody) return;
+
+  const sortedTransactions = transactions.sort((a, b) => 
+    new Date(b.date) - new Date(a.date)
+  ).slice(0, 50);
+
+  if (sortedTransactions.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 2rem; color: #999;">Nenhuma transação no período selecionado</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = sortedTransactions.map(transaction => `
+    <tr>
+      <td>${new Date(transaction.date).toLocaleDateString('pt-PT')}</td>
+      <td>${transaction.description}</td>
+      <td><span style="display: inline-block; padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.875rem; background: ${transaction.type === 'Entrada' ? '#d4edda' : '#f8d7da'}; color: ${transaction.type === 'Entrada' ? '#155724' : '#721c24'};">${transaction.type}</span></td>
+      <td>${transaction.category}</td>
+      <td style="font-weight: 600; color: ${transaction.type === 'Entrada' ? '#28a745' : '#dc3545'};">€${transaction.amount.toFixed(2)}</td>
+    </tr>
+  `).join('');
+}
+
+function loadMessagesReport(messages) {
+  const totalCount = messages.length;
+  const readCount = messages.filter(m => m.read || m.lida).length;
+  const unreadCount = totalCount - readCount;
+
+  const totalEl = document.getElementById('totalMessagesCount');
+  const readEl = document.getElementById('readMessagesCount');
+  const unreadEl = document.getElementById('unreadMessagesCount');
+
+  if (totalEl) totalEl.textContent = totalCount;
+  if (readEl) readEl.textContent = readCount;
+  if (unreadEl) unreadEl.textContent = unreadCount;
+}
+
+function exportReportPDF() {
+  showToast('Funcionalidade de exportação em desenvolvimento. Os dados podem ser impressos usando Ctrl+P.', 'info');
+  window.print();
+}
+

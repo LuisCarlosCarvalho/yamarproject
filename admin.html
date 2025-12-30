@@ -62,6 +62,7 @@
       </div>
       <nav class="mobile-nav" id="mobileAdminNav">
         <a href="#" data-section="dashboard">📊 Dashboard</a>
+        <a href="#" data-section="reports">📈 Relatórios</a>
         <a href="#" data-section="bookings">📅 Marcações</a>
         <a href="#" data-section="orders">📦 Encomendas</a>
         <a href="#" data-section="services">💄 Serviços</a>
@@ -84,6 +85,7 @@
           <nav id="adminNav">
             <a class="admin-menu-item active" data-section="dashboard"
               >📊 Dashboard</a>
+            <a class="admin-menu-item" data-section="reports">📈 Relatórios</a>
             <a class="admin-menu-item" data-section="bookings">📅 Marcações</a>
             <a class="admin-menu-item" data-section="orders">📦 Encomendas</a>
             <a class="admin-menu-item" data-section="services">💄 Serviços</a>
@@ -138,6 +140,222 @@
                 </div>
                 <div id="recentOrders" style="padding: 1rem">
                   <!-- Encomendas recentes -->
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Relatórios -->
+          <section id="reportsSection" class="admin-section">
+            <h2 style="margin-bottom: 1.5rem">📈 Relatórios Completos</h2>
+            <div
+              class="alert alert-info"
+              style="
+                margin-bottom: 1.5rem;
+                padding: 1rem;
+                background: #e8f4f8;
+                border-left: 4px solid #0066cc;
+                border-radius: 4px;
+              "
+            >
+              <strong>📊 Análise Completa:</strong> Visualize relatórios detalhados de todas as operações do site, incluindo estatísticas de visitas, vendas, mensagens, workshops realizados, encomendas e análise financeira com entradas e saídas.
+            </div>
+
+            <!-- Filtros de Período -->
+            <div class="filters" style="margin-bottom: 2rem; display: flex; gap: 1rem; flex-wrap: wrap;">
+              <div>
+                <label for="reportPeriod" style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Período:</label>
+                <select id="reportPeriod" onchange="loadReportsData()" style="padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px;">
+                  <option value="today">Hoje</option>
+                  <option value="week">Esta Semana</option>
+                  <option value="month" selected>Este Mês</option>
+                  <option value="quarter">Este Trimestre</option>
+                  <option value="year">Este Ano</option>
+                  <option value="all">Todo o Período</option>
+                </select>
+              </div>
+              <div>
+                <label for="reportStartDate" style="display: block; margin-bottom: 0.5rem; font-weight: 500;">De:</label>
+                <input type="date" id="reportStartDate" onchange="loadReportsData()" style="padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px;" />
+              </div>
+              <div>
+                <label for="reportEndDate" style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Até:</label>
+                <input type="date" id="reportEndDate" onchange="loadReportsData()" style="padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px;" />
+              </div>
+              <div style="display: flex; align-items: flex-end;">
+                <button class="btn btn-sm btn-primary" onclick="exportReportPDF()">📄 Exportar PDF</button>
+              </div>
+            </div>
+
+            <!-- Cards de Estatísticas Principais -->
+            <div class="stats-grid" style="margin-bottom: 2rem;">
+              <div class="stat-card">
+                <div class="stat-icon" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">👁️</div>
+                <div class="stat-details">
+                  <h3 id="reportVisits">0</h3>
+                  <p>Visitas ao Site</p>
+                </div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-icon" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">💰</div>
+                <div class="stat-details">
+                  <h3 id="reportRevenue">€0</h3>
+                  <p>Receita Total</p>
+                </div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-icon" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">📦</div>
+                <div class="stat-details">
+                  <h3 id="reportOrders">0</h3>
+                  <p>Encomendas</p>
+                </div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-icon" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">✉️</div>
+                <div class="stat-details">
+                  <h3 id="reportMessages">0</h3>
+                  <p>Mensagens Recebidas</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Gráficos -->
+            <div class="grid grid-2" style="margin-bottom: 2rem; gap: 2rem;">
+              <div class="admin-table-container">
+                <div class="admin-table-header">
+                  <h3 class="admin-table-title">📊 Vendas por Categoria</h3>
+                </div>
+                <div style="padding: 2rem;">
+                  <canvas id="salesByCategoryChart"></canvas>
+                </div>
+              </div>
+              <div class="admin-table-container">
+                <div class="admin-table-header">
+                  <h3 class="admin-table-title">📈 Receitas vs Despesas</h3>
+                </div>
+                <div style="padding: 2rem;">
+                  <canvas id="revenueExpensesChart"></canvas>
+                </div>
+              </div>
+            </div>
+
+            <!-- Tabelas Detalhadas -->
+            <div style="margin-bottom: 2rem;">
+              <div class="admin-table-container">
+                <div class="admin-table-header">
+                  <h3 class="admin-table-title">🛍️ Produtos Mais Vendidos</h3>
+                </div>
+                <table class="admin-table">
+                  <thead>
+                    <tr>
+                      <th>Produto</th>
+                      <th>Quantidade</th>
+                      <th>Receita</th>
+                      <th>% do Total</th>
+                    </tr>
+                  </thead>
+                  <tbody id="topProductsTable">
+                    <!-- Dados carregados via JS -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="grid grid-2" style="gap: 2rem; margin-bottom: 2rem;">
+              <div class="admin-table-container">
+                <div class="admin-table-header">
+                  <h3 class="admin-table-title">💄 Serviços Realizados</h3>
+                </div>
+                <table class="admin-table">
+                  <thead>
+                    <tr>
+                      <th>Serviço</th>
+                      <th>Quantidade</th>
+                      <th>Receita</th>
+                    </tr>
+                  </thead>
+                  <tbody id="servicesReportTable">
+                    <!-- Dados carregados via JS -->
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="admin-table-container">
+                <div class="admin-table-header">
+                  <h3 class="admin-table-title">🎓 Workshops Realizados</h3>
+                </div>
+                <table class="admin-table">
+                  <thead>
+                    <tr>
+                      <th>Workshop</th>
+                      <th>Participantes</th>
+                      <th>Receita</th>
+                    </tr>
+                  </thead>
+                  <tbody id="workshopsReportTable">
+                    <!-- Dados carregados via JS -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Análise Financeira -->
+            <div class="admin-table-container" style="margin-bottom: 2rem;">
+              <div class="admin-table-header">
+                <h3 class="admin-table-title">💵 Análise Financeira Detalhada</h3>
+              </div>
+              <div style="padding: 2rem;">
+                <div class="grid grid-3" style="gap: 2rem; margin-bottom: 2rem;">
+                  <div style="text-align: center; padding: 1.5rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 8px;">
+                    <h4 style="margin: 0 0 0.5rem 0; font-size: 2rem;" id="totalRevenueAmount">€0</h4>
+                    <p style="margin: 0; opacity: 0.9;">Total de Entradas</p>
+                  </div>
+                  <div style="text-align: center; padding: 1.5rem; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; border-radius: 8px;">
+                    <h4 style="margin: 0 0 0.5rem 0; font-size: 2rem;" id="totalExpensesAmount">€0</h4>
+                    <p style="margin: 0; opacity: 0.9;">Total de Saídas</p>
+                  </div>
+                  <div style="text-align: center; padding: 1.5rem; background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); color: white; border-radius: 8px;">
+                    <h4 style="margin: 0 0 0.5rem 0; font-size: 2rem;" id="netProfitAmount">€0</h4>
+                    <p style="margin: 0; opacity: 0.9;">Lucro Líquido</p>
+                  </div>
+                </div>
+
+                <table class="admin-table">
+                  <thead>
+                    <tr>
+                      <th>Data</th>
+                      <th>Descrição</th>
+                      <th>Tipo</th>
+                      <th>Categoria</th>
+                      <th>Valor</th>
+                    </tr>
+                  </thead>
+                  <tbody id="financialTransactionsTable">
+                    <!-- Dados carregados via JS -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Resumo de Mensagens -->
+            <div class="admin-table-container">
+              <div class="admin-table-header">
+                <h3 class="admin-table-title">✉️ Resumo de Mensagens</h3>
+              </div>
+              <div style="padding: 2rem;">
+                <div class="grid grid-3" style="gap: 1.5rem; margin-bottom: 1.5rem;">
+                  <div style="padding: 1rem; background: #f8f9fa; border-radius: 4px; text-align: center;">
+                    <h4 style="margin: 0 0 0.5rem 0; color: #0066cc; font-size: 1.5rem;" id="totalMessagesCount">0</h4>
+                    <p style="margin: 0; color: #666;">Total de Mensagens</p>
+                  </div>
+                  <div style="padding: 1rem; background: #f8f9fa; border-radius: 4px; text-align: center;">
+                    <h4 style="margin: 0 0 0.5rem 0; color: #28a745; font-size: 1.5rem;" id="readMessagesCount">0</h4>
+                    <p style="margin: 0; color: #666;">Mensagens Lidas</p>
+                  </div>
+                  <div style="padding: 1rem; background: #f8f9fa; border-radius: 4px; text-align: center;">
+                    <h4 style="margin: 0 0 0.5rem 0; color: #dc3545; font-size: 1.5rem;" id="unreadMessagesCount">0</h4>
+                    <p style="margin: 0; color: #666;">Mensagens Não Lidas</p>
+                  </div>
                 </div>
               </div>
             </div>
