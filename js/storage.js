@@ -524,9 +524,9 @@ const SEED_SITE_SETTINGS = {
   bannerImagemUrl:
     "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=800",
   bannerCta: "Marcar Agora",
-  welcomeAvatarUrl: "images/logo_name.png",
-  aboutImageUrl: "images/capa.png",
-  footerAvatarUrl: "images/logo_name.png",
+  welcomeAvatarUrl: "",
+  aboutImageUrl: "",
+  footerAvatarUrl: "",
   emailContacto: "yemarmk@gmail.com",
   telefone: "(+351) 933758731",
   whatsapp: "351933758731",
