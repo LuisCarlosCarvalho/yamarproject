@@ -77,6 +77,9 @@ body {
     background-color: var(--color-white);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+    width: 100%;
+    position: relative;
 }
 
 img {
@@ -100,11 +103,17 @@ button {
     cursor: pointer;
     border: none;
     background: none;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
 }
 
 input, textarea, select {
     font-family: inherit;
-    font-size: 1rem;
+    font-size: 16px; /* Evita zoom no iOS */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    max-width: 100%;
 }
 
 ul, ol {
@@ -122,9 +131,16 @@ h1, h2, h3, h4, h5, h6 {
    ============================================ */
 
 .container {
+    width: 100%;
     max-width: var(--container-max);
     margin: 0 auto;
     padding: 0 var(--spacing-md);
+}
+
+@media (max-width: 576px) {
+    .container {
+        padding: 0 var(--spacing-sm);
+    }
 }
 
 .text-center { text-align: center; }
@@ -475,6 +491,18 @@ h1, h2, h3, h4, h5, h6 {
     border-radius: var(--border-radius);
     transition: all var(--transition-fast);
     cursor: pointer;
+    min-height: 44px;
+    min-width: 44px;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+}
+
+@media (max-width: 576px) {
+    .btn {
+        padding: 0.75rem 1.5rem;
+        font-size: 0.75rem;
+        width: 100%;
+    }
 }
 
 .btn-primary {
@@ -3187,5 +3215,362 @@ h1, h2, h3, h4, h5, h6 {
 @media (display-mode: standalone) {
     .pwa-install-banner {
         display: none !important;
+    }
+}
+/* ============================================
+   MOBILE FIXES - Melhorias Adicionais
+   Adicionar ao final do styles.css
+   ============================================ */
+
+/* Garantir que todos os grids sejam responsivos */
+@media (max-width: 768px) {
+    .contact-grid,
+    .footer-grid,
+    .form-row {
+        grid-template-columns: 1fr !important;
+    }
+    
+    .portfolio-grid,
+    .admin-image-grid,
+    .admin-image-preview-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)) !important;
+    }
+}
+
+/* Tabelas responsivas */
+@media (max-width: 768px) {
+    table {
+        display: block;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        white-space: nowrap;
+    }
+    
+    .admin-table-container {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+}
+
+/* Modais mobile */
+@media (max-width: 768px) {
+    .modal {
+        margin: var(--spacing-sm);
+        max-height: 90vh;
+        overflow-y: auto;
+    }
+    
+    .modal-content {
+        padding: var(--spacing-md);
+    }
+}
+
+/* Forms mobile */
+@media (max-width: 768px) {
+    .form-group {
+        margin-bottom: var(--spacing-md);
+    }
+    
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    input[type="tel"],
+    input[type="number"],
+    input[type="date"],
+    textarea,
+    select {
+        font-size: 16px !important;
+        padding: 12px;
+        width: 100%;
+    }
+    
+    label {
+        font-size: 14px;
+        margin-bottom: 6px;
+        display: block;
+    }
+}
+
+/* Cards mobile */
+@media (max-width: 768px) {
+    .card,
+    .service-card,
+    .product-card,
+    .blog-card {
+        margin-bottom: var(--spacing-md);
+    }
+    
+    .card-body {
+        padding: var(--spacing-md);
+    }
+}
+
+/* Hero mobile */
+@media (max-width: 768px) {
+    .hero {
+        min-height: 400px;
+        height: 60vh;
+    }
+    
+    .hero-content {
+        padding: var(--spacing-md);
+    }
+}
+
+/* Dropdown mobile */
+@media (max-width: 768px) {
+    .dropdown-menu {
+        position: static;
+        box-shadow: none;
+        border: none;
+        padding-left: var(--spacing-md);
+    }
+}
+
+/* Imagens responsivas */
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+.img-fluid {
+    width: 100%;
+    height: auto;
+}
+
+/* Vídeos responsivos */
+video {
+    max-width: 100%;
+    height: auto;
+}
+
+/* iframes responsivos */
+iframe {
+    max-width: 100%;
+}
+
+/* Garantir que nada ultrapasse a tela */
+* {
+    max-width: 100%;
+}
+
+html, body {
+    overflow-x: hidden;
+    width: 100%;
+}
+
+/* Fix para elementos com position absolute */
+@media (max-width: 768px) {
+    [style*="position: absolute"] {
+        position: relative !important;
+    }
+}
+
+/* Melhorar espaçamentos mobile */
+@media (max-width: 768px) {
+    .section {
+        padding: var(--spacing-xl) 0;
+    }
+    
+    .section-title {
+        font-size: 1.5rem;
+        margin-bottom: var(--spacing-md);
+    }
+    
+    .section-subtitle {
+        font-size: 1rem;
+    }
+}
+
+/* Links e botões - touch targets */
+@media (max-width: 768px) {
+    a, button, .btn, input[type="submit"], input[type="button"] {
+        min-height: 44px;
+        min-width: 44px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
+
+/* Navegação mobile melhorada */
+@media (max-width: 768px) {
+    .main-nav {
+        display: none;
+    }
+    
+    .mobile-menu {
+        width: 280px;
+        max-width: 85vw;
+    }
+    
+    .mobile-nav a {
+        padding: 15px 20px;
+        font-size: 16px;
+        min-height: 50px;
+        display: flex;
+        align-items: center;
+    }
+}
+
+/* Carrinho mobile */
+@media (max-width: 768px) {
+    .mini-cart {
+        right: 0;
+        left: auto;
+        width: 100%;
+        max-width: 350px;
+    }
+}
+
+/* Admin mobile */
+@media (max-width: 768px) {
+    .admin-layout {
+        grid-template-columns: 1fr;
+    }
+    
+    .admin-sidebar {
+        display: none;
+    }
+    
+    .admin-content {
+        padding: var(--spacing-md);
+    }
+}
+
+/* Toast mobile */
+@media (max-width: 768px) {
+    .toast {
+        left: var(--spacing-sm);
+        right: var(--spacing-sm);
+        min-width: auto;
+        max-width: calc(100% - 2rem);
+    }
+}
+
+/* Search mobile */
+@media (max-width: 768px) {
+    .search-overlay {
+        padding: var(--spacing-md);
+    }
+    
+    .search-input {
+        font-size: 16px;
+        padding: 15px;
+    }
+}
+
+/* Footer mobile */
+@media (max-width: 768px) {
+    .footer-grid {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-lg);
+    }
+    
+    .footer-column {
+        text-align: center;
+    }
+}
+
+/* Certificados mobile */
+@media (max-width: 768px) {
+    .certificates-slider {
+        padding: 0 var(--spacing-sm);
+    }
+    
+    .certificate-item {
+        max-width: 200px;
+    }
+}
+
+/* Galeria mobile */
+@media (max-width: 768px) {
+    .gallery-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--spacing-sm);
+    }
+}
+
+/* Produtos mobile */
+@media (max-width: 768px) {
+    .product-detail {
+        grid-template-columns: 1fr;
+    }
+    
+    .product-images {
+        margin-bottom: var(--spacing-md);
+    }
+}
+
+/* Blog mobile */
+@media (max-width: 768px) {
+    .blog-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .post-content {
+        padding: var(--spacing-md);
+    }
+}
+
+/* Workshops mobile */
+@media (max-width: 768px) {
+    .workshop-card {
+        margin-bottom: var(--spacing-md);
+    }
+}
+
+/* Eventos mobile */
+@media (max-width: 768px) {
+    .event-card {
+        margin-bottom: var(--spacing-md);
+    }
+    
+    .event-details {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Contacto mobile */
+@media (max-width: 768px) {
+    .contact-info {
+        text-align: center;
+        margin-bottom: var(--spacing-lg);
+    }
+}
+
+/* Sobre mobile */
+@media (max-width: 768px) {
+    .about-content {
+        grid-template-columns: 1fr;
+    }
+    
+    .about-image {
+        margin-bottom: var(--spacing-md);
+    }
+}
+
+/* Portfolio mobile */
+@media (max-width: 768px) {
+    .portfolio-filters {
+        flex-wrap: wrap;
+        gap: var(--spacing-xs);
+    }
+    
+    .filter-btn {
+        font-size: 14px;
+        padding: 8px 16px;
+    }
+}
+
+/* Serviços mobile */
+@media (max-width: 768px) {
+    .service-detail {
+        grid-template-columns: 1fr;
+    }
+    
+    .service-image {
+        margin-bottom: var(--spacing-md);
     }
 }
