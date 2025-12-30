@@ -511,16 +511,27 @@ function handleContactSubmit(event) {
   event.preventDefault();
 
   const form = event.target;
-  const nome = form.nome.value.trim();
-  const email = form.email.value.trim();
-  const assunto = form.assunto.value.trim();
-  const mensagem = form.mensagem.value.trim();
+  const nome = form.querySelector('#contactName').value.trim();
+  const email = form.querySelector('#contactEmail').value.trim();
+  const telefone = form.querySelector('#contactPhone').value.trim() || 'Não fornecido';
+  const assunto = form.querySelector('#contactSubject').value;
+  const mensagem = form.querySelector('#contactMessage').value.trim();
 
-  // Simular envio
+  // Criar mensagem no storage
+  const message = createMessage({
+    nome: nome,
+    email: email,
+    telefone: telefone,
+    assunto: assunto,
+    mensagem: mensagem
+  });
+
+  // Mostrar sucesso
   showToast(
     "Mensagem enviada com sucesso! Entraremos em contacto em breve.",
     "success",
   );
+  
   form.reset();
 }
 

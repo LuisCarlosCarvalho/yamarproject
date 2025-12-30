@@ -225,12 +225,18 @@
         </div>
     </footer>
 
-    <script src="js/storage.js" defer></script>
-    <script src="js/ui.js" defer></script>
-    <script src="js/app.js" defer></script>
+    <script src="js/storage.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/app.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             loadContactPage();
+            
+            // Adicionar handler do formulário
+            const contactForm = document.getElementById('contactForm');
+            if (contactForm) {
+                contactForm.addEventListener('submit', handleContactSubmit);
+            }
         });
     </script>
 </body>
