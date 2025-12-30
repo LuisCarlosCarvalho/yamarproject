@@ -284,8 +284,9 @@ function applySiteSettings() {
   // Aplicar logo imagem se existir
   if (settings.logoUrl) {
     const logoImgs = document.querySelectorAll(".logo-img");
+    const logoUrl = getImageUrl({imagemUrl: settings.logoUrl}, 'assets/images/logo-default.png');
     logoImgs.forEach((img) => {
-      img.src = settings.logoUrl;
+      img.src = logoUrl;
       img.style.display = "block";
       img.onerror = function() {
         this.onerror = null;
@@ -297,9 +298,10 @@ function applySiteSettings() {
   // Aplicar foto do rodapé
   const footerAvatars = document.querySelectorAll("#footerAvatar, .footer-avatar");
   if (footerAvatars.length > 0) {
-    const avatarUrl = settings.footerAvatarUrl ||
-                     settings.aboutImageUrl ||
-                     "images/capa.png";
+    const avatarUrlRaw = settings.footerAvatarUrl ||
+                         settings.aboutImageUrl ||
+                         "images/capa.png";
+    const avatarUrl = getImageUrl({imagemUrl: avatarUrlRaw}, 'assets/images/placeholder.jpg');
     footerAvatars.forEach(img => {
       img.src = avatarUrl;
       img.onerror = function() {
@@ -312,8 +314,9 @@ function applySiteSettings() {
   // Aplicar foto do perfil da homepage
   const welcomeAvatars = document.querySelectorAll("#welcomeAvatar, .welcome-avatar");
   if (welcomeAvatars.length > 0 && settings.welcomeAvatarUrl) {
+    const welcomeUrl = getImageUrl({imagemUrl: settings.welcomeAvatarUrl}, 'assets/images/placeholder.jpg');
     welcomeAvatars.forEach(img => {
-      img.src = settings.welcomeAvatarUrl;
+      img.src = welcomeUrl;
       img.onerror = function() {
         this.onerror = null;
         this.src = 'assets/images/placeholder.jpg';
@@ -324,8 +327,9 @@ function applySiteSettings() {
   // Aplicar foto da página sobre
   const aboutImages = document.querySelectorAll("#aboutImage, .about-image");
   if (aboutImages.length > 0 && settings.aboutImageUrl) {
+    const aboutUrl = getImageUrl({imagemUrl: settings.aboutImageUrl}, 'assets/images/placeholder.jpg');
     aboutImages.forEach(img => {
-      img.src = settings.aboutImageUrl;
+      img.src = aboutUrl;
       img.onerror = function() {
         this.onerror = null;
         this.src = 'assets/images/placeholder.jpg';
@@ -737,7 +741,8 @@ function loadHomeContent() {
   // Aplicar banner (settings já declarado acima)
   const heroBanner = document.getElementById("heroBanner");
   if (heroBanner && settings.bannerImagemUrl) {
-    heroBanner.style.backgroundImage = `url(${settings.bannerImagemUrl})`;
+    const bannerUrl = getImageUrl({imagemUrl: settings.bannerImagemUrl}, 'assets/images/placeholder.jpg');
+    heroBanner.style.backgroundImage = `url(${bannerUrl})`;
   }
 
   const heroTitle = document.getElementById("heroTitle");
