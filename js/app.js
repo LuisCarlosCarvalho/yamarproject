@@ -287,29 +287,50 @@ function applySiteSettings() {
     logoImgs.forEach((img) => {
       img.src = settings.logoUrl;
       img.style.display = "block";
+      img.onerror = function() {
+        this.onerror = null;
+        this.style.display = "none";
+      };
     });
   }
 
   // Aplicar foto do rodapé
-  const footerAvatar = document.getElementById("footerAvatar");
-  if (footerAvatar) {
-    // Usa footerAvatarUrl se existir, senão usa aboutImageUrl, senão usa padrão
-    footerAvatar.src =
-      settings.footerAvatarUrl ||
-      settings.aboutImageUrl ||
-      "images/capa.png";
+  const footerAvatars = document.querySelectorAll("#footerAvatar, .footer-avatar");
+  if (footerAvatars.length > 0) {
+    const avatarUrl = settings.footerAvatarUrl ||
+                     settings.aboutImageUrl ||
+                     "images/capa.png";
+    footerAvatars.forEach(img => {
+      img.src = avatarUrl;
+      img.onerror = function() {
+        this.onerror = null;
+        this.src = 'assets/images/placeholder.jpg';
+      };
+    });
   }
 
   // Aplicar foto do perfil da homepage
-  const welcomeAvatar = document.getElementById("welcomeAvatar");
-  if (welcomeAvatar && settings.welcomeAvatarUrl) {
-    welcomeAvatar.src = settings.welcomeAvatarUrl;
+  const welcomeAvatars = document.querySelectorAll("#welcomeAvatar, .welcome-avatar");
+  if (welcomeAvatars.length > 0 && settings.welcomeAvatarUrl) {
+    welcomeAvatars.forEach(img => {
+      img.src = settings.welcomeAvatarUrl;
+      img.onerror = function() {
+        this.onerror = null;
+        this.src = 'assets/images/placeholder.jpg';
+      };
+    });
   }
 
   // Aplicar foto da página sobre
-  const aboutImage = document.getElementById("aboutImage");
-  if (aboutImage && settings.aboutImageUrl) {
-    aboutImage.src = settings.aboutImageUrl;
+  const aboutImages = document.querySelectorAll("#aboutImage, .about-image");
+  if (aboutImages.length > 0 && settings.aboutImageUrl) {
+    aboutImages.forEach(img => {
+      img.src = settings.aboutImageUrl;
+      img.onerror = function() {
+        this.onerror = null;
+        this.src = 'assets/images/placeholder.jpg';
+      };
+    });
   }
 }
 
@@ -753,12 +774,21 @@ function loadServiceDetail() {
     return;
   }
 
-  // Preencher página
-  document.getElementById("serviceImage").src = service.imagemUrl;
-  document.getElementById("serviceImage").alt = service.nome;
+  // Preencher página com imagem normalizada
+  const imageUrl = getImageUrl(service, 'assets/images/servico-default.jpg');
+  const serviceImages = document.querySelectorAll("#serviceImage, .service-image");
+  serviceImages.forEach(img => {
+    img.src = imageUrl;
+    img.alt = service.nome || service.titulo;
+    img.onerror = function() {
+      this.onerror = null;
+      this.src = 'assets/images/placeholder.jpg';
+    };
+  });
+  
   document.getElementById("serviceCategory").textContent =
     service.categoria || "SERVIÇO";
-  document.getElementById("serviceTitle").textContent = service.nome;
+  document.getElementById("serviceTitle").textContent = service.nome || service.titulo;
   document.getElementById("servicePrice").textContent = `${service.preco}€`;
   document.getElementById("serviceDuration").textContent = service.duracao;
   document.getElementById("serviceDescription").innerHTML =
@@ -797,9 +827,18 @@ function loadWorkshopDetail() {
     return;
   }
 
-  // Preencher página
-  document.getElementById("workshopImage").src = workshop.imagemUrl;
-  document.getElementById("workshopImage").alt = workshop.titulo;
+  // Preencher página com imagem normalizada
+  const imageUrl = getImageUrl(workshop, 'assets/images/workshop-default.jpg');
+  const workshopImages = document.querySelectorAll("#workshopImage, .workshop-image");
+  workshopImages.forEach(img => {
+    img.src = imageUrl;
+    img.alt = workshop.titulo;
+    img.onerror = function() {
+      this.onerror = null;
+      this.src = 'assets/images/placeholder.jpg';
+    };
+  });
+  
   document.getElementById("workshopModality").textContent = workshop.modalidade;
   document.getElementById("workshopTitle").textContent = workshop.titulo;
   document.getElementById("workshopPrice").textContent = `${workshop.preco}€`;
@@ -890,9 +929,18 @@ function loadProductDetail() {
     return;
   }
 
-  // Preencher página
-  document.getElementById("productImage").src = product.imagemUrl;
-  document.getElementById("productImage").alt = product.nome;
+  // Preencher página com imagem normalizada
+  const imageUrl = getImageUrl(product, 'assets/images/produto-default.jpg');
+  const productImages = document.querySelectorAll("#productImage, .product-image");
+  productImages.forEach(img => {
+    img.src = imageUrl;
+    img.alt = product.nome;
+    img.onerror = function() {
+      this.onerror = null;
+      this.src = 'assets/images/placeholder.jpg';
+    };
+  });
+  
   document.getElementById("productCategory").textContent = product.categoria;
   document.getElementById("productTitle").textContent = product.nome;
   document.getElementById("productPrice").textContent = `${product.preco}€`;
@@ -932,13 +980,23 @@ function loadPostDetail() {
     return;
   }
 
-  // Preencher página
+  // Preencher página com imagem normalizada
   document.getElementById("postCategory").textContent = post.categoria;
   document.getElementById("postTitle").textContent = post.titulo;
   document.getElementById("postDate").textContent =
     `Posted on ${formatDate(new Date(post.dataPublicacao))}`;
-  document.getElementById("postImage").src = post.imagemUrl;
-  document.getElementById("postImage").alt = post.titulo;
+  
+  const imageUrl = getImageUrl(post, 'assets/images/blog-default.jpg');
+  const postImages = document.querySelectorAll("#postImage, .post-image");
+  postImages.forEach(img => {
+    img.src = imageUrl;
+    img.alt = post.titulo;
+    img.onerror = function() {
+      this.onerror = null;
+      this.src = 'assets/images/placeholder.jpg';
+    };
+  });
+  
   document.getElementById("postContent").innerHTML = post.conteudo.replace(
     /\n/g,
     "<br>",
