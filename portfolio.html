@@ -62,6 +62,13 @@
         </section>
     </main>
 
+    <!-- Lightbox Modal -->
+    <div id="lightboxModal" class="lightbox-modal" style="display: none;">
+        <span class="lightbox-close">&times;</span>
+        <img class="lightbox-content" id="lightboxImg" alt="Imagem ampliada">
+        <div class="lightbox-caption" id="lightboxCaption"></div>
+    </div>
+
   <!-- Footer -->
     <footer class="footer">
         <div class="container">
@@ -112,8 +119,8 @@
             
             grid.style.display = 'grid';
             empty.style.display = 'none';
-            grid.innerHTML = images.map(img => `
-                <div class="portfolio-item">
+            grid.innerHTML = images.map((img, index) => `
+                <div class="portfolio-item" onclick="openLightbox('${img.imageUrl}', '${img.title || ''}', '${img.description || ''}')">
                     <img src="${img.imageUrl}" alt="${img.title || 'Portfolio'}" loading="lazy">
                     <div class="portfolio-overlay">
                         <h3>${img.title || ''}</h3>
@@ -123,6 +130,24 @@
             `).join('');
         }
 
+        // Lightbox functions
+        function openLightbox(imageUrl, title, description) {
+            const modal = document.getElementById('lightboxModal');
+            const img = document.getElementById('lightboxImg');
+            const caption = document.getElementById('lightboxCaption');
+            
+            modal.style.display = 'flex';
+            img.src = imageUrl;
+            caption.innerHTML = `<h3>${title}</h3><p>${description}</p>`;
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLightbox() {
+            const modal = document.getElementById('lightboxModal');
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
         // Initialize
         document.addEventListener('DOMContentLoaded', () => {
             if (typeof trackPageVisit === 'function') trackPageVisit('portfolio');
@@ -130,6 +155,27 @@
             if (typeof updateCartBadge === 'function') updateCartBadge();
             if (typeof updateAuthUI === 'function') updateAuthUI();
             if (typeof loadSiteSettings === 'function') loadSiteSettings();
+            
+            // Close lightbox on click
+            const modal = document.getElementById('lightboxModal');
+            const closeBtn = document.querySelector('.lightbox-close');
+            
+            if (closeBtn) {
+                closeBtn.onclick = closeLightbox;
+            }
+            
+            if (modal) {
+                modal.onclick = function(e) {
+                    if (e.target === modal) {
+                        closeLightbox();
+                    }
+                }
+            }
+            
+            // Close on ESC key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') closeLightbox();
+            });
         });
     </script>
 </body>
