@@ -64,13 +64,13 @@ async function fetchDadosJSON() {
  */
 async function getDadosJSON(forceRefresh = false) {
   // Se não tem cache ou force refresh ou cache antigo (>5min)
-  const cacheExpired = !ultimaAtualizacao || 
+  const cacheExpired = !ultimaAtualizacao ||
                        (new Date() - ultimaAtualizacao) > 300000;
-  
+
   if (forceRefresh || !dadosCache || cacheExpired) {
     return await fetchDadosJSON();
   }
-  
+
   return dadosCache;
 }
 
