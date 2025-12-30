@@ -4660,7 +4660,7 @@ function loadFinancialAnalysis(orders, bookings) {
       totalRevenue += revenue;
 
       const type = (booking.type || booking.tipo || '').toLowerCase();
-      const category = type === 'workshop' ? 'Workshop' : 
+      const category = type === 'workshop' ? 'Workshop' :
                       (type === 'event' || type === 'evento') ? 'Evento' : 'Serviço';
 
       transactions.push({
