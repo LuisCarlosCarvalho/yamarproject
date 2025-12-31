@@ -1,7 +1,146 @@
 /**
- * STORAGE.JS - Camada de persistência localStorage
+ * STORAGE.JS - Camada de persistência localStorage + JSON
  * Gerencia todos os dados do site: usuários, produtos, serviços, eventos, workshops, posts, marcações e configurações
+ * SINCRONIZAÇÃO: Lê dados centralizados de dados.json com cache-busting para garantir atualização mobile
  */
+
+// ============================================
+// SINCRONIZAÇÃO COM dados.json
+// ============================================
+
+/**
+ * Cache local dos dados do JSON
+ */
+let dadosCache = null;
+let ultimaAtualizacao = null;
+
+/**
+ * Fetch dos dados.json com cache-busting
+ * Força o navegador mobile a baixar versão mais recente
+ */
+async function fetchDadosJSON() {
+  try {
+    // Cache-busting: adiciona timestamp para forçar download
+    const timestamp = new Date().getTime();
+    const url = `dados.json?t=${timestamp}`;
+    
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0'
+      }
+    });
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
+    const dados = await response.json();
+    
+    // Atualiza cache local
+    dadosCache = dados;
+    ultimaAtualizacao = new Date();
+    
+    console.log('✅ Dados sincronizados:', {
+      version: dados.version,
+      lastUpdate: dados.lastUpdate,
+      timestamp: ultimaAtualizacao
+    });
+    
+    return dados;
+  } catch (error) {
+    console.error('❌ Erro ao buscar dados.json:', error);
+    
+    // Fallback: retorna cache ou dados vazios
+    return dadosCache || criarEstruturaVazia();
+  }
+}
+
+/**
+ * Obtém dados do JSON (usa cache se disponível e recente)
+ * @param {boolean} forceRefresh - Força nova requisição
+ */
+async function getDadosJSON(forceRefresh = false) {
+  // Se não tem cache ou force refresh ou cache antigo (>5min)
+  const cacheExpired = !ultimaAtualizacao ||
+                       (new Date() - ultimaAtualizacao) > 300000;
+
+  if (forceRefresh || !dadosCache || cacheExpired) {
+    return await fetchDadosJSON();
+  }
+
+  return dadosCache;
+}
+
+/**
+ * Estrutura vazia como fallback
+ */
+function criarEstruturaVazia() {
+  return {
+    version: '1.0.0',
+    lastUpdate: new Date().toISOString(),
+    site: {},
+    servicos: [],
+    workshops: [],
+    produtos: [],
+    blog: [],
+    eventos: [],
+    depoimentos: [],
+    galeria: [],
+    configuracoes: {},
+    promocoes: [],
+    estatisticas: {}
+  };
+}
+
+/**
+ * Sincroniza dados do JSON com localStorage
+ * Mescla dados centralizados (JSON) com dados locais (localStorage)
+ */
+async function sincronizarDados() {
+  try {
+    const dados = await fetchDadosJSON();
+    
+    // Atualiza serviços
+    if (dados.servicos && dados.servicos.length > 0) {
+      setData('servicos', dados.servicos);
+    }
+    
+    // Atualiza workshops
+    if (dados.workshops && dados.workshops.length > 0) {
+      setData('workshops', dados.workshops);
+    }
+    
+    // Atualiza produtos
+    if (dados.produtos && dados.produtos.length > 0) {
+      setData('produtos', dados.produtos);
+    }
+    
+    // Atualiza blog
+    if (dados.blog && dados.blog.length > 0) {
+      setData('posts', dados.blog);
+    }
+    
+    // Atualiza eventos
+    if (dados.eventos && dados.eventos.length > 0) {
+      setData('eventos', dados.eventos);
+    }
+    
+    // Atualiza configurações do site
+    if (dados.site) {
+      setData('siteConfig', dados.site);
+    }
+    
+    console.log('✅ Sincronização completa - LocalStorage atualizado');
+    
+    return true;
+  } catch (error) {
+    console.error('❌ Erro na sincronização:', error);
+    return false;
+  }
+}
 
 // ============================================
 // UTILITÁRIOS
@@ -385,9 +524,9 @@ const SEED_SITE_SETTINGS = {
   bannerImagemUrl:
     "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=800",
   bannerCta: "Marcar Agora",
-  welcomeAvatarUrl: "images/logo_name.png",
-  aboutImageUrl: "images/capa.png",
-  footerAvatarUrl: "images/logo_name.png",
+  welcomeAvatarUrl: "",
+  aboutImageUrl: "",
+  footerAvatarUrl: "",
   emailContacto: "yemarmk@gmail.com",
   telefone: "(+351) 933758731",
   whatsapp: "351933758731",

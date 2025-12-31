@@ -4,6 +4,58 @@
  */
 
 // ============================================
+// HELPER DE IMAGENS
+// ============================================
+
+/**
+ * Normaliza URL de imagem (suporta URLs externas e caminhos locais)
+ * @param {object} item - Objeto com propriedade imagem ou imagemUrl
+ * @param {string} fallback - Imagem padrão se não encontrar
+ * @returns {string} URL normalizada
+ */
+function getImageUrl(item, fallback = 'assets/images/placeholder.jpg') {
+  // Se item não é um objeto ou é null/undefined, retorna fallback
+  if (!item || typeof item !== 'object') {
+    return fallback;
+  }
+
+  // Prioridade: imagemUrl > imagem
+  const imageField = item.imagemUrl || item.imagem;
+
+  // Se não tem imagem, retorna fallback
+  if (!imageField) return fallback;
+
+  // Se é URL externa (começa com http:// ou https://), retorna diretamente
+  if (imageField.startsWith('http://') || imageField.startsWith('https://')) {
+    return imageField;
+  }
+
+  // Se é caminho local, retorna como está (relativo à raiz do site)
+  return imageField;
+}
+
+/**
+ * Aplica imagem com fallback em elementos
+ * @param {string} selector - Seletor CSS
+ * @param {string} imageUrl - URL da imagem
+ */
+function applyImageWithFallback(selector, imageUrl) {
+  const elements = document.querySelectorAll(selector);
+  elements.forEach(el => {
+    if (el.tagName === 'IMG') {
+      el.src = imageUrl;
+      // Fallback se imagem falhar ao carregar
+      el.onerror = function() {
+        this.onerror = null; // Previne loop infinito
+        this.style.display = 'none'; // Esconde imagem quebrada
+      };
+    } else {
+      el.style.backgroundImage = `url(${imageUrl})`;
+    }
+  });
+}
+
+// ============================================
 // TOAST NOTIFICATIONS
 // ============================================
 
@@ -106,7 +158,8 @@ function handleModalEsc(e) {
 }
 
 function closeModal() {
-    const modal = document.getElementById('modal');
+    // Usa querySelector ao invés de getElementById para compatibilidade
+    const modal = document.querySelector('.modal-overlay');
     if (modal) {
         modal.classList.remove('show');
         setTimeout(() => {
@@ -122,7 +175,8 @@ function closeModal() {
 // ============================================
 
 function showLoader() {
-    if (document.getElementById('loader')) return;
+    // Usa querySelector ao invés de getElementById para compatibilidade
+    if (document.querySelector('.loader-overlay')) return;
     
     const loader = document.createElement('div');
     loader.id = 'loader';
@@ -138,7 +192,8 @@ function showLoader() {
 }
 
 function hideLoader() {
-    const loader = document.getElementById('loader');
+    // Usa querySelector ao invés de getElementById para compatibilidade
+    const loader = document.querySelector('.loader-overlay');
     if (loader) {
         loader.remove();
     }
@@ -152,10 +207,11 @@ function hideLoader() {
  * Renderiza card de serviço
  */
 function renderServiceCard(service) {
+    const imageUrl = getImageUrl(service, 'assets/images/servico-default.jpg');
     return `
         <article class="card service-card">
             <div class="card-image">
-                <img src="${service.imagemUrl}" alt="${service.nome}" loading="lazy">
+                <img src="${imageUrl}" alt="${service.nome || service.titulo}" loading="lazy" onerror="this.onerror=null;this.src='assets/images/placeholder.jpg';">
                 <span class="card-category">${service.categoria || 'SERVIÇO'}</span>
             </div>
             <div class="card-content">
@@ -175,11 +231,12 @@ function renderServiceCard(service) {
  * Renderiza card de workshop
  */
 function renderWorkshopCard(workshop) {
+    const imageUrl = getImageUrl(workshop, 'assets/images/workshop-default.jpg');
     return `
         <article class="card workshop-card">
             <div class="card-image">
-                <img src="${workshop.imagemUrl}" alt="${workshop.titulo}" loading="lazy">
-                <span class="card-category">${workshop.modalidade}</span>
+                <img src="${imageUrl}" alt="${workshop.titulo}" loading="lazy" onerror="this.onerror=null;this.src='assets/images/placeholder.jpg';">
+                <span class="card-category">${workshop.modalidade || 'WORKSHOP'}</span>
             </div>
             <div class="card-content">
                 <h3 class="card-title">${workshop.titulo}</h3>
@@ -201,10 +258,11 @@ function renderEventCard(event) {
     const eventDate = new Date(event.data);
     const formattedDate = formatDate(eventDate);
     
+    const imageUrl = getImageUrl(event, 'assets/images/evento-default.jpg');
     return `
         <article class="card event-card">
             <div class="card-image">
-                <img src="${event.imagemUrl}" alt="${event.titulo}" loading="lazy">
+                <img src="${imageUrl}" alt="${event.titulo}" loading="lazy" onerror="this.onerror=null;this.src='assets/images/placeholder.jpg';">
                 <div class="event-date-badge">
                     <span class="day">${eventDate.getDate()}</span>
                     <span class="month">${getMonthShort(eventDate.getMonth())}</span>
@@ -230,10 +288,11 @@ function renderEventCard(event) {
  * Renderiza card de produto
  */
 function renderProductCard(product) {
+    const imageUrl = getImageUrl(product, 'assets/images/produto-default.jpg');
     return `
         <article class="card product-card">
             <div class="card-image">
-                <img src="${product.imagemUrl}" alt="${product.nome}" loading="lazy">
+                <img src="${imageUrl}" alt="${product.nome}" loading="lazy" onerror="this.onerror=null;this.src='assets/images/placeholder.jpg';">
                 <span class="card-category">${product.categoria}</span>
             </div>
             <div class="card-content">
@@ -252,10 +311,11 @@ function renderProductCard(product) {
  * Renderiza card de post/blog
  */
 function renderPostCard(post) {
+    const imageUrl = getImageUrl(post, 'assets/images/blog-default.jpg');
     return `
         <article class="card post-card">
             <div class="card-image">
-                <img src="${post.imagemUrl}" alt="${post.titulo}" loading="lazy">
+                <img src="${imageUrl}" alt="${post.titulo}" loading="lazy" onerror="this.onerror=null;this.src='assets/images/placeholder.jpg';">
             </div>
             <div class="card-content">
                 <span class="post-category">${post.categoria}</span>
@@ -285,7 +345,7 @@ function renderEditorialPostCard(post, featured = false) {
             </div>
             <div class="editorial-image">
                 <a href="post.html?id=${post.id}">
-                    <img src="${post.imagemUrl}" alt="${post.titulo}" loading="lazy">
+                    <img src="${getImageUrl(post, 'assets/images/blog-default.jpg')}" alt="${post.titulo}" loading="lazy" onerror="this.onerror=null;this.src='assets/images/placeholder.jpg';">
                 </a>
             </div>
             <div class="editorial-content">
@@ -718,10 +778,13 @@ function renderMiniCart() {
 }
 
 function updateCartBadge() {
-    const badge = document.getElementById('cartBadge');
-    if (badge) {
+    // Usa querySelectorAll para atualizar TODOS os badges (desktop + mobile)
+    const badges = document.querySelectorAll('#cartBadge, .cart-badge');
+    if (badges.length > 0) {
         const count = getCartItemCount();
-        badge.textContent = count;
-        badge.style.display = count > 0 ? 'flex' : 'none';
+        badges.forEach(badge => {
+            badge.textContent = count;
+            badge.style.display = count > 0 ? 'flex' : 'none';
+        });
     }
 }

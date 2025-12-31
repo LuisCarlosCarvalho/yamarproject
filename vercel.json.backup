@@ -1,0 +1,10 @@
+{
+  "routes": [
+    {
+      "src": "/dados.json",
+      "headers": {
+        "Cache-Control": "no-cache"
+      }
+    }
+  ]
+}

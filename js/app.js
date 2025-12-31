@@ -3,11 +3,14 @@
  * Estado global, autenticação, guards, handlers e inicialização
  */
 
+console.log('🚀 app.js CARREGADO - Versão:', new Date().toISOString());
+
 // ============================================
 // INICIALIZAÇÃO
 // ============================================
 
 document.addEventListener("DOMContentLoaded", function () {
+  console.log('✅ DOMContentLoaded DISPARADO');
   // Inicializar storage/seed
   initializeSeed();
 
@@ -251,6 +254,13 @@ function checkRouteProtection() {
 
 function applySiteSettings() {
   const settings = getSiteSettings();
+  console.log('🔧 applySiteSettings() executado');
+  console.log('📋 Settings carregadas:', {
+    welcomeAvatarUrl: settings.welcomeAvatarUrl,
+    aboutImageUrl: settings.aboutImageUrl,
+    footerAvatarUrl: settings.footerAvatarUrl,
+    bannerImagemUrl: settings.bannerImagemUrl
+  });
 
   // Aplicar logo
   const logoElements = document.querySelectorAll(".logo-text");
@@ -297,32 +307,80 @@ function applySiteSettings() {
   // Aplicar logo imagem se existir
   if (settings.logoUrl) {
     const logoImgs = document.querySelectorAll(".logo-img");
+    const logoUrl = getImageUrl({imagemUrl: settings.logoUrl}, 'assets/images/logo-default.png');
+    console.log('🖼️ Aplicando logo:', logoUrl, 'em', logoImgs.length, 'elementos');
     logoImgs.forEach((img) => {
-      img.src = settings.logoUrl;
+      img.src = logoUrl;
       img.style.display = "block";
+      img.onerror = function() {
+        this.onerror = null;
+        this.style.display = "none";
+      };
     });
   }
 
   // Aplicar foto do rodapé
-  const footerAvatar = document.getElementById("footerAvatar");
-  if (footerAvatar) {
-    // Usa footerAvatarUrl se existir, senão usa aboutImageUrl, senão usa padrão
-    footerAvatar.src =
-      settings.footerAvatarUrl ||
-      settings.aboutImageUrl ||
-      "images/capa.png";
+  const footerAvatars = document.querySelectorAll("#footerAvatar, .footer-avatar");
+  if (footerAvatars.length > 0 && (settings.footerAvatarUrl || settings.aboutImageUrl)) {
+    const avatarUrlRaw = settings.footerAvatarUrl || settings.aboutImageUrl;
+    const avatarUrl = getImageUrl({imagemUrl: avatarUrlRaw});
+    console.log('👤 Aplicando footer avatar:', avatarUrl, 'em', footerAvatars.length, 'elementos');
+    footerAvatars.forEach(img => {
+      img.src = avatarUrl;
+      img.style.display = 'block';
+      img.onload = function() {
+        console.log('✅ Footer avatar carregou:', this.src);
+      };
+      img.onerror = function() {
+        console.error('❌ Erro ao carregar footer avatar:', this.src);
+        this.onerror = null;
+        this.style.display = 'none';
+      };
+    });
+  } else {
+    console.log('⚠️ Footer: Nenhuma URL configurada ou elementos não encontrados');
   }
 
   // Aplicar foto do perfil da homepage
-  const welcomeAvatar = document.getElementById("welcomeAvatar");
-  if (welcomeAvatar && settings.welcomeAvatarUrl) {
-    welcomeAvatar.src = settings.welcomeAvatarUrl;
+  const welcomeAvatars = document.querySelectorAll("#welcomeAvatar, .welcome-avatar");
+  if (welcomeAvatars.length > 0 && settings.welcomeAvatarUrl) {
+    const welcomeUrl = getImageUrl({imagemUrl: settings.welcomeAvatarUrl});
+    console.log('👤 Aplicando welcome avatar:', welcomeUrl, 'em', welcomeAvatars.length, 'elementos');
+    welcomeAvatars.forEach(img => {
+      img.src = welcomeUrl;
+      img.style.display = 'block';
+      img.onload = function() {
+        console.log('✅ Welcome avatar carregou:', this.src);
+      };
+      img.onerror = function() {
+        console.error('❌ Erro ao carregar welcome avatar:', this.src);
+        this.onerror = null;
+        this.style.display = 'none';
+      };
+    });
+  } else {
+    console.log('⚠️ Welcome: Nenhuma URL configurada ou elementos não encontrados');
   }
 
   // Aplicar foto da página sobre
-  const aboutImage = document.getElementById("aboutImage");
-  if (aboutImage && settings.aboutImageUrl) {
-    aboutImage.src = settings.aboutImageUrl;
+  const aboutImages = document.querySelectorAll("#aboutImage, .about-image");
+  if (aboutImages.length > 0 && settings.aboutImageUrl) {
+    const aboutUrl = getImageUrl({imagemUrl: settings.aboutImageUrl});
+    console.log('👤 Aplicando about image:', aboutUrl, 'em', aboutImages.length, 'elementos');
+    aboutImages.forEach(img => {
+      img.src = aboutUrl;
+      img.style.display = 'block';
+      img.onload = function() {
+        console.log('✅ About image carregou:', this.src);
+      };
+      img.onerror = function() {
+        console.error('❌ Erro ao carregar about image:', this.src);
+        this.onerror = null;
+        this.style.display = 'none';
+      };
+    });
+  } else {
+    console.log('⚠️ About: Nenhuma URL configurada ou elementos não encontrados');
   }
 }
 
@@ -523,29 +581,29 @@ function cancelUserBooking(bookingId) {
 function handleContactSubmit(event) {
   event.preventDefault();
 
-  const nome = document.getElementById("contactName").value.trim();
-  const email = document.getElementById("contactEmail").value.trim();
-  const telefone = document.getElementById("contactPhone").value.trim();
-  const assunto = document.getElementById("contactSubject").value;
-  const mensagem = document.getElementById("contactMessage").value.trim();
+  const form = event.target;
+  const nome = form.querySelector('#contactName').value.trim();
+  const email = form.querySelector('#contactEmail').value.trim();
+  const telefone = form.querySelector('#contactPhone').value.trim() || 'Não fornecido';
+  const assunto = form.querySelector('#contactSubject').value;
+  const mensagem = form.querySelector('#contactMessage').value.trim();
 
-  // Salvar mensagem
-  const messageData = {
-    nome,
-    email,
-    telefone,
-    assunto,
-    mensagem,
-  };
-  createMessage(messageData);
+  // Criar mensagem no storage
+  const message = createMessage({
+    nome: nome,
+    email: email,
+    telefone: telefone,
+    assunto: assunto,
+    mensagem: mensagem
+  });
 
-  // Simular envio
+  // Mostrar sucesso
   showToast(
     "Mensagem enviada com sucesso! Entraremos em contacto em breve.",
     "success",
   );
-  // Reset form
-  document.getElementById("contactForm").reset();
+  
+  form.reset();
 }
 
 // ============================================
@@ -729,7 +787,8 @@ function loadHomeContent() {
   // Aplicar banner (settings já declarado acima)
   const heroBanner = document.getElementById("heroBanner");
   if (heroBanner && settings.bannerImagemUrl) {
-    heroBanner.style.backgroundImage = `url(${settings.bannerImagemUrl})`;
+    const bannerUrl = getImageUrl({imagemUrl: settings.bannerImagemUrl}, 'assets/images/placeholder.jpg');
+    heroBanner.style.backgroundImage = `url(${bannerUrl})`;
   }
 
   const heroTitle = document.getElementById("heroTitle");
@@ -766,12 +825,21 @@ function loadServiceDetail() {
     return;
   }
 
-  // Preencher página
-  document.getElementById("serviceImage").src = service.imagemUrl;
-  document.getElementById("serviceImage").alt = service.nome;
+  // Preencher página com imagem normalizada
+  const imageUrl = getImageUrl(service, 'assets/images/servico-default.jpg');
+  const serviceImages = document.querySelectorAll("#serviceImage, .service-image");
+  serviceImages.forEach(img => {
+    img.src = imageUrl;
+    img.alt = service.nome || service.titulo;
+    img.onerror = function() {
+      this.onerror = null;
+      this.src = 'assets/images/placeholder.jpg';
+    };
+  });
+  
   document.getElementById("serviceCategory").textContent =
     service.categoria || "SERVIÇO";
-  document.getElementById("serviceTitle").textContent = service.nome;
+  document.getElementById("serviceTitle").textContent = service.nome || service.titulo;
   document.getElementById("servicePrice").textContent = `${service.preco}€`;
   document.getElementById("serviceDuration").textContent = service.duracao;
   document.getElementById("serviceDescription").innerHTML =
@@ -810,9 +878,18 @@ function loadWorkshopDetail() {
     return;
   }
 
-  // Preencher página
-  document.getElementById("workshopImage").src = workshop.imagemUrl;
-  document.getElementById("workshopImage").alt = workshop.titulo;
+  // Preencher página com imagem normalizada
+  const imageUrl = getImageUrl(workshop, 'assets/images/workshop-default.jpg');
+  const workshopImages = document.querySelectorAll("#workshopImage, .workshop-image");
+  workshopImages.forEach(img => {
+    img.src = imageUrl;
+    img.alt = workshop.titulo;
+    img.onerror = function() {
+      this.onerror = null;
+      this.src = 'assets/images/placeholder.jpg';
+    };
+  });
+  
   document.getElementById("workshopModality").textContent = workshop.modalidade;
   document.getElementById("workshopTitle").textContent = workshop.titulo;
   document.getElementById("workshopPrice").textContent = `${workshop.preco}€`;
@@ -903,9 +980,18 @@ function loadProductDetail() {
     return;
   }
 
-  // Preencher página
-  document.getElementById("productImage").src = product.imagemUrl;
-  document.getElementById("productImage").alt = product.nome;
+  // Preencher página com imagem normalizada
+  const imageUrl = getImageUrl(product, 'assets/images/produto-default.jpg');
+  const productImages = document.querySelectorAll("#productImage, .product-image");
+  productImages.forEach(img => {
+    img.src = imageUrl;
+    img.alt = product.nome;
+    img.onerror = function() {
+      this.onerror = null;
+      this.src = 'assets/images/placeholder.jpg';
+    };
+  });
+  
   document.getElementById("productCategory").textContent = product.categoria;
   document.getElementById("productTitle").textContent = product.nome;
   document.getElementById("productPrice").textContent = `${product.preco}€`;
@@ -945,13 +1031,23 @@ function loadPostDetail() {
     return;
   }
 
-  // Preencher página
+  // Preencher página com imagem normalizada
   document.getElementById("postCategory").textContent = post.categoria;
   document.getElementById("postTitle").textContent = post.titulo;
   document.getElementById("postDate").textContent =
     `Posted on ${formatDate(new Date(post.dataPublicacao))}`;
-  document.getElementById("postImage").src = post.imagemUrl;
-  document.getElementById("postImage").alt = post.titulo;
+  
+  const imageUrl = getImageUrl(post, 'assets/images/blog-default.jpg');
+  const postImages = document.querySelectorAll("#postImage, .post-image");
+  postImages.forEach(img => {
+    img.src = imageUrl;
+    img.alt = post.titulo;
+    img.onerror = function() {
+      this.onerror = null;
+      this.src = 'assets/images/placeholder.jpg';
+    };
+  });
+  
   document.getElementById("postContent").innerHTML = post.conteudo.replace(
     /\n/g,
     "<br>",
@@ -2737,7 +2833,7 @@ function loadAdminMessages() {
   if (container) {
     const messages = getMessages ? getMessages() : [];
     if (messages.length === 0) {
-      container.innerHTML = '<tr><td colspan="7">Sem mensagens.</td></tr>';
+      container.innerHTML = '<tr><td colspan="6">Sem mensagens.</td></tr>';
     } else {
       container.innerHTML = messages
         .map(
@@ -2745,7 +2841,6 @@ function loadAdminMessages() {
                 <tr>
                     <td>${m.nome}</td>
                     <td>${m.email}</td>
-                    <td>${m.telefone || ''}</td>
                     <td>${m.assunto}</td>
                     <td>${formatDate(new Date(m.createdAt))}</td>
                     <td><span class="status-badge ${m.lida ? "status-confirmed" : "status-pending"}">${m.lida ? "Lida" : "Nova"}</span></td>
@@ -2760,31 +2855,6 @@ function loadAdminMessages() {
   }
 }
 
-function viewMessage(id) {
-  const messages = getMessages();
-  const message = messages.find(m => m.id === id);
-  if (message) {
-    // Marcar como lida
-    markMessageAsRead(id);
-    
-    // Mostrar modal ou alert com a mensagem
-    const messageText = `
-Nome: ${message.nome}
-Email: ${message.email}
-Telefone: ${message.telefone || 'N/A'}
-Assunto: ${message.assunto}
-Data: ${formatDateTime(new Date(message.createdAt))}
-
-Mensagem:
-${message.mensagem}
-    `;
-    alert(messageText);
-    
-    // Recarregar a lista para atualizar o status
-    loadAdminMessages();
-  }
-}
-
 function updateImagePreviews() {
   const welcomeAvatarUrl = document.getElementById("welcomeAvatarUrl");
   const aboutImageUrl = document.getElementById("aboutImageUrl");
@@ -2794,14 +2864,25 @@ function updateImagePreviews() {
   const aboutPreview = document.getElementById("aboutImagePreview");
   const footerPreview = document.getElementById("footerAvatarPreview");
 
-  if (welcomeAvatarUrl && welcomePreview) {
-    welcomePreview.src = welcomeAvatarUrl.value || welcomeAvatarUrl.placeholder;
+  if (welcomeAvatarUrl && welcomePreview && welcomeAvatarUrl.value) {
+    welcomePreview.src = welcomeAvatarUrl.value;
+    welcomePreview.style.display = 'block';
+  } else if (welcomePreview) {
+    welcomePreview.style.display = 'none';
   }
-  if (aboutImageUrl && aboutPreview) {
-    aboutPreview.src = aboutImageUrl.value || aboutImageUrl.placeholder;
+  
+  if (aboutImageUrl && aboutPreview && aboutImageUrl.value) {
+    aboutPreview.src = aboutImageUrl.value;
+    aboutPreview.style.display = 'block';
+  } else if (aboutPreview) {
+    aboutPreview.style.display = 'none';
   }
-  if (footerAvatarUrl && footerPreview) {
-    footerPreview.src = footerAvatarUrl.value || footerAvatarUrl.placeholder;
+  
+  if (footerAvatarUrl && footerPreview && footerAvatarUrl.value) {
+    footerPreview.src = footerAvatarUrl.value;
+    footerPreview.style.display = 'block';
+  } else if (footerPreview) {
+    footerPreview.style.display = 'none';
   }
 }
 
@@ -2889,12 +2970,12 @@ function loadAdminSettingsPage() {
 
   if (welcomeAvatarUrl)
     welcomeAvatarUrl.value =
-      settings.welcomeAvatarUrl || "images/logo_name.png";
+      settings.welcomeAvatarUrl || "";
   if (aboutImageUrl)
-    aboutImageUrl.value = settings.aboutImageUrl || "images/capa.png";
+    aboutImageUrl.value = settings.aboutImageUrl || "";
   if (footerAvatarUrl)
     footerAvatarUrl.value =
-      settings.footerAvatarUrl || "images/logo_name.png";
+      settings.footerAvatarUrl || "";
 
   // Atualizar previews das imagens
   updateImagePreviews();
@@ -3439,725 +3520,8 @@ function stopCertificatesAutoplay() {
 // RELATÓRIOS E ANÁLISES
 // ============================================
 
-let reportsCharts = {
-  services: null,
-  revenue: null,
-  bookingsStatus: null,
-  topProducts: null,
-};
-
-function loadReports() {
-  const startDate = document.getElementById("reportStartDate").value;
-  const endDate = document.getElementById("reportEndDate").value;
-
-  // Gerar estatísticas
-  const stats = generateReportStats(startDate, endDate);
-  displayReportStats(stats);
-
-  // Gerar gráficos
-  generateServicesChart(startDate, endDate);
-  generateRevenueChart(startDate, endDate);
-  generateBookingsStatusChart(startDate, endDate);
-  generateTopProductsChart(startDate, endDate);
-
-  // Gerar tabela de serviços
-  generateServicesTable(startDate, endDate);
-}
-
-function generateReportStats(startDate, endDate) {
-  const bookings = filterByDateRange(getBookings(), startDate, endDate);
-  const orders = filterByDateRange(getOrders(), startDate, endDate);
-
-  const totalBookings = bookings.length;
-  const confirmedBookings = bookings.filter(
-    (b) => b.status === "Confirmada",
-  ).length;
-  const completedBookings = bookings.filter(
-    (b) => b.status === "Concluída",
-  ).length;
-  const cancelledBookings = bookings.filter(
-    (b) => b.status === "Cancelada",
-  ).length;
-
-  const totalOrders = orders.length;
-  const completedOrders = orders.filter((o) => o.status === "Entregue").length;
-
-  // Calcular receita
-  let bookingsRevenue = 0;
-  bookings.forEach((booking) => {
-    if (booking.status === "Concluída") {
-      if (booking.serviceId) {
-        const service = getServiceById(booking.serviceId);
-        if (service) bookingsRevenue += parseFloat(service.preco) || 0;
-      } else if (booking.workshopId) {
-        const workshop = getWorkshopById(booking.workshopId);
-        if (workshop) bookingsRevenue += parseFloat(workshop.preco) || 0;
-      }
-    }
-  });
-
-  let ordersRevenue = 0;
-  orders.forEach((order) => {
-    if (order.status === "Entregue") {
-      ordersRevenue += parseFloat(order.total) || 0;
-    }
-  });
-
-  const totalRevenue = bookingsRevenue + ordersRevenue;
-
-  return {
-    totalBookings,
-    confirmedBookings,
-    completedBookings,
-    cancelledBookings,
-    totalOrders,
-    completedOrders,
-    bookingsRevenue,
-    ordersRevenue,
-    totalRevenue,
-  };
-}
-
-function displayReportStats(stats) {
-  const statsGrid = document.getElementById("reportStatsGrid");
-  if (!statsGrid) return;
-
-  statsGrid.innerHTML = `
-        <div class="stat-card">
-            <div class="stat-value">${stats.totalBookings}</div>
-            <div class="stat-label">Total Marcações</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-value">${stats.completedBookings}</div>
-            <div class="stat-label">Marcações Concluídas</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-value">${stats.totalOrders}</div>
-            <div class="stat-label">Total Encomendas</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-value">€${stats.totalRevenue.toFixed(2)}</div>
-            <div class="stat-label">Receita Total</div>
-        </div>
-    `;
-}
-
-function filterByDateRange(items, startDate, endDate) {
-  if (!startDate && !endDate) return items;
-
-  return items.filter((item) => {
-    const itemDate = new Date(item.createdAt || item.data);
-    const start = startDate ? new Date(startDate) : new Date("1900-01-01");
-    const end = endDate ? new Date(endDate) : new Date("2100-12-31");
-
-    return itemDate >= start && itemDate <= end;
-  });
-}
-
-function generateServicesChart(startDate, endDate) {
-  const bookings = filterByDateRange(getBookings(), startDate, endDate);
-  const services = getServices();
-
-  const serviceCounts = {};
-  services.forEach((service) => {
-    serviceCounts[service.nome] = 0;
-  });
-
-  bookings.forEach((booking) => {
-    if (booking.serviceId) {
-      const service = getServiceById(booking.serviceId);
-      if (service && serviceCounts[service.nome] !== undefined) {
-        serviceCounts[service.nome]++;
-      }
-    }
-  });
-
-  const labels = Object.keys(serviceCounts);
-  const data = Object.values(serviceCounts);
-
-  const ctx = document.getElementById("servicesChart");
-  if (!ctx) return;
-
-  if (reportsCharts.services) {
-    reportsCharts.services.destroy();
-  }
-
-  reportsCharts.services = new Chart(ctx, {
-    type: "bar",
-    data: {
-      labels: labels,
-      datasets: [
-        {
-          label: "Número de Marcações",
-          data: data,
-          backgroundColor: "#c9a227",
-          borderColor: "#c9a227",
-          borderWidth: 1,
-        },
-      ],
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: true,
-      plugins: {
-        legend: {
-          display: false,
-        },
-      },
-      scales: {
-        y: {
-          beginAtZero: true,
-          ticks: {
-            stepSize: 1,
-          },
-        },
-      },
-    },
-  });
-}
-
-function generateRevenueChart(startDate, endDate) {
-  const bookings = filterByDateRange(getBookings(), startDate, endDate);
-  const orders = filterByDateRange(getOrders(), startDate, endDate);
-
-  // Agrupar por mês
-  const monthlyRevenue = {};
-
-  bookings.forEach((booking) => {
-    if (booking.status === "Concluída" && booking.createdAt) {
-      const month = booking.createdAt.substring(0, 7); // YYYY-MM
-      if (!monthlyRevenue[month]) monthlyRevenue[month] = 0;
-
-      if (booking.serviceId) {
-        const service = getServiceById(booking.serviceId);
-        if (service) monthlyRevenue[month] += parseFloat(service.preco) || 0;
-      } else if (booking.workshopId) {
-        const workshop = getWorkshopById(booking.workshopId);
-        if (workshop) monthlyRevenue[month] += parseFloat(workshop.preco) || 0;
-      }
-    }
-  });
-
-  orders.forEach((order) => {
-    if (order.status === "Entregue" && order.createdAt) {
-      const month = order.createdAt.substring(0, 7);
-      if (!monthlyRevenue[month]) monthlyRevenue[month] = 0;
-      monthlyRevenue[month] += parseFloat(order.total) || 0;
-    }
-  });
-
-  const labels = Object.keys(monthlyRevenue).sort();
-  const data = labels.map((month) => monthlyRevenue[month]);
-
-  const ctx = document.getElementById("revenueChart");
-  if (!ctx) return;
-
-  if (reportsCharts.revenue) {
-    reportsCharts.revenue.destroy();
-  }
-
-  reportsCharts.revenue = new Chart(ctx, {
-    type: "line",
-    data: {
-      labels: labels,
-      datasets: [
-        {
-          label: "Receita (€)",
-          data: data,
-          backgroundColor: "rgba(201, 162, 39, 0.2)",
-          borderColor: "#c9a227",
-          borderWidth: 2,
-          tension: 0.4,
-          fill: true,
-        },
-      ],
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: true,
-      plugins: {
-        legend: {
-          display: true,
-        },
-      },
-      scales: {
-        y: {
-          beginAtZero: true,
-        },
-      },
-    },
-  });
-}
-
-function generateBookingsStatusChart(startDate, endDate) {
-  const bookings = filterByDateRange(getBookings(), startDate, endDate);
-
-  const statusCounts = {
-    Pendente: 0,
-    Confirmada: 0,
-    Concluída: 0,
-    Cancelada: 0,
-  };
-
-  bookings.forEach((booking) => {
-    if (statusCounts[booking.status] !== undefined) {
-      statusCounts[booking.status]++;
-    }
-  });
-
-  const ctx = document.getElementById("bookingsStatusChart");
-  if (!ctx) return;
-
-  if (reportsCharts.bookingsStatus) {
-    reportsCharts.bookingsStatus.destroy();
-  }
-
-  reportsCharts.bookingsStatus = new Chart(ctx, {
-    type: "doughnut",
-    data: {
-      labels: Object.keys(statusCounts),
-      datasets: [
-        {
-          data: Object.values(statusCounts),
-          backgroundColor: ["#ffc107", "#4caf50", "#2196f3", "#f44336"],
-        },
-      ],
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: true,
-      plugins: {
-        legend: {
-          position: "bottom",
-        },
-      },
-    },
-  });
-}
-
-function generateTopProductsChart(startDate, endDate) {
-  const orders = filterByDateRange(getOrders(), startDate, endDate);
-  const products = getProducts();
-
-  const productSales = {};
-  products.forEach((product) => {
-    productSales[product.nome] = 0;
-  });
-
-  orders.forEach((order) => {
-    if (order.items && Array.isArray(order.items)) {
-      order.items.forEach((item) => {
-        const product = getProductById(item.productId);
-        if (product && productSales[product.nome] !== undefined) {
-          productSales[product.nome] += item.quantity || 0;
-        }
-      });
-    }
-  });
-
-  // Pegar top 5
-  const sorted = Object.entries(productSales)
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, 5);
-
-  const labels = sorted.map((item) => item[0]);
-  const data = sorted.map((item) => item[1]);
-
-  const ctx = document.getElementById("topProductsChart");
-  if (!ctx) return;
-
-  if (reportsCharts.topProducts) {
-    reportsCharts.topProducts.destroy();
-  }
-
-  reportsCharts.topProducts = new Chart(ctx, {
-    type: "bar",
-    data: {
-      labels: labels,
-      datasets: [
-        {
-          label: "Unidades Vendidas",
-          data: data,
-          backgroundColor: "#c9a227",
-          borderColor: "#c9a227",
-          borderWidth: 1,
-        },
-      ],
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: true,
-      indexAxis: "y",
-      plugins: {
-        legend: {
-          display: false,
-        },
-      },
-      scales: {
-        x: {
-          beginAtZero: true,
-          ticks: {
-            stepSize: 1,
-          },
-        },
-      },
-    },
-  });
-}
-
-function generateServicesTable(startDate, endDate) {
-  const bookings = filterByDateRange(getBookings(), startDate, endDate);
-  const services = getServices();
-
-  const serviceStats = {};
-  services.forEach((service) => {
-    serviceStats[service.id] = {
-      nome: service.nome,
-      preco: parseFloat(service.preco) || 0,
-      total: 0,
-      confirmadas: 0,
-      concluidas: 0,
-      canceladas: 0,
-      receita: 0,
-    };
-  });
-
-  bookings.forEach((booking) => {
-    if (booking.serviceId && serviceStats[booking.serviceId]) {
-      const stats = serviceStats[booking.serviceId];
-      stats.total++;
-
-      if (booking.status === "Confirmada") stats.confirmadas++;
-      if (booking.status === "Concluída") {
-        stats.concluidas++;
-        stats.receita += stats.preco;
-      }
-      if (booking.status === "Cancelada") stats.canceladas++;
-    }
-  });
-
-  const tbody = document.getElementById("servicesReportTable");
-  if (!tbody) return;
-
-  tbody.innerHTML = Object.values(serviceStats)
-    .sort((a, b) => b.total - a.total)
-    .map(
-      (stats) => `
-            <tr>
-                <td>${stats.nome}</td>
-                <td>${stats.total}</td>
-                <td>${stats.confirmadas}</td>
-                <td>${stats.concluidas}</td>
-                <td>${stats.canceladas}</td>
-                <td>€${stats.receita.toFixed(2)}</td>
-            </tr>
-        `,
-    )
-    .join("");
-}
-
-// Inicializar datas padrão (últimos 30 dias)
-function initializeReportDates() {
-  const endDate = new Date();
-  const startDate = new Date();
-  startDate.setDate(startDate.getDate() - 30);
-
-  const startInput = document.getElementById("reportStartDate");
-  const endInput = document.getElementById("reportEndDate");
-
-  if (startInput) startInput.value = startDate.toISOString().split("T")[0];
-  if (endInput) endInput.value = endDate.toISOString().split("T")[0];
-}
-
-// ============================================
-// EXPORTAÇÃO DE RELATÓRIOS
-// ============================================
-
-function exportReportPDF() {
-  const startDate = document.getElementById("reportStartDate").value;
-  const endDate = document.getElementById("reportEndDate").value;
-
-  const stats = generateReportStats(startDate, endDate);
-  const bookings = filterByDateRange(getBookings(), startDate, endDate);
-  const services = getServices();
-
-  // Gerar conteúdo HTML para PDF
-  const content = `
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>Relatório - Yemar Makeup Artist</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 40px;
-            color: #333;
-        }
-        h1 {
-            color: #c9a227;
-            border-bottom: 3px solid #c9a227;
-            padding-bottom: 10px;
-        }
-        h2 {
-            color: #666;
-            margin-top: 30px;
-            border-bottom: 1px solid #ddd;
-            padding-bottom: 5px;
-        }
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        .period {
-            text-align: center;
-            color: #666;
-            margin-bottom: 20px;
-        }
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 20px;
-            margin: 20px 0;
-        }
-        .stat-card {
-            border: 1px solid #ddd;
-            padding: 15px;
-            text-align: center;
-            border-radius: 4px;
-        }
-        .stat-value {
-            font-size: 24px;
-            font-weight: bold;
-            color: #c9a227;
-        }
-        .stat-label {
-            font-size: 12px;
-            color: #666;
-            margin-top: 5px;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 12px;
-            text-align: left;
-        }
-        th {
-            background-color: #c9a227;
-            color: white;
-        }
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-        .footer {
-            margin-top: 40px;
-            text-align: center;
-            font-size: 12px;
-            color: #999;
-        }
-    </style>
-</head>
-<body>
-    <div class="header">
-        <h1>Relatório de Desempenho</h1>
-        <p style="font-size: 18px; color: #c9a227;">Yemar Makeup Artist</p>
-    </div>
-    
-    <div class="period">
-        <strong>Período:</strong> ${startDate || "Início"} até ${endDate || "Hoje"}
-    </div>
-    
-    <h2>Estatísticas Gerais</h2>
-    <div class="stats-grid">
-        <div class="stat-card">
-            <div class="stat-value">${stats.totalBookings}</div>
-            <div class="stat-label">Total Marcações</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-value">${stats.completedBookings}</div>
-            <div class="stat-label">Marcações Concluídas</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-value">${stats.totalOrders}</div>
-            <div class="stat-label">Total Encomendas</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-value">€${stats.totalRevenue.toFixed(2)}</div>
-            <div class="stat-label">Receita Total</div>
-        </div>
-    </div>
-    
-    <h2>Detalhamento de Serviços</h2>
-    <table>
-        <thead>
-            <tr>
-                <th>Serviço</th>
-                <th>Total Marcações</th>
-                <th>Confirmadas</th>
-                <th>Concluídas</th>
-                <th>Canceladas</th>
-                <th>Receita Total</th>
-            </tr>
-        </thead>
-        <tbody>
-            ${generateServicesTableHTML(startDate, endDate)}
-        </tbody>
-    </table>
-    
-    <div class="footer">
-        <p>Relatório gerado em ${new Date().toLocaleString("pt-PT")}</p>
-        <p>Yemar Makeup Artist - Maquilhagem Profissional</p>
-    </div>
-</body>
-</html>
-    `;
-
-  // Criar blob e download
-  const blob = new Blob([content], { type: "text/html" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = `relatorio_${startDate || "inicio"}_${endDate || "hoje"}.html`;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-
-  showToast(
-    'Relatório HTML gerado! Abra o arquivo e use "Imprimir > Salvar como PDF" no navegador.',
-    "success",
-  );
-}
-
-function generateServicesTableHTML(startDate, endDate) {
-  const bookings = filterByDateRange(getBookings(), startDate, endDate);
-  const services = getServices();
-
-  const serviceStats = {};
-  services.forEach((service) => {
-    serviceStats[service.id] = {
-      nome: service.nome,
-      preco: parseFloat(service.preco) || 0,
-      total: 0,
-      confirmadas: 0,
-      concluidas: 0,
-      canceladas: 0,
-      receita: 0,
-    };
-  });
-
-  bookings.forEach((booking) => {
-    if (booking.serviceId && serviceStats[booking.serviceId]) {
-      const stats = serviceStats[booking.serviceId];
-      stats.total++;
-
-      if (booking.status === "Confirmada") stats.confirmadas++;
-      if (booking.status === "Concluída") {
-        stats.concluidas++;
-        stats.receita += stats.preco;
-      }
-      if (booking.status === "Cancelada") stats.canceladas++;
-    }
-  });
-
-  return Object.values(serviceStats)
-    .sort((a, b) => b.total - a.total)
-    .map(
-      (stats) => `
-            <tr>
-                <td>${stats.nome}</td>
-                <td>${stats.total}</td>
-                <td>${stats.confirmadas}</td>
-                <td>${stats.concluidas}</td>
-                <td>${stats.canceladas}</td>
-                <td>€${stats.receita.toFixed(2)}</td>
-            </tr>
-        `,
-    )
-    .join("");
-}
-
-function exportReportExcel() {
-  const startDate = document.getElementById("reportStartDate").value;
-  const endDate = document.getElementById("reportEndDate").value;
-
-  const stats = generateReportStats(startDate, endDate);
-  const bookings = filterByDateRange(getBookings(), startDate, endDate);
-  const services = getServices();
-
-  // Gerar conteúdo CSV
-  let csv = "RELATÓRIO DE DESEMPENHO - YEMAR MAKEUP ARTIST\n";
-  csv += `Período: ${startDate || "Início"} até ${endDate || "Hoje"}\n`;
-  csv += `Gerado em: ${new Date().toLocaleString("pt-PT")}\n\n`;
-
-  csv += "ESTATÍSTICAS GERAIS\n";
-  csv += "Métrica,Valor\n";
-  csv += `Total Marcações,${stats.totalBookings}\n`;
-  csv += `Marcações Confirmadas,${stats.confirmedBookings}\n`;
-  csv += `Marcações Concluídas,${stats.completedBookings}\n`;
-  csv += `Marcações Canceladas,${stats.cancelledBookings}\n`;
-  csv += `Total Encomendas,${stats.totalOrders}\n`;
-  csv += `Encomendas Entregues,${stats.completedOrders}\n`;
-  csv += `Receita Marcações,€${stats.bookingsRevenue.toFixed(2)}\n`;
-  csv += `Receita Encomendas,€${stats.ordersRevenue.toFixed(2)}\n`;
-  csv += `Receita Total,€${stats.totalRevenue.toFixed(2)}\n\n`;
-
-  csv += "DETALHAMENTO DE SERVIÇOS\n";
-  csv +=
-    "Serviço,Total Marcações,Confirmadas,Concluídas,Canceladas,Receita Total\n";
-
-  const serviceStats = {};
-  services.forEach((service) => {
-    serviceStats[service.id] = {
-      nome: service.nome,
-      preco: parseFloat(service.preco) || 0,
-      total: 0,
-      confirmadas: 0,
-      concluidas: 0,
-      canceladas: 0,
-      receita: 0,
-    };
-  });
-
-  bookings.forEach((booking) => {
-    if (booking.serviceId && serviceStats[booking.serviceId]) {
-      const s = serviceStats[booking.serviceId];
-      s.total++;
-      if (booking.status === "Confirmada") s.confirmadas++;
-      if (booking.status === "Concluída") {
-        s.concluidas++;
-        s.receita += s.preco;
-      }
-      if (booking.status === "Cancelada") s.canceladas++;
-    }
-  });
-
-  Object.values(serviceStats)
-    .sort((a, b) => b.total - a.total)
-    .forEach((s) => {
-      csv += `${s.nome},${s.total},${s.confirmadas},${s.concluidas},${s.canceladas},€${s.receita.toFixed(2)}\n`;
-    });
-
-  // Criar blob e download
-  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = `relatorio_${startDate || "inicio"}_${endDate || "hoje"}.csv`;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-
-  showToast(
-    "Relatório CSV exportado! Abra com Excel ou Google Sheets.",
-    "success",
-  );
-}
+// Nota: As funções de relatórios foram movidas para o final do arquivo
+// para melhor organização e compatibilidade com a nova interface
 
 // ============================================
 // FUNÇÕES ADMIN - MARCAÇÕES
@@ -4927,3 +4291,576 @@ function editImageUrl(type, id, title, currentUrl) {
       break;
   }
 }
+
+// ============================================
+// RELATÓRIOS - Funções de Análise e Estatísticas
+// ============================================
+
+let salesChart = null;
+let revenueChart = null;
+
+function initializeReportDates() {
+  const endDate = new Date();
+  const startDate = new Date();
+  startDate.setMonth(startDate.getMonth() - 1);
+
+  const startInput = document.getElementById('reportStartDate');
+  const endInput = document.getElementById('reportEndDate');
+
+  if (startInput) startInput.value = startDate.toISOString().split('T')[0];
+  if (endInput) endInput.value = endDate.toISOString().split('T')[0];
+}
+
+function loadReports() {
+  loadReportsData();
+}
+
+function loadReportsData() {
+  const period = document.getElementById('reportPeriod')?.value || 'month';
+  const startDate = document.getElementById('reportStartDate')?.value;
+  const endDate = document.getElementById('reportEndDate')?.value;
+
+  const dateFilter = getDateRangeFilter(period, startDate, endDate);
+
+  // Carregar dados de todas as fontes
+  const orders = getOrders() || [];
+  const bookings = getBookings() || [];
+  const messages = getMessages() || [];
+  const products = getProducts() || [];
+  const services = getServices() || [];
+  const workshops = getWorkshops() || [];
+
+  // Filtrar por data
+  const filteredOrders = filterByDateRange(orders, dateFilter);
+  const filteredBookings = filterByDateRange(bookings, dateFilter);
+  const filteredMessages = filterByDateRange(messages, dateFilter);
+
+  // Calcular estatísticas principais
+  const stats = calculateReportStats(filteredOrders, filteredBookings, filteredMessages);
+
+  // Atualizar cards principais
+  updateReportCards(stats);
+
+  // Carregar gráficos
+  loadSalesByCategoryChart(filteredOrders, filteredBookings);
+  loadRevenueExpensesChart(filteredOrders, filteredBookings);
+
+  // Carregar tabelas
+  loadTopProductsTable(filteredOrders);
+  loadServicesReportTable(filteredBookings, services);
+  loadWorkshopsReportTable(filteredBookings, workshops);
+  loadFinancialAnalysis(filteredOrders, filteredBookings);
+  loadMessagesReport(filteredMessages);
+}
+
+function getDateRangeFilter(period, customStart, customEnd) {
+  const now = new Date();
+  let startDate = new Date();
+
+  switch (period) {
+    case 'today':
+      startDate.setHours(0, 0, 0, 0);
+      break;
+    case 'week':
+      startDate.setDate(now.getDate() - 7);
+      break;
+    case 'month':
+      startDate.setMonth(now.getMonth() - 1);
+      break;
+    case 'quarter':
+      startDate.setMonth(now.getMonth() - 3);
+      break;
+    case 'year':
+      startDate.setFullYear(now.getFullYear() - 1);
+      break;
+    case 'all':
+      startDate = new Date('2020-01-01');
+      break;
+  }
+
+  if (customStart) startDate = new Date(customStart);
+  const endDate = customEnd ? new Date(customEnd) : now;
+
+  return { startDate, endDate };
+}
+
+function filterByDateRange(items, dateFilter) {
+  if (!items || !Array.isArray(items)) return [];
+
+  return items.filter(item => {
+    const itemDate = new Date(item.data || item.createdAt || item.timestamp);
+    return itemDate >= dateFilter.startDate && itemDate <= dateFilter.endDate;
+  });
+}
+
+function calculateReportStats(orders, bookings, messages) {
+  // Calcular visitas (simulado - pode ser integrado com analytics real)
+  const visits = Math.floor(Math.random() * 1000) + (orders.length + bookings.length) * 10;
+
+  // Calcular receita total
+  let revenue = 0;
+
+  orders.forEach(order => {
+    const status = order.status?.toLowerCase() || '';
+    if (status === 'completed' || status === 'paid' || status === 'entregue' || status === 'concluída') {
+      revenue += parseFloat(order.total || 0);
+    }
+  });
+
+  bookings.forEach(booking => {
+    const status = booking.status?.toLowerCase() || '';
+    if (status === 'completed' || status === 'confirmed' || status === 'concluída' || status === 'confirmada') {
+      revenue += parseFloat(booking.price || booking.preco || 0);
+    }
+  });
+
+  return {
+    visits,
+    revenue,
+    ordersCount: orders.length,
+    messagesCount: messages.length
+  };
+}
+
+function updateReportCards(stats) {
+  const visitEl = document.getElementById('reportVisits');
+  const revenueEl = document.getElementById('reportRevenue');
+  const ordersEl = document.getElementById('reportOrders');
+  const messagesEl = document.getElementById('reportMessages');
+
+  if (visitEl) visitEl.textContent = stats.visits.toLocaleString();
+  if (revenueEl) revenueEl.textContent = `€${stats.revenue.toFixed(2)}`;
+  if (ordersEl) ordersEl.textContent = stats.ordersCount;
+  if (messagesEl) messagesEl.textContent = stats.messagesCount;
+}
+
+function loadSalesByCategoryChart(orders, bookings) {
+  const canvas = document.getElementById('salesByCategoryChart');
+  if (!canvas) return;
+
+  const ctx = canvas.getContext('2d');
+
+  // Agrupar vendas por categoria
+  const categories = {
+    'Produtos': 0,
+    'Serviços': 0,
+    'Workshops': 0,
+    'Eventos': 0
+  };
+
+  orders.forEach(order => {
+    const status = order.status?.toLowerCase() || '';
+    if (status === 'completed' || status === 'paid' || status === 'entregue' || status === 'concluída') {
+      categories['Produtos'] += parseFloat(order.total || 0);
+    }
+  });
+
+  bookings.forEach(booking => {
+    const status = booking.status?.toLowerCase() || '';
+    if (status === 'completed' || status === 'confirmed' || status === 'concluída' || status === 'confirmada') {
+      const price = parseFloat(booking.price || booking.preco || 0);
+      const type = (booking.type || booking.tipo || '').toLowerCase();
+      if (type === 'workshop') {
+        categories['Workshops'] += price;
+      } else if (type === 'event' || type === 'evento') {
+        categories['Eventos'] += price;
+      } else {
+        categories['Serviços'] += price;
+      }
+    }
+  });
+
+  if (salesChart) salesChart.destroy();
+
+  salesChart = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: Object.keys(categories),
+      datasets: [{
+        data: Object.values(categories),
+        backgroundColor: [
+          'rgba(102, 126, 234, 0.8)',
+          'rgba(118, 75, 162, 0.8)',
+          'rgba(240, 147, 251, 0.8)',
+          'rgba(245, 87, 108, 0.8)'
+        ],
+        borderWidth: 2,
+        borderColor: '#fff'
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      plugins: {
+        legend: {
+          position: 'bottom',
+          labels: {
+            padding: 15,
+            font: { size: 12 }
+          }
+        },
+        tooltip: {
+          callbacks: {
+            label: function(context) {
+              const label = context.label || '';
+              const value = context.parsed || 0;
+              return `${label}: €${value.toFixed(2)}`;
+            }
+          }
+        }
+      }
+    }
+  });
+}
+
+function loadRevenueExpensesChart(orders, bookings) {
+  const canvas = document.getElementById('revenueExpensesChart');
+  if (!canvas) return;
+
+  const ctx = canvas.getContext('2d');
+
+  // Calcular receitas e despesas por mês
+  const monthlyData = {};
+
+  const addToMonth = (date, revenue, expense) => {
+    const key = new Date(date).toISOString().slice(0, 7);
+    if (!monthlyData[key]) {
+      monthlyData[key] = { revenue: 0, expenses: 0 };
+    }
+    monthlyData[key].revenue += revenue;
+    monthlyData[key].expenses += expense;
+  };
+
+  orders.forEach(order => {
+    const status = order.status?.toLowerCase() || '';
+    if (status === 'completed' || status === 'paid' || status === 'entregue' || status === 'concluída') {
+      const revenue = parseFloat(order.total || 0);
+      const expense = revenue * 0.3; // Estimativa de 30% de custos
+      addToMonth(order.data || order.createdAt, revenue, expense);
+    }
+  });
+
+  bookings.forEach(booking => {
+    const status = booking.status?.toLowerCase() || '';
+    if (status === 'completed' || status === 'confirmed' || status === 'concluída' || status === 'confirmada') {
+      const revenue = parseFloat(booking.price || booking.preco || 0);
+      const expense = revenue * 0.25; // Estimativa de 25% de custos
+      addToMonth(booking.data || booking.createdAt, revenue, expense);
+    }
+  });
+
+  const labels = Object.keys(monthlyData).sort();
+  const revenueData = labels.map(key => monthlyData[key].revenue);
+  const expensesData = labels.map(key => monthlyData[key].expenses);
+
+  if (revenueChart) revenueChart.destroy();
+
+  revenueChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: labels.map(formatMonthLabel),
+      datasets: [
+        {
+          label: 'Receitas',
+          data: revenueData,
+          backgroundColor: 'rgba(67, 233, 123, 0.8)',
+          borderColor: 'rgba(67, 233, 123, 1)',
+          borderWidth: 1
+        },
+        {
+          label: 'Despesas',
+          data: expensesData,
+          backgroundColor: 'rgba(245, 87, 108, 0.8)',
+          borderColor: 'rgba(245, 87, 108, 1)',
+          borderWidth: 1
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: {
+            callback: function(value) {
+              return '€' + value.toFixed(0);
+            }
+          }
+        }
+      },
+      plugins: {
+        legend: {
+          position: 'top'
+        },
+        tooltip: {
+          callbacks: {
+            label: function(context) {
+              return `${context.dataset.label}: €${context.parsed.y.toFixed(2)}`;
+            }
+          }
+        }
+      }
+    }
+  });
+}
+
+function formatMonthLabel(yearMonth) {
+  const [year, month] = yearMonth.split('-');
+  const months = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+  return `${months[parseInt(month) - 1]} ${year}`;
+}
+
+function loadTopProductsTable(orders) {
+  const tbody = document.getElementById('topProductsTable');
+  if (!tbody) return;
+
+  const productSales = {};
+  let totalRevenue = 0;
+
+  orders.forEach(order => {
+    const status = order.status?.toLowerCase() || '';
+    if (status === 'completed' || status === 'paid' || status === 'entregue' || status === 'concluída') {
+      (order.items || []).forEach(item => {
+        const key = item.productId || item.nome;
+        if (!productSales[key]) {
+          productSales[key] = {
+            name: item.nome || 'Produto',
+            quantity: 0,
+            revenue: 0
+          };
+        }
+        const qty = item.quantidade || item.quantity || 1;
+        const price = parseFloat(item.preco || item.price || 0);
+        productSales[key].quantity += qty;
+        productSales[key].revenue += price * qty;
+        totalRevenue += price * qty;
+      });
+    }
+  });
+
+  const sortedProducts = Object.values(productSales)
+    .sort((a, b) => b.revenue - a.revenue)
+    .slice(0, 10);
+
+  if (sortedProducts.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; padding: 2rem; color: #999;">Nenhum produto vendido no período selecionado</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = sortedProducts.map(product => `
+    <tr>
+      <td>${product.name}</td>
+      <td>${product.quantity}</td>
+      <td>€${product.revenue.toFixed(2)}</td>
+      <td>${((product.revenue / totalRevenue) * 100).toFixed(1)}%</td>
+    </tr>
+  `).join('');
+}
+
+function loadServicesReportTable(bookings, services) {
+  const tbody = document.getElementById('servicesReportTable');
+  if (!tbody) return;
+
+  const serviceSales = {};
+
+  bookings.forEach(booking => {
+    const status = booking.status?.toLowerCase() || '';
+    const type = (booking.type || booking.tipo || '').toLowerCase();
+    if ((status === 'completed' || status === 'confirmed' || status === 'concluída' || status === 'confirmada') && (type === 'service' || type === 'serviço')) {
+      const key = booking.serviceId || booking.serviceName || 'Serviço';
+      if (!serviceSales[key]) {
+        serviceSales[key] = {
+          name: booking.serviceName || booking.nomeServico || 'Serviço',
+          count: 0,
+          revenue: 0
+        };
+      }
+      serviceSales[key].count++;
+      serviceSales[key].revenue += parseFloat(booking.price || booking.preco || 0);
+    }
+  });
+
+  const sortedServices = Object.values(serviceSales)
+    .sort((a, b) => b.revenue - a.revenue);
+
+  if (sortedServices.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="3" style="text-align: center; padding: 2rem; color: #999;">Nenhum serviço realizado no período selecionado</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = sortedServices.map(service => `
+    <tr>
+      <td>${service.name}</td>
+      <td>${service.count}</td>
+      <td>€${service.revenue.toFixed(2)}</td>
+    </tr>
+  `).join('');
+}
+
+function loadWorkshopsReportTable(bookings, workshops) {
+  const tbody = document.getElementById('workshopsReportTable');
+  if (!tbody) return;
+
+  const workshopSales = {};
+
+  bookings.forEach(booking => {
+    const status = booking.status?.toLowerCase() || '';
+    const type = (booking.type || booking.tipo || '').toLowerCase();
+    if ((status === 'completed' || status === 'confirmed' || status === 'concluída' || status === 'confirmada') && type === 'workshop') {
+      const key = booking.workshopId || booking.workshopName || 'Workshop';
+      if (!workshopSales[key]) {
+        workshopSales[key] = {
+          name: booking.workshopName || booking.nomeWorkshop || 'Workshop',
+          participants: 0,
+          revenue: 0
+        };
+      }
+      workshopSales[key].participants++;
+      workshopSales[key].revenue += parseFloat(booking.price || booking.preco || 0);
+    }
+  });
+
+  const sortedWorkshops = Object.values(workshopSales)
+    .sort((a, b) => b.revenue - a.revenue);
+
+  if (sortedWorkshops.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="3" style="text-align: center; padding: 2rem; color: #999;">Nenhum workshop realizado no período selecionado</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = sortedWorkshops.map(workshop => `
+    <tr>
+      <td>${workshop.name}</td>
+      <td>${workshop.participants}</td>
+      <td>€${workshop.revenue.toFixed(2)}</td>
+    </tr>
+  `).join('');
+}
+
+function loadFinancialAnalysis(orders, bookings) {
+  let totalRevenue = 0;
+  let totalExpenses = 0;
+  const transactions = [];
+
+  // Processar encomendas
+  orders.forEach(order => {
+    const status = order.status?.toLowerCase() || '';
+    if (status === 'completed' || status === 'paid' || status === 'entregue' || status === 'concluída') {
+      const revenue = parseFloat(order.total || 0);
+      totalRevenue += revenue;
+
+      transactions.push({
+        date: order.data || order.createdAt,
+        description: `Encomenda #${order.id?.slice(0, 8) || 'N/A'}`,
+        type: 'Entrada',
+        category: 'Vendas de Produtos',
+        amount: revenue
+      });
+
+      // Estimar custos
+      const cost = revenue * 0.3;
+      totalExpenses += cost;
+
+      transactions.push({
+        date: order.data || order.createdAt,
+        description: `Custos - Encomenda #${order.id?.slice(0, 8) || 'N/A'}`,
+        type: 'Saída',
+        category: 'Custos de Produtos',
+        amount: cost
+      });
+    }
+  });
+
+  // Processar marcações
+  bookings.forEach(booking => {
+    const status = booking.status?.toLowerCase() || '';
+    if (status === 'completed' || status === 'confirmed' || status === 'concluída' || status === 'confirmada') {
+      const revenue = parseFloat(booking.price || booking.preco || 0);
+      totalRevenue += revenue;
+
+      const type = (booking.type || booking.tipo || '').toLowerCase();
+      const category = type === 'workshop' ? 'Workshop' :
+                      (type === 'event' || type === 'evento') ? 'Evento' : 'Serviço';
+
+      transactions.push({
+        date: booking.data || booking.createdAt,
+        description: `${category} - ${booking.serviceName || booking.workshopName || booking.nomeServico || booking.nomeWorkshop || 'N/A'}`,
+        type: 'Entrada',
+        category: `Receitas de ${category}`,
+        amount: revenue
+      });
+
+      // Estimar custos
+      const cost = revenue * 0.25;
+      totalExpenses += cost;
+
+      transactions.push({
+        date: booking.data || booking.createdAt,
+        description: `Custos - ${category}`,
+        type: 'Saída',
+        category: `Custos de ${category}`,
+        amount: cost
+      });
+    }
+  });
+
+  const netProfit = totalRevenue - totalExpenses;
+
+  // Atualizar resumo financeiro
+  const revenueEl = document.getElementById('totalRevenueAmount');
+  const expensesEl = document.getElementById('totalExpensesAmount');
+  const profitEl = document.getElementById('netProfitAmount');
+
+  if (revenueEl) revenueEl.textContent = `€${totalRevenue.toFixed(2)}`;
+  if (expensesEl) expensesEl.textContent = `€${totalExpenses.toFixed(2)}`;
+  if (profitEl) {
+    profitEl.textContent = `€${netProfit.toFixed(2)}`;
+    profitEl.style.background = netProfit >= 0 
+      ? 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)'
+      : 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)';
+  }
+
+  // Carregar tabela de transações
+  const tbody = document.getElementById('financialTransactionsTable');
+  if (!tbody) return;
+
+  const sortedTransactions = transactions.sort((a, b) => 
+    new Date(b.date) - new Date(a.date)
+  ).slice(0, 50);
+
+  if (sortedTransactions.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 2rem; color: #999;">Nenhuma transação no período selecionado</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = sortedTransactions.map(transaction => `
+    <tr>
+      <td>${new Date(transaction.date).toLocaleDateString('pt-PT')}</td>
+      <td>${transaction.description}</td>
+      <td><span style="display: inline-block; padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.875rem; background: ${transaction.type === 'Entrada' ? '#d4edda' : '#f8d7da'}; color: ${transaction.type === 'Entrada' ? '#155724' : '#721c24'};">${transaction.type}</span></td>
+      <td>${transaction.category}</td>
+      <td style="font-weight: 600; color: ${transaction.type === 'Entrada' ? '#28a745' : '#dc3545'};">€${transaction.amount.toFixed(2)}</td>
+    </tr>
+  `).join('');
+}
+
+function loadMessagesReport(messages) {
+  const totalCount = messages.length;
+  const readCount = messages.filter(m => m.read || m.lida).length;
+  const unreadCount = totalCount - readCount;
+
+  const totalEl = document.getElementById('totalMessagesCount');
+  const readEl = document.getElementById('readMessagesCount');
+  const unreadEl = document.getElementById('unreadMessagesCount');
+
+  if (totalEl) totalEl.textContent = totalCount;
+  if (readEl) readEl.textContent = readCount;
+  if (unreadEl) unreadEl.textContent = unreadCount;
+}
+
+function exportReportPDF() {
+  showToast('Funcionalidade de exportação em desenvolvimento. Os dados podem ser impressos usando Ctrl+P.', 'info');
+  window.print();
+}
+
