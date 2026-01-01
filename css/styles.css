@@ -357,13 +357,15 @@ h1, h2, h3, h4, h5, h6 {
     position: fixed;
     top: 0;
     left: -100%;
-    width: 100%;
-    max-width: 320px;
+    width: 280px;
+    max-width: 85vw;
     height: 100vh;
     background: var(--color-white);
+    box-shadow: 2px 0 10px rgba(0,0,0,0.1);
     z-index: 2000;
-    transition: left var(--transition-normal);
+    transition: left 0.3s ease;
     overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
 .mobile-menu.open {
@@ -388,12 +390,20 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .mobile-nav a {
-    display: block;
-    padding: var(--spacing-sm) 0;
-    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    padding: 15px 20px;
+    font-size: 16px;
+    min-height: 50px;
     text-transform: uppercase;
     letter-spacing: 0.1em;
     border-bottom: 1px solid var(--color-gray-100);
+    transition: background-color 0.2s ease;
+}
+
+.mobile-nav a:hover,
+.mobile-nav a:active {
+    background-color: var(--color-gray-50);
 }
 
 .mobile-nav .submenu {
@@ -3399,19 +3409,6 @@ html, body {
     .main-nav {
         display: none;
     }
-    
-    .mobile-menu {
-        width: 280px;
-        max-width: 85vw;
-    }
-    
-    .mobile-nav a {
-        padding: 15px 20px;
-        font-size: 16px;
-        min-height: 50px;
-        display: flex;
-        align-items: center;
-    }
 }
 
 /* Carrinho mobile */
@@ -3572,5 +3569,135 @@ html, body {
     
     .service-image {
         margin-bottom: var(--spacing-md);
+    }
+}
+
+
+/* ==============================================
+   MELHORIAS DE PERFORMANCE E ACESSIBILIDADE
+   ============================================== */
+
+/* Otimização de fontes */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* Melhorar contraste para acessibilidade */
+.btn-secondary {
+    background-color: #333;
+    color: #fff;
+}
+
+.btn-secondary:hover {
+    background-color: #000;
+}
+
+/* Skip link para acessibilidade */
+.skip-link {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    background: var(--color-primary);
+    color: var(--color-white);
+    padding: 8px;
+    text-decoration: none;
+    z-index: 10000;
+}
+
+.skip-link:focus {
+    top: 0;
+}
+
+/* Melhorar foco visível */
+a:focus,
+button:focus,
+input:focus,
+textarea:focus,
+select:focus {
+    outline: 3px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+/* Loading otimizado para imagens */
+img {
+    content-visibility: auto;
+}
+
+/* Lazy loading hint */
+img[loading="lazy"] {
+    background: var(--color-gray-100);
+}
+
+/* Otimização de scroll */
+.mobile-menu,
+.modal-content,
+.cart-items {
+    will-change: transform;
+    transform: translateZ(0);
+}
+
+/* Prevenir layout shift */
+.logo-img {
+    aspect-ratio: 1 / 1;
+    width: auto;
+    height: 80px;
+}
+
+@media (max-width: 768px) {
+    .logo-img {
+        height: 60px;
+    }
+}
+
+/* Melhorar performance de animações */
+.mobile-menu,
+.modal,
+.dropdown-menu {
+    backface-visibility: hidden;
+    perspective: 1000px;
+}
+
+/* Aria labels visuais */
+[aria-label]:hover::after {
+    content: attr(aria-label);
+    position: absolute;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    z-index: 10000;
+    pointer-events: none;
+}
+
+/* Print styles */
+@media print {
+    .header,
+    .footer,
+    .mobile-menu,
+    .btn,
+    nav {
+        display: none !important;
+    }
+    
+    body {
+        background: white;
+        color: black;
+    }
+    
+    a {
+        text-decoration: underline;
+    }
+    
+    a[href]::after {
+        content: " (" attr(href) ")";
     }
 }
