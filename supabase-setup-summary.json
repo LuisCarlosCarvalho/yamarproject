@@ -1,0 +1,20 @@
+{
+  "project_id": "qzjzlpilmptoojuguqas",
+  "project_url": "https://qzjzlpilmptoojuguqas.supabase.co",
+  "api_key_prefix": "sbp_7a9ad3f79c7fe...10cd16d",
+  "configured_at": "2026-01-02T10:30:00Z",
+  "status": "configured",
+  "next_steps": [
+    "1. Criar tabelas no Supabase usando supabase-schema.sql",
+    "2. Popular banco com: await supabaseSeed.seed()",
+    "3. Verificar status com: await supabaseSeed.checkStatus()"
+  ],
+  "files_created": [
+    "js/supabase-config.js",
+    "js/supabase-db.js",
+    "js/supabase-seed.js",
+    "supabase-schema.sql",
+    "SUPABASE_CONFIG.md",
+    "QUICKSTART_SUPABASE.md"
+  ]
+}

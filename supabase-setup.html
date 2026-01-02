@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configuração Supabase - Yamar Project</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 800px;
+            width: 100%;
+            padding: 40px;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2rem;
+        }
+        
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1rem;
+        }
+        
+        .status {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .status-icon {
+            font-size: 1.5rem;
+        }
+        
+        .button-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 10px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            font-weight: 600;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .log {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 20px;
+            border-radius: 8px;
+            max-height: 400px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+        
+        .log-success { color: #4caf50; }
+        .log-error { color: #f44336; }
+        .log-warning { color: #ff9800; }
+        .log-info { color: #2196f3; }
+        
+        .step {
+            background: #e8f4f8;
+            border-left: 4px solid #2196f3;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+        
+        .step h3 {
+            color: #2196f3;
+            margin-bottom: 10px;
+        }
+        
+        code {
+            background: #f5f5f5;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .alert-success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        
+        .alert-warning {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🗄️ Configuração Supabase</h1>
+        <p class="subtitle">Yamar Makeup Artist - Database Setup</p>
+        
+        <div class="status" id="status">
+            <div class="status-item">
+                <span class="status-icon">⏳</span>
+                <span>Verificando conexão...</span>
+            </div>
+        </div>
+        
+        <div class="alert alert-warning">
+            <strong>⚠️ IMPORTANTE:</strong> Antes de continuar, certifique-se de ter executado o SQL schema no Supabase Dashboard!
+        </div>
+        
+        <div class="step">
+            <h3>📋 Passo 1: Criar Tabelas</h3>
+            <p>1. Acesse <a href="https://app.supabase.com/project/qzjzlpilmptoojuguqas/sql/new" target="_blank">SQL Editor</a></p>
+            <p>2. Copie o conteúdo de <code>supabase-schema.sql</code></p>
+            <p>3. Cole no editor e clique em <strong>Run</strong></p>
+        </div>
+        
+        <div class="step">
+            <h3>🌱 Passo 2: Popular Banco de Dados</h3>
+            <p>Clique no botão abaixo para inserir os dados iniciais:</p>
+        </div>
+        
+        <div class="button-group">
+            <button onclick="checkConnection()">🔍 Verificar Conexão</button>
+            <button onclick="seedDatabase()">🌱 Popular Banco</button>
+            <button onclick="checkStatus()">📊 Ver Status</button>
+            <button onclick="clearLog()">🗑️ Limpar Log</button>
+        </div>
+        
+        <div id="log" class="log">
+            <div class="log-info">💡 Aguardando comandos...</div>
+        </div>
+    </div>
+    
+    <!-- Supabase Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <!-- App Scripts -->
+    <script src="js/supabase-config.js"></script>
+    <script src="js/supabase-db.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/supabase-seed.js"></script>
+    
+    <script>
+        const logElement = document.getElementById('log');
+        const statusElement = document.getElementById('status');
+        
+        function log(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const className = `log-${type}`;
+            const icon = {
+                success: '✅',
+                error: '❌',
+                warning: '⚠️',
+                info: '💡'
+            }[type] || '•';
+            
+            logElement.innerHTML += `<div class="${className}">[${timestamp}] ${icon} ${message}</div>`;
+            logElement.scrollTop = logElement.scrollHeight;
+        }
+        
+        function updateStatus(status, icon, color) {
+            statusElement.innerHTML = `
+                <div class="status-item">
+                    <span class="status-icon">${icon}</span>
+                    <span style="color: ${color}">${status}</span>
+                </div>
+            `;
+        }
+        
+        function clearLog() {
+            logElement.innerHTML = '<div class="log-info">💡 Log limpo. Aguardando comandos...</div>';
+        }
+        
+        async function checkConnection() {
+            try {
+                log('Verificando conexão com Supabase...', 'info');
+                
+                if (!isSupabaseAvailable()) {
+                    log('Erro: Cliente Supabase não está disponível', 'error');
+                    updateStatus('❌ Não Conectado', '❌', '#f44336');
+                    return;
+                }
+                
+                const client = getSupabaseClient();
+                log('Cliente Supabase inicializado', 'success');
+                
+                // Testar conexão
+                const { data, error } = await client
+                    .from('servicos')
+                    .select('count')
+                    .limit(1);
+                
+                if (error && error.code !== 'PGRST116') {
+                    throw error;
+                }
+                
+                log('Conexão estabelecida com sucesso!', 'success');
+                log(`URL: ${SUPABASE_CONFIG.url}`, 'info');
+                updateStatus('✅ Conectado ao Supabase', '✅', '#4caf50');
+                
+            } catch (error) {
+                log(`Erro na conexão: ${error.message}`, 'error');
+                
+                if (error.message.includes('relation') || error.message.includes('does not exist')) {
+                    log('⚠️ Tabelas ainda não foram criadas', 'warning');
+                    log('Execute o SQL schema no Supabase Dashboard', 'warning');
+                    updateStatus('⚠️ Tabelas não criadas', '⚠️', '#ff9800');
+                } else {
+                    updateStatus('❌ Erro na Conexão', '❌', '#f44336');
+                }
+            }
+        }
+        
+        async function seedDatabase() {
+            try {
+                log('='.repeat(50), 'info');
+                log('🌱 Iniciando seed do banco de dados...', 'info');
+                log('='.repeat(50), 'info');
+                
+                const result = await seedSupabaseDatabase();
+                
+                if (result.success) {
+                    log('', 'info');
+                    log('✅ SEED CONCLUÍDO COM SUCESSO!', 'success');
+                    log(`📊 Total inseridos: ${result.inseridos}`, 'success');
+                    
+                    if (result.erros > 0) {
+                        log(`⚠️ Total erros: ${result.erros}`, 'warning');
+                    }
+                    
+                    updateStatus('✅ Banco Populado', '✅', '#4caf50');
+                    
+                    // Mostrar status automaticamente
+                    setTimeout(() => checkStatus(), 1000);
+                } else {
+                    log(`❌ Erro no seed: ${result.error}`, 'error');
+                    updateStatus('❌ Erro no Seed', '❌', '#f44336');
+                }
+                
+            } catch (error) {
+                log(`❌ Erro ao executar seed: ${error.message}`, 'error');
+                updateStatus('❌ Erro no Seed', '❌', '#f44336');
+            }
+        }
+        
+        async function checkStatus() {
+            try {
+                log('📊 Verificando status do banco...', 'info');
+                
+                const status = await checkSyncStatus();
+                
+                if (status) {
+                    log('', 'info');
+                    log('📊 STATUS DO BANCO DE DADOS:', 'success');
+                    log(`   Serviços: ${status.servicos}`, 'info');
+                    log(`   Produtos: ${status.produtos}`, 'info');
+                    log(`   Workshops: ${status.workshops}`, 'info');
+                    log(`   Eventos: ${status.eventos}`, 'info');
+                    log(`   Posts: ${status.posts}`, 'info');
+                    
+                    const total = status.servicos + status.produtos + status.workshops + status.eventos + status.posts;
+                    log(``, 'info');
+                    log(`📈 Total de registros: ${total}`, 'success');
+                    
+                    if (total > 0) {
+                        updateStatus(`✅ ${total} registros no banco`, '✅', '#4caf50');
+                    } else {
+                        updateStatus('⚠️ Banco vazio', '⚠️', '#ff9800');
+                        log('', 'warning');
+                        log('⚠️ Banco está vazio. Execute o seed!', 'warning');
+                    }
+                } else {
+                    log('❌ Não foi possível obter status', 'error');
+                }
+                
+            } catch (error) {
+                log(`❌ Erro ao verificar status: ${error.message}`, 'error');
+            }
+        }
+        
+        // Verificar conexão ao carregar
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                checkConnection();
+            }, 500);
+        });
+    </script>
+</body>
+</html>
