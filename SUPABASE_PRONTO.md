@@ -20,7 +20,7 @@
 ```
 Projeto ID: qzjzlpilmptoojuguqas
 URL: https://qzjzlpilmptoojuguqas.supabase.co
-Token: sbp_7a9ad3f79c7feadbc5e163ff1bba998de10cd16d
+Token: sb_publishable_dMFxTGX9uZlXkT2hjBqtcg_BRHBtky7
 Status: ✅ Configurado
 ```
 
