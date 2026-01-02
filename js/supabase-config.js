@@ -6,7 +6,7 @@
 // Configurações do Supabase
 const SUPABASE_CONFIG = {
   url: 'https://qzjzlpilmptoojuguqas.supabase.co',
-  key: 'sbp_7a9ad3f79c7feadbc5e163ff1bba998de10cd16d',
+  key: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF6anpscGlsbXB0b29qdWd1cWFzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjczNDQ2NjIsImV4cCI6MjA4MjkyMDY2Mn0.z2Mv4Nzvyel0xEZrcCxmoqBwpYHmoTPTRLlJ6Ja_ujI',
   options: {
     auth: {
       autoRefreshToken: true,

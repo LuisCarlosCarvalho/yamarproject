@@ -48,7 +48,7 @@ async function seedSupabaseDatabase() {
           }
         } catch (error) {
           totalErros++;
-          console.error(`  ✗ Erro ao inserir serviço ${servico.id}:`, error.message);
+          console.error(`  ✗ Erro ao inserir serviço ${servico.id}:`, error);
         }
       }
     }
@@ -68,7 +68,7 @@ async function seedSupabaseDatabase() {
           }
         } catch (error) {
           totalErros++;
-          console.error(`  ✗ Erro ao inserir produto ${produto.id}:`, error.message);
+          console.error(`  ✗ Erro ao inserir produto ${produto.id}:`, error);
         }
       }
     }
@@ -94,7 +94,7 @@ async function seedSupabaseDatabase() {
           }
         } catch (error) {
           totalErros++;
-          console.error(`  ✗ Erro ao inserir workshop ${workshop.id}:`, error.message);
+          console.error(`  ✗ Erro ao inserir workshop ${workshop.id}:`, error);
         }
       }
     }
@@ -120,7 +120,7 @@ async function seedSupabaseDatabase() {
           }
         } catch (error) {
           totalErros++;
-          console.error(`  ✗ Erro ao inserir evento ${evento.id}:`, error.message);
+          console.error(`  ✗ Erro ao inserir evento ${evento.id}:`, error);
         }
       }
     }
@@ -140,7 +140,7 @@ async function seedSupabaseDatabase() {
           }
         } catch (error) {
           totalErros++;
-          console.error(`  ✗ Erro ao inserir post ${post.id}:`, error.message);
+          console.error(`  ✗ Erro ao inserir post ${post.id}:`, error);
         }
       }
     }
@@ -157,7 +157,7 @@ async function seedSupabaseDatabase() {
           ]);
         console.log('  ✓ Configurações inseridas');
       } catch (error) {
-        console.error('  ✗ Erro ao inserir configurações:', error.message);
+        console.error('  ✗ Erro ao inserir configurações:', error);
       }
     }
     

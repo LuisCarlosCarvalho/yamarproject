@@ -12,4 +12,11 @@
   ],
   "author": "",
   "license": "ISC"
+  ,
+  "scripts": {
+    "seed:supabase": "node tools/run-seed.js"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.36.0"
+  }
 }
