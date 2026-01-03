@@ -1686,6 +1686,8 @@ h1, h2, h3, h4, h5, h6 {
     visibility: hidden;
     transition: all var(--transition-normal);
     padding: var(--spacing-md);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
 .modal-overlay.show {
@@ -1702,6 +1704,8 @@ h1, h2, h3, h4, h5, h6 {
     border-radius: var(--border-radius-lg);
     transform: translateY(20px);
     transition: transform var(--transition-normal);
+    margin: 0 auto;
+    position: relative;
 }
 
 .modal-overlay.show .modal {
@@ -2739,9 +2743,21 @@ h1, h2, h3, h4, h5, h6 {
     }
     
     /* Melhorar modal em mobile */
+    .modal {
+        width: 95vw;
+        max-width: 95vw;
+        max-height: 85vh;
+        border-radius: var(--border-radius-md);
+        margin: var(--spacing-sm);
+    }
+    
     .modal-content {
-        max-height: 90vh;
+        max-height: 85vh;
         overflow-y: auto;
+    }
+    
+    .modal-overlay {
+        padding: var(--spacing-sm);
     }
     
     /* Melhorar dropdown mobile */
@@ -3414,10 +3430,15 @@ html, body {
 /* Carrinho mobile */
 @media (max-width: 768px) {
     .mini-cart {
-        right: 0;
+        right: -100%;
         left: auto;
-        width: 100%;
+        width: 90vw;
         max-width: 350px;
+        box-shadow: -2px 0 10px rgba(0,0,0,0.2);
+    }
+    
+    .mini-cart.open {
+        right: 0;
     }
 }
 
@@ -3699,5 +3720,230 @@ img[loading="lazy"] {
     
     a[href]::after {
         content: " (" attr(href) ")";
+    }
+}
+
+
+/* ==============================================
+   CORREÇÕES ADICIONAIS MOBILE
+   ============================================== */
+
+/* Garantir que overlays não cubram tudo em mobile */
+@media (max-width: 768px) {
+    /* Backdrop para menu mobile */
+    .mobile-menu-backdrop {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1999;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+    }
+    
+    .mobile-menu-backdrop.show {
+        opacity: 1;
+        visibility: visible;
+    }
+    
+    /* Garantir que body não scroll quando modal aberto */
+    body.modal-open,
+    body.menu-open {
+        overflow: hidden;
+        position: fixed;
+        width: 100%;
+    }
+    
+    /* Corrigir z-index hierarchy */
+    .mobile-menu {
+        z-index: 2000;
+    }
+    
+    .mini-cart {
+        z-index: 2001;
+    }
+    
+    .modal-overlay {
+        z-index: 3000;
+    }
+    
+    .loader-overlay {
+        z-index: 5000;
+    }
+    
+    /* Melhorar carrinho em telas pequenas */
+    .cart-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-sm);
+    }
+    
+    .cart-item-image {
+        width: 100%;
+        max-width: 150px;
+    }
+    
+    .cart-item-details {
+        width: 100%;
+    }
+    
+    .cart-item-actions {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    /* Melhorar formulários em modais mobile */
+    .modal .form-group {
+        margin-bottom: var(--spacing-md);
+    }
+    
+    .modal .form-group input,
+    .modal .form-group textarea,
+    .modal .form-group select {
+        width: 100%;
+        font-size: 16px;
+        padding: 12px;
+    }
+    
+    /* Melhorar botões em modais mobile */
+    .modal .btn {
+        width: 100%;
+        margin-bottom: var(--spacing-sm);
+    }
+    
+    .modal .btn:last-child {
+        margin-bottom: 0;
+    }
+    
+    /* Corrigir header do modal */
+    .modal-header {
+        padding: var(--spacing-md);
+        position: sticky;
+        top: 0;
+        background: var(--color-white);
+        z-index: 10;
+        border-bottom: 1px solid var(--color-gray-200);
+    }
+    
+    .modal-body {
+        padding: var(--spacing-md);
+    }
+    
+    .modal-footer {
+        padding: var(--spacing-md);
+        position: sticky;
+        bottom: 0;
+        background: var(--color-white);
+        border-top: 1px solid var(--color-gray-200);
+    }
+    
+    /* Melhorar search overlay mobile */
+    .search-overlay {
+        padding: var(--spacing-lg) var(--spacing-md);
+    }
+    
+    .search-input {
+        width: 100%;
+        font-size: 16px;
+        padding: 15px;
+    }
+    
+    /* Corrigir dropdown em mobile */
+    .dropdown-menu {
+        position: static;
+        width: 100%;
+        box-shadow: none;
+        border: 1px solid var(--color-gray-200);
+    }
+    
+    /* Melhorar admin em mobile */
+    .admin-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-sm);
+    }
+    
+    .admin-actions {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-xs);
+    }
+    
+    .admin-actions .btn {
+        width: 100%;
+    }
+    
+    /* Corrigir tabelas em mobile */
+    .table-responsive {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        margin-bottom: var(--spacing-md);
+    }
+    
+    table {
+        min-width: 600px;
+    }
+    
+    /* Melhorar portfolio em mobile */
+    .portfolio-grid {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-md);
+    }
+    
+    .portfolio-item {
+        height: 300px;
+    }
+    
+    /* Melhorar produtos em mobile */
+    .product-grid {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-md);
+    }
+    
+    /* Melhorar serviços em mobile */
+    .services-grid {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-md);
+    }
+    
+    /* Corrigir hero em mobile */
+    .hero {
+        min-height: 60vh;
+        padding: var(--spacing-xl) var(--spacing-md);
+    }
+    
+    .hero h1 {
+        font-size: 2rem;
+    }
+    
+    .hero p {
+        font-size: 1rem;
+    }
+}
+
+/* Correções específicas para telas muito pequenas */
+@media (max-width: 375px) {
+    .modal {
+        width: 100vw;
+        max-width: 100vw;
+        border-radius: 0;
+        margin: 0;
+    }
+    
+    .modal-overlay {
+        padding: 0;
+    }
+    
+    .mini-cart {
+        width: 100vw;
+        max-width: 100vw;
+    }
+    
+    .mobile-menu {
+        width: 100vw;
+        max-width: 100vw;
     }
 }
