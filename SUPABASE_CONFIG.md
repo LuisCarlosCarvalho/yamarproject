@@ -29,7 +29,7 @@ Edite o arquivo `js/supabase-config.js` e substitua a URL:
 ```javascript
 const SUPABASE_CONFIG = {
   url: 'https://SEU-PROJETO.supabase.co', // ← Substitua aqui
-  key: 'sbp_7a9ad3f79c7feadbc5e163ff1bba998de10cd16d',
+  key: 'sbp_<YOUR_ANON_KEY_HERE>',
   // ...
 };
 ```

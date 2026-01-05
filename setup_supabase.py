@@ -4,6 +4,7 @@ Ajuda a configurar o projeto com Supabase
 """
 
 import json
+import os
 import re
 from pathlib import Path
 
@@ -57,12 +58,13 @@ def update_config_file(project_url, api_key):
         content
     )
     
-    # Substituir key (caso seja diferente)
-    content = re.sub(
-        r"key:\s*['\"][^'\"]+['\"]",
-        f"key: '{api_key}'",
-        content
-    )
+    # Substituir key (caso seja diferente) apenas se uma chave foi fornecida
+    if api_key:
+        content = re.sub(
+            r"key:\s*['\"][^'\"]+['\"]",
+            f"key: '{api_key}'",
+            content
+        )
     
     # Salvar arquivo
     config_file.write_text(content, encoding='utf-8')
@@ -127,17 +129,28 @@ def check_files():
 
 def show_token_info(token):
     """Exibe informações sobre o token"""
-    print(f"\n🔑 Token configurado: {token[:20]}...{token[-10:]}")
-    print("   ⚠️  IMPORTANTE: Este é um token público (anon key)")
-    print("   ⚠️  NÃO compartilhe o 'service_role_key'")
-    print("   ✅ Este token é seguro para usar no frontend")
+    if token:
+        print(f"\n🔑 Token configurado: {token[:20]}...{token[-10:]}")
+        print("   ⚠️  IMPORTANTE: Este é um token público (anon key)")
+        print("   ⚠️  NÃO compartilhe o 'service_role_key'")
+        print("   ✅ Este token é seguro para usar no frontend")
+    else:
+        print("\n🔑 Nenhuma chave fornecida (variável de ambiente não definida).\n   Será necessário configurar 'js/supabase-config.js' manualmente ou exportar SUPABASE_ANON_KEY.")
 
 def main():
     """Função principal"""
     print_banner()
     
     # Token fornecido pelo usuário
-    api_key = "sbp_7a9ad3f79c7feadbc5e163ff1bba998de10cd16d"
+    api_key = os.environ.get("SUPABASE_ANON_KEY") or os.environ.get("SUPABASE_KEY")
+    if not api_key:
+        # Se não definido, solicitar ao usuário (opcional)
+        try:
+            entered = input("Cole a anon key do Supabase (ou pressione ENTER para pular): ").strip()
+        except Exception:
+            entered = ""
+        if entered:
+            api_key = entered
     
     # Verificar arquivos
     print_step(1, "Verificando arquivos")
