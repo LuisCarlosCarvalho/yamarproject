@@ -335,6 +335,32 @@ function applySiteSettings() {
     });
   }
 
+  // Helper: aplica imagem após pré-load, usa fallback se necessário
+  function applyImageSafe(el, src, fallback) {
+    try {
+      if (!el) return;
+      const isImg = el.tagName === 'IMG';
+      const tester = new Image();
+      tester.onload = function() {
+        if (isImg) el.src = src; else el.style.backgroundImage = `url('${src}')`;
+        el.style.display = 'block';
+        console.log('✅ Imagem pré-carregada aplicada:', src);
+      };
+      tester.onerror = function() {
+        console.warn('⚠️ Falha ao pré-carregar imagem:', src, '— aplicando fallback', fallback);
+        if (isImg) el.src = fallback; else el.style.backgroundImage = `url('${fallback}')`;
+        el.style.display = 'block';
+      };
+      tester.src = src;
+    } catch (e) {
+      console.warn('Erro em applyImageSafe:', e);
+      try {
+        if (el.tagName === 'IMG') el.src = fallback;
+        else el.style.backgroundImage = `url('${fallback}')`;
+      } catch (er) { /* ignore */ }
+    }
+  }
+
   // Aplicar foto do rodapé
   const footerAvatars = document.querySelectorAll("#footerAvatar, .footer-avatar");
   if (footerAvatars.length > 0 && (settings.footerAvatarUrl || settings.aboutImageUrl)) {
@@ -345,20 +371,9 @@ function applySiteSettings() {
       console.warn('⚠️ Avatar footer: URL inválida detectada, aplicando fallback');
       avatarUrl = 'assets/images/logo.png';
     }
-    console.log('👤 Aplicando footer avatar:', avatarUrl, 'em', footerAvatars.length, 'elementos');
-    footerAvatars.forEach(img => {
-      img.src = avatarUrl;
-      img.style.display = 'block';
-      img.onload = function() {
-        console.log('✅ Footer avatar carregou:', this.src);
-      };
-      img.onerror = function() {
-        console.error('❌ Erro ao carregar footer avatar:', this.src);
-        this.onerror = null;
-        // Tentar fallback para imagem padrão do projeto
-        this.src = 'assets/images/logo.png';
-        this.style.display = 'block';
-      };
+    console.log('👤 Aplicando footer avatar (pré-load):', avatarUrl, 'em', footerAvatars.length, 'elementos');
+    footerAvatars.forEach(el => {
+      applyImageSafe(el, avatarUrl, 'assets/images/logo.png');
     });
   } else {
     console.log('⚠️ Footer: Nenhuma URL configurada ou elementos não encontrados');
@@ -368,19 +383,9 @@ function applySiteSettings() {
   const welcomeAvatars = document.querySelectorAll("#welcomeAvatar, .welcome-avatar");
   if (welcomeAvatars.length > 0 && settings.welcomeAvatarUrl) {
     const welcomeUrl = getImageUrl({imagemUrl: settings.welcomeAvatarUrl});
-    console.log('👤 Aplicando welcome avatar:', welcomeUrl, 'em', welcomeAvatars.length, 'elementos');
-    welcomeAvatars.forEach(img => {
-      img.src = welcomeUrl;
-      img.style.display = 'block';
-      img.onload = function() {
-        console.log('✅ Welcome avatar carregou:', this.src);
-      };
-      img.onerror = function() {
-        console.error('❌ Erro ao carregar welcome avatar:', this.src);
-        this.onerror = null;
-        this.src = 'assets/images/logo.png';
-        this.style.display = 'block';
-      };
+    console.log('👤 Aplicando welcome avatar (pré-load):', welcomeUrl, 'em', welcomeAvatars.length, 'elementos');
+    welcomeAvatars.forEach(el => {
+      applyImageSafe(el, welcomeUrl, 'assets/images/logo.png');
     });
   } else {
     console.log('⚠️ Welcome: Nenhuma URL configurada ou elementos não encontrados');
@@ -390,19 +395,9 @@ function applySiteSettings() {
   const aboutImages = document.querySelectorAll("#aboutImage, .about-image");
   if (aboutImages.length > 0 && settings.aboutImageUrl) {
     const aboutUrl = getImageUrl({imagemUrl: settings.aboutImageUrl});
-    console.log('👤 Aplicando about image:', aboutUrl, 'em', aboutImages.length, 'elementos');
-    aboutImages.forEach(img => {
-      img.src = aboutUrl;
-      img.style.display = 'block';
-      img.onload = function() {
-        console.log('✅ About image carregou:', this.src);
-      };
-      img.onerror = function() {
-        console.error('❌ Erro ao carregar about image:', this.src);
-        this.onerror = null;
-        this.src = 'assets/images/capa.png';
-        this.style.display = 'block';
-      };
+    console.log('👤 Aplicando about image (pré-load):', aboutUrl, 'em', aboutImages.length, 'elementos');
+    aboutImages.forEach(el => {
+      applyImageSafe(el, aboutUrl, 'assets/images/capa.png');
     });
   } else {
     console.log('⚠️ About: Nenhuma URL configurada ou elementos não encontrados');
