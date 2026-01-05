@@ -132,9 +132,9 @@
 
         <section class="section">
             <div class="container">
-                <div class="grid grid-2" style="align-items: center; gap: 3rem;">
+                    <div class="grid grid-2" style="align-items: center; gap: 3rem;">
                     <div>
-                        <img src="images/capa.png" alt="Yemar Makeup Artist" id="aboutImage" style="width: 100%; border-radius: 4px;">
+                        <img src="assets/images/capa.png" alt="Yemar Makeup Artist" id="aboutImage" style="width: 100%; border-radius: 4px;">
                     </div>
                     <div>
                         <h2 style="font-size: 2rem; margin-bottom: 1.5rem;">Olá, sou a Yemar!</h2>
@@ -244,13 +244,8 @@
                 </div>
             </div>
             <div class="footer-bottom">
-<<<<<<< HEAD
-                <p>&copy; © 2025 YemarMakeupArtist. Todos os direitos reservados.</p>
-                <p class="prototype-notice">© FSL Solution Digital. https://fslsolution.com</p>
-=======
                 <p>&copy; 2025 YemarMakeupArtist. Todos os direitos reservados.</p>
-                <p class="prototype-notice">© FSL Solution Digital. https://fslsolution.com </p>
->>>>>>> b0806521698c0978c9ff3494b5ac37a87c58f61b
+                <p class="prototype-notice">© FSL Solution Digital. https://fslsolution.com</p>
             </div>
         </div>
     </footer>
@@ -264,7 +259,9 @@
             const settings = getSiteSettings();
             const aboutImage = document.getElementById('aboutImage');
             if (aboutImage && settings.aboutImageUrl) {
-                aboutImage.src = settings.aboutImageUrl;
+                const aboutUrl = getImageUrl({ imagemUrl: settings.aboutImageUrl }, 'assets/images/placeholder.jpg');
+                aboutImage.src = aboutUrl;
+                aboutImage.onerror = function() { this.onerror = null; this.src = 'assets/images/placeholder.jpg'; };
             }
         });
     </script>

@@ -323,7 +323,7 @@ function applySiteSettings() {
   // Aplicar logo imagem se existir
   if (settings.logoUrl) {
     const logoImgs = document.querySelectorAll(".logo-img");
-    const logoUrl = getImageUrl({imagemUrl: settings.logoUrl}, 'assets/images/logo-default.png');
+    const logoUrl = getImageUrl({imagemUrl: settings.logoUrl}, 'assets/images/logo.png/logo-default.png');
     console.log('🖼️ Aplicando logo:', logoUrl, 'em', logoImgs.length, 'elementos');
     logoImgs.forEach((img) => {
       img.src = logoUrl;
@@ -397,6 +397,34 @@ function applySiteSettings() {
     });
   } else {
     console.log('⚠️ About: Nenhuma URL configurada ou elementos não encontrados');
+  }
+
+  // Debug overlay para URLs de imagem (apenas com ?debugImages=1)
+  try {
+    if (window.location.search.includes('debugImages=1')) {
+      const settingsDebug = getSiteSettings();
+      const dbg = document.createElement('div');
+      dbg.id = 'image-debug-overlay';
+      dbg.style.position = 'fixed';
+      dbg.style.right = '12px';
+      dbg.style.bottom = '12px';
+      dbg.style.background = 'rgba(0,0,0,0.75)';
+      dbg.style.color = '#fff';
+      dbg.style.padding = '10px 12px';
+      dbg.style.borderRadius = '8px';
+      dbg.style.zIndex = '99999';
+      dbg.style.fontSize = '12px';
+      dbg.style.maxWidth = '320px';
+      dbg.innerHTML = `
+        <strong>Image Debug</strong><br>
+        welcome: ${getImageUrl({imagemUrl: settingsDebug.welcomeAvatarUrl})}<br>
+        about: ${getImageUrl({imagemUrl: settingsDebug.aboutImageUrl})}<br>
+        footer: ${getImageUrl({imagemUrl: settingsDebug.footerAvatarUrl})}
+      `;
+      document.body.appendChild(dbg);
+    }
+  } catch (e) {
+    console.warn('Erro ao criar debug overlay:', e);
   }
 }
 
