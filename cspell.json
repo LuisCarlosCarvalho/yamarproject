@@ -19,6 +19,7 @@
     "Yemar",
     "Yamarproject",
     "supabase",
+    "Supabase",
     "supabaseSeed",
     "SEED_SITE_SETTINGS",
     "capa",
@@ -36,6 +37,19 @@
     "WhatsApp",
     "RLS",
     "PWA",
-    "supabase-config"
+    "supabase-config",
+    "SUPABASE_CONFIG",
+    "SEU-PROJETO",
+    "sbp_<YOUR_ANON_KEY_HERE>",
+    "sbp",
+    "service_role_key",
+    "anon",
+    "supabase-seed",
+    "supabase-db",
+    "supabase-schema",
+    "imgur",
+    "syncSupabaseToLocal",
+    "syncLocalToSupabase",
+    "supabase-js"
   ]
 }
