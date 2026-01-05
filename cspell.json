@@ -1,0 +1,41 @@
+{
+  "version": "0.2",
+  "language": "pt-BR",
+  "ignorePaths": [
+    "node_modules/**",
+    ".git/**",
+    "assets/**",
+    "images/**",
+    "css/**",
+    "dist/**",
+    "*.min.js"
+  ],
+  "ignoreRegExpList": [
+    "\\$\\{[^}]*\\}",
+    "https?://[^\\s'\"<>()]+",
+    "<[^>]+>"
+  ],
+  "words": [
+    "Yemar",
+    "Yamarproject",
+    "supabase",
+    "supabaseSeed",
+    "SEED_SITE_SETTINGS",
+    "capa",
+    "conta",
+    "servico",
+    "servicos",
+    "produtos",
+    "workshop",
+    "workshops",
+    "marcacao",
+    "marcação",
+    "conteudo",
+    "encomenda",
+    "marcacoes",
+    "WhatsApp",
+    "RLS",
+    "PWA",
+    "supabase-config"
+  ]
+}

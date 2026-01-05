@@ -1,0 +1,12 @@
+{
+  "cSpell.enabled": true,
+  "cSpell.language": "pt-BR",
+  "cSpell.useGitignore": true,
+  "cSpell.ignorePaths": [
+    "images/**",
+    "assets/**",
+    "css/**",
+    "dist/**",
+    "node_modules/**"
+  ]
+}
