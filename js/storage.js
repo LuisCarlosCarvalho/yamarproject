@@ -1325,6 +1325,18 @@ function updateSiteSettings(settings) {
   const current = getSiteSettings();
   const updated = { ...current, ...settings };
   setData("siteSettings", updated);
+  // Tentativa assíncrona de persistir no Supabase se disponível
+  try {
+    if (typeof upsertSiteSettingsToSupabase === 'function') {
+      upsertSiteSettingsToSupabase(updated).then(() => {
+        console.log('🔺 Site settings sincronizadas para Supabase');
+      }).catch((e) => {
+        console.warn('⚠️ Falha ao sincronizar siteSettings no Supabase:', e);
+      });
+    }
+  } catch (e) {
+    console.warn('⚠️ Erro ao tentar enviar siteSettings ao Supabase:', e);
+  }
   return updated;
 }
 
