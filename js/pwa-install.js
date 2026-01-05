@@ -138,7 +138,7 @@ class PWAInstall {
     banner.innerHTML = `
       <div class="pwa-banner-content">
         <div class="pwa-banner-icon">
-          <img src="/assets/images/icon-96.png" alt="Yamar App" width="48" height="48" onerror="console.log('[PWA] Erro ao carregar ícone')">
+          <img src="assets/images/icon-96.png" alt="Yamar App" width="48" height="48" onerror="this.onerror=null;this.src='assets/images/logo.png';console.log('[PWA] Erro ao carregar ícone, fallback aplicado')">
         </div>
         <div class="pwa-banner-text">
           <h3>Instalar Yamar App</h3>

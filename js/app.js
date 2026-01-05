@@ -350,7 +350,9 @@ function applySiteSettings() {
       img.onerror = function() {
         console.error('❌ Erro ao carregar footer avatar:', this.src);
         this.onerror = null;
-        this.style.display = 'none';
+        // Tentar fallback para imagem padrão do projeto
+        this.src = 'assets/images/logo.png';
+        this.style.display = 'block';
       };
     });
   } else {
@@ -371,7 +373,8 @@ function applySiteSettings() {
       img.onerror = function() {
         console.error('❌ Erro ao carregar welcome avatar:', this.src);
         this.onerror = null;
-        this.style.display = 'none';
+        this.src = 'assets/images/logo.png';
+        this.style.display = 'block';
       };
     });
   } else {
@@ -392,7 +395,8 @@ function applySiteSettings() {
       img.onerror = function() {
         console.error('❌ Erro ao carregar about image:', this.src);
         this.onerror = null;
-        this.style.display = 'none';
+        this.src = 'assets/images/capa.png';
+        this.style.display = 'block';
       };
     });
   } else {
