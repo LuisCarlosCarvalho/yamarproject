@@ -373,6 +373,16 @@ function createSecureImage(src, alt = '', className = '') {
   img.alt = sanitizeHTML(alt);
   // Pré-carrega a src e aplica fallback se necessário
   (function(preloadSrc){
+    // If a global applyImageSafe exists (from ui.js), use it for consistent fallback handling
+    if (typeof window.applyImageSafe === 'function') {
+      try {
+        window.applyImageSafe(img, preloadSrc, 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"%3E%3Crect fill="%23ddd" width="100" height="100"/%3E%3Ctext x="50" y="50" text-anchor="middle" dy=".3em" fill="%23999"%3E?%3C/text%3E%3C/svg%3E');
+        return;
+      } catch (e) {
+        console.warn('applyImageSafe failed, falling back to local preload:', e);
+      }
+    }
+
     const tester = new Image();
     tester.onload = function() { img.src = preloadSrc; };
     tester.onerror = function() { img.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"%3E%3Crect fill="%23ddd" width="100" height="100"/%3E%3Ctext x="50" y="50" text-anchor="middle" dy=".3em" fill="%23999"%3E?%3C/text%3E%3C/svg%3E'; };
