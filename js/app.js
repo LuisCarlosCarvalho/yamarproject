@@ -369,6 +369,18 @@ function applySiteSettings() {
     console.log('👤 Aplicando footer avatar (pré-load):', avatarUrl, 'em', footerAvatars.length, 'elementos');
     footerAvatars.forEach(el => {
       applyImageSafe(el, avatarUrl, 'assets/images/logo.png');
+      // Se após 1s a imagem ainda for o fallback, tentar um reload com cache-bust
+      setTimeout(() => {
+        try {
+          const current = (el.tagName === 'IMG') ? el.src : (el.style.backgroundImage || '');
+          const fallback = (el.tagName === 'IMG') ? location.origin + '/assets/images/logo.png' : "url('assets/images/logo.png')";
+          if (current && current.indexOf('logo.png') !== -1) {
+            const bust = avatarUrl + (avatarUrl.includes('?') ? '&' : '?') + 'cb=' + Date.now();
+            console.log('🔁 Footer retry com cache-bust:', bust);
+            applyImageSafe(el, bust, 'assets/images/logo.png');
+          }
+        } catch (e) { console.warn('Erro no retry do footer avatar:', e); }
+      }, 1000);
     });
   } else {
     console.log('⚠️ Footer: Nenhuma URL configurada ou elementos não encontrados');
@@ -416,9 +428,13 @@ function applySiteSettings() {
       dbg.style.maxWidth = '320px';
       dbg.innerHTML = `
         <strong>Image Debug</strong><br>
-        welcome: ${getImageUrl({imagemUrl: settingsDebug.welcomeAvatarUrl})}<br>
-        about: ${getImageUrl({imagemUrl: settingsDebug.aboutImageUrl})}<br>
-        footer: ${getImageUrl({imagemUrl: settingsDebug.footerAvatarUrl})}
+        raw welcome: ${settingsDebug.welcomeAvatarUrl || '(empty)'}<br>
+        resolved welcome: ${getImageUrl({imagemUrl: settingsDebug.welcomeAvatarUrl})}<br>
+        raw about: ${settingsDebug.aboutImageUrl || '(empty)'}<br>
+        resolved about: ${getImageUrl({imagemUrl: settingsDebug.aboutImageUrl})}<br>
+        raw footer: ${settingsDebug.footerAvatarUrl || '(empty)'}<br>
+        resolved footer: ${getImageUrl({imagemUrl: settingsDebug.footerAvatarUrl})}<br>
+        time: ${new Date().toISOString()}
       `;
       document.body.appendChild(dbg);
     }
