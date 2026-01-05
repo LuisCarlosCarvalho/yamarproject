@@ -10,30 +10,46 @@ console.log('🚀 app.js CARREGADO - Versão:', new Date().toISOString());
 // ============================================
 
 document.addEventListener("DOMContentLoaded", function () {
-  console.log('✅ DOMContentLoaded DISPARADO');
-  // Inicializar storage/seed
-  initializeSeed();
+  (async function() {
+    console.log('✅ DOMContentLoaded DISPARADO');
+    // Inicializar storage/seed
+    initializeSeed();
 
-  // Atualizar UI baseado na sessão
-  updateAuthUI();
+    // Tentar sincronizar configurações do Supabase (se disponível)
+    try {
+      if (typeof fetchSiteSettingsFromSupabase === 'function') {
+        const remote = await fetchSiteSettingsFromSupabase();
+        if (remote && typeof remote === 'object') {
+          // Salva no localStorage para uso offline e aplica
+          setData('siteSettings', remote);
+          console.log('🔁 Site settings sincronizadas a partir do Supabase');
+        }
+      }
+    } catch (e) {
+      console.warn('⚠️ Falha ao sincronizar com Supabase:', e);
+    }
 
-  // Atualizar badge do carrinho
-  updateCartBadge();
+    // Atualizar UI baseado na sessão
+    updateAuthUI();
 
-  // Inicializar menu mobile
-  initMobileMenu();
+    // Atualizar badge do carrinho
+    updateCartBadge();
 
-  // Inicializar dropdowns
-  initDropdowns();
+    // Inicializar menu mobile
+    initMobileMenu();
 
-  // Inicializar pesquisa
-  initSearch();
+    // Inicializar dropdowns
+    initDropdowns();
 
-  // Aplicar configurações do site
-  applySiteSettings();
+    // Inicializar pesquisa
+    initSearch();
 
-  // Verificar proteção de rotas
-  checkRouteProtection();
+    // Aplicar configurações do site
+    applySiteSettings();
+
+    // Verificar proteção de rotas
+    checkRouteProtection();
+  })();
 });
 
 // ============================================
