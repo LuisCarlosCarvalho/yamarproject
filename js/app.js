@@ -323,7 +323,7 @@ function applySiteSettings() {
   // Aplicar logo imagem se existir
   if (settings.logoUrl) {
     const logoImgs = document.querySelectorAll(".logo-img");
-    const logoUrl = getImageUrl({imagemUrl: settings.logoUrl}, 'assets/images/logo.png/logo-default.png');
+    const logoUrl = getImageUrl({imagemUrl: settings.logoUrl}, 'assets/images/logo.png');
     console.log('🖼️ Aplicando logo:', logoUrl, 'em', logoImgs.length, 'elementos');
     logoImgs.forEach((img) => {
       img.src = logoUrl;
@@ -339,7 +339,12 @@ function applySiteSettings() {
   const footerAvatars = document.querySelectorAll("#footerAvatar, .footer-avatar");
   if (footerAvatars.length > 0 && (settings.footerAvatarUrl || settings.aboutImageUrl)) {
     const avatarUrlRaw = settings.footerAvatarUrl || settings.aboutImageUrl;
-    const avatarUrl = getImageUrl({imagemUrl: avatarUrlRaw});
+    let avatarUrl = getImageUrl({imagemUrl: avatarUrlRaw});
+    // Sanitizar URLs conhecidas inválidas que possam ter sido introduzidas
+    if (!avatarUrl || typeof avatarUrl !== 'string' || avatarUrl.includes('logo-default.png') || avatarUrl.includes('logo.png/logo-default.png')) {
+      console.warn('⚠️ Avatar footer: URL inválida detectada, aplicando fallback');
+      avatarUrl = 'assets/images/logo.png';
+    }
     console.log('👤 Aplicando footer avatar:', avatarUrl, 'em', footerAvatars.length, 'elementos');
     footerAvatars.forEach(img => {
       img.src = avatarUrl;
