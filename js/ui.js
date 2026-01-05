@@ -75,14 +75,50 @@ function applyImageWithFallback(selector, imageUrl) {
     if (el.tagName === 'IMG') {
       el.src = imageUrl;
       // Fallback se imagem falhar ao carregar
-      el.onerror = function() {
-        this.onerror = null; // Previne loop infinito
-        this.style.display = 'none'; // Esconde imagem quebrada
-      };
+            el.onerror = function() {
+                this.onerror = null; // Previne loop infinito
+                this.style.display = 'none'; // Esconde imagem quebrada
+            };
     } else {
       el.style.backgroundImage = `url(${imageUrl})`;
     }
   });
+}
+
+/**
+ * Aplica uma imagem de forma segura: pré-carrega e aplica fallback se necessário.
+ * Aceita seletor CSS, NodeList, array de elementos ou elemento único.
+ * @param {string|Element|NodeList|Array} target
+ * @param {string} src
+ * @param {string} fallback
+ */
+function applyImageSafe(target, src, fallback = 'assets/images/placeholder.jpg') {
+    function applyToElement(el) {
+        if (!el) return;
+        const isImg = el.tagName === 'IMG';
+        const tester = new Image();
+        tester.onload = function() {
+            try {
+                if (isImg) el.src = src; else el.style.backgroundImage = `url('${src}')`;
+                el.style.display = 'block';
+            } catch (e) { /* ignore */ }
+        };
+        tester.onerror = function() {
+            try {
+                if (isImg) el.src = fallback; else el.style.backgroundImage = `url('${fallback}')`;
+                el.style.display = 'block';
+            } catch (e) { /* ignore */ }
+        };
+        tester.src = src;
+    }
+
+    if (typeof target === 'string') {
+        document.querySelectorAll(target).forEach(applyToElement);
+    } else if (target instanceof Element) {
+        applyToElement(target);
+    } else if (NodeList.prototype.isPrototypeOf(target) || Array.isArray(target)) {
+        Array.from(target).forEach(applyToElement);
+    }
 }
 
 // ============================================
