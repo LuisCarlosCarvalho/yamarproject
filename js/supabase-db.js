@@ -18,6 +18,67 @@ function checkSupabaseClient() {
   return client;
 }
 
+// ============================================
+// SITE SETTINGS SYNC
+// ============================================
+
+/**
+ * Busca as configurações do site na tabela `configuracoes` (chave 'site_settings' ou 'site_info')
+ */
+async function fetchSiteSettingsFromSupabase() {
+  try {
+    const client = checkSupabaseClient();
+
+    // Primeiro tenta chave 'site_settings'
+    let { data, error } = await client
+      .from('configuracoes')
+      .select('valor')
+      .eq('chave', 'site_settings')
+      .limit(1)
+      .single();
+
+    if (error || !data) {
+      // fallback para 'site_info'
+      const res = await client
+        .from('configuracoes')
+        .select('valor')
+        .eq('chave', 'site_info')
+        .limit(1)
+        .single();
+      if (res.error || !res.data) return null;
+      return res.data.valor || null;
+    }
+
+    return data.valor || null;
+  } catch (err) {
+    handleSupabaseError(err, 'fetchSiteSettingsFromSupabase');
+    return null;
+  }
+}
+
+/**
+ * Upsert das configurações do site na tabela `configuracoes` com chave 'site_settings'
+ * @param {Object} settings
+ */
+async function upsertSiteSettingsToSupabase(settings) {
+  try {
+    const client = checkSupabaseClient();
+    const payload = { chave: 'site_settings', valor: settings };
+    const { data, error } = await client
+      .from('configuracoes')
+      .upsert(payload, { onConflict: 'chave' })
+      .select()
+      .single();
+
+    if (error) throw error;
+    console.log('✅ Site settings upserted to Supabase');
+    return data;
+  } catch (err) {
+    handleSupabaseError(err, 'upsertSiteSettingsToSupabase');
+    return null;
+  }
+}
+
 /**
  * Handler genérico de erros
  */
