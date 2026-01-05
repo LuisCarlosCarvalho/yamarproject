@@ -14,25 +14,55 @@
  * @returns {string} URL normalizada
  */
 function getImageUrl(item, fallback = 'assets/images/placeholder.jpg') {
-  // Se item não é um objeto ou é null/undefined, retorna fallback
-  if (!item || typeof item !== 'object') {
-    return fallback;
-  }
+    // Se item não é um objeto ou é null/undefined, retorna fallback
+    if (!item || typeof item !== 'object') {
+        return fallback;
+    }
 
-  // Prioridade: imagemUrl > imagem
-  const imageField = item.imagemUrl || item.imagem;
+    // Prioridade: imagemUrl > imagem
+    let imageField = item.imagemUrl || item.imagem;
 
-  // Se não tem imagem, retorna fallback
-  if (!imageField) return fallback;
+    // Se não tem imagem, retorna fallback
+    if (!imageField) return fallback;
 
-  // Se é URL externa (começa com http:// ou https://), retorna diretamente
-  if (imageField.startsWith('http://') || imageField.startsWith('https://')) {
+    // Se é URL externa (começa com http:// ou https://), retorna diretamente
+    if (imageField.startsWith('http://') || imageField.startsWith('https://')) {
+        return imageField;
+    }
+
+    // Normalizar caminhos locais comuns:
+    // - já com 'assets/' -> usar direto
+    // - começando por '/assets' -> usar direto
+    // - começando por 'images/' -> prefixar com 'assets/'
+    // - começando por './images/' ou './assets/images/' -> normalizar para 'assets/images/...'
+
+    // Trim possíveis './' prefixos
+    if (imageField.startsWith('./')) {
+        imageField = imageField.replace(/^\.\//, '');
+    }
+
+    if (imageField.startsWith('assets/')) {
+        return imageField;
+    }
+
+    if (imageField.startsWith('/assets/')) {
+        // Mantém leading slash (será resolvido pelo navegador)
+        return imageField;
+    }
+
+    if (imageField.startsWith('images/')) {
+        return `assets/${imageField}`;
+    }
+
+    // Se for apenas um nome de ficheiro (ex: 'capa.png') -> assumimos pasta assets/images
+    if (!imageField.includes('/')) {
+        return `assets/images/${imageField}`;
+    }
+
+    // Caso geral: devolve o valor tal como está (relativo)
     return imageField;
-  }
-
-  // Se é caminho local, retorna como está (relativo à raiz do site)
-  return imageField;
 }
+
 
 /**
  * Aplica imagem com fallback em elementos

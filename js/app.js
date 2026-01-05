@@ -733,7 +733,9 @@ function loadHomeContent() {
   const settings = getSiteSettings();
   const welcomeAvatar = document.getElementById("welcomeAvatar");
   if (welcomeAvatar && settings.welcomeAvatarUrl) {
-    welcomeAvatar.src = settings.welcomeAvatarUrl;
+    const welcomeUrl = getImageUrl({ imagemUrl: settings.welcomeAvatarUrl }, 'assets/images/placeholder.jpg');
+    welcomeAvatar.src = welcomeUrl;
+    welcomeAvatar.onerror = function() { this.onerror = null; this.src = 'assets/images/placeholder.jpg'; };
   }
 
   // Carregar serviços
