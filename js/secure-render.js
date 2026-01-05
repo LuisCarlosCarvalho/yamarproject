@@ -369,8 +369,15 @@ function createSecureBadge(status) {
 function createSecureImage(src, alt = '', className = '') {
   const img = document.createElement('img');
   
-  img.src = sanitizeURL(src, 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg"%3E%3C/svg%3E');
+  const safeSrc = sanitizeURL(src, 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg"%3E%3C/svg%3E');
   img.alt = sanitizeHTML(alt);
+  // Pré-carrega a src e aplica fallback se necessário
+  (function(preloadSrc){
+    const tester = new Image();
+    tester.onload = function() { img.src = preloadSrc; };
+    tester.onerror = function() { img.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"%3E%3Crect fill="%23ddd" width="100" height="100"/%3E%3Ctext x="50" y="50" text-anchor="middle" dy=".3em" fill="%23999"%3E?%3C/text%3E%3C/svg%3E'; };
+    tester.src = preloadSrc;
+  })(safeSrc);
   
   if (className) {
     img.className = sanitizeHTML(className);

@@ -325,13 +325,8 @@ function applySiteSettings() {
     const logoImgs = document.querySelectorAll(".logo-img");
     const logoUrl = getImageUrl({imagemUrl: settings.logoUrl}, 'assets/images/logo.png');
     console.log('🖼️ Aplicando logo:', logoUrl, 'em', logoImgs.length, 'elementos');
-    logoImgs.forEach((img) => {
-      img.src = logoUrl;
-      img.style.display = "block";
-      img.onerror = function() {
-        this.onerror = null;
-        this.style.display = "none";
-      };
+    logoImgs.forEach((el) => {
+      applyImageSafe(el, logoUrl, 'assets/images/logo.png');
     });
   }
 
@@ -878,13 +873,11 @@ function loadServiceDetail() {
   // Preencher página com imagem normalizada
   const imageUrl = getImageUrl(service, 'assets/images/servico-default.jpg');
   const serviceImages = document.querySelectorAll("#serviceImage, .service-image");
-  serviceImages.forEach(img => {
-    img.src = imageUrl;
-    img.alt = service.nome || service.titulo;
-    img.onerror = function() {
-      this.onerror = null;
-      this.src = 'assets/images/placeholder.jpg';
-    };
+  serviceImages.forEach(el => {
+    if (el) {
+      el.alt = service.nome || service.titulo;
+      applyImageSafe(el, imageUrl, 'assets/images/placeholder.jpg');
+    }
   });
   
   document.getElementById("serviceCategory").textContent =
@@ -931,13 +924,11 @@ function loadWorkshopDetail() {
   // Preencher página com imagem normalizada
   const imageUrl = getImageUrl(workshop, 'assets/images/workshop-default.jpg');
   const workshopImages = document.querySelectorAll("#workshopImage, .workshop-image");
-  workshopImages.forEach(img => {
-    img.src = imageUrl;
-    img.alt = workshop.titulo;
-    img.onerror = function() {
-      this.onerror = null;
-      this.src = 'assets/images/placeholder.jpg';
-    };
+  workshopImages.forEach(el => {
+    if (el) {
+      el.alt = workshop.titulo;
+      applyImageSafe(el, imageUrl, 'assets/images/placeholder.jpg');
+    }
   });
   
   document.getElementById("workshopModality").textContent = workshop.modalidade;
@@ -1033,13 +1024,11 @@ function loadProductDetail() {
   // Preencher página com imagem normalizada
   const imageUrl = getImageUrl(product, 'assets/images/produto-default.jpg');
   const productImages = document.querySelectorAll("#productImage, .product-image");
-  productImages.forEach(img => {
-    img.src = imageUrl;
-    img.alt = product.nome;
-    img.onerror = function() {
-      this.onerror = null;
-      this.src = 'assets/images/placeholder.jpg';
-    };
+  productImages.forEach(el => {
+    if (el) {
+      el.alt = product.nome;
+      applyImageSafe(el, imageUrl, 'assets/images/placeholder.jpg');
+    }
   });
   
   document.getElementById("productCategory").textContent = product.categoria;
@@ -1089,13 +1078,11 @@ function loadPostDetail() {
   
   const imageUrl = getImageUrl(post, 'assets/images/blog-default.jpg');
   const postImages = document.querySelectorAll("#postImage, .post-image");
-  postImages.forEach(img => {
-    img.src = imageUrl;
-    img.alt = post.titulo;
-    img.onerror = function() {
-      this.onerror = null;
-      this.src = 'assets/images/placeholder.jpg';
-    };
+  postImages.forEach(el => {
+    if (el) {
+      el.alt = post.titulo;
+      applyImageSafe(el, imageUrl, 'assets/images/placeholder.jpg');
+    }
   });
   
   document.getElementById("postContent").innerHTML = post.conteudo.replace(
