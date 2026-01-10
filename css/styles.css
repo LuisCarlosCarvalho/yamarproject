@@ -1163,6 +1163,14 @@ h1, h2, h3, h4, h5, h6 {
     margin-right: var(--spacing-xs);
 }
 
+/* Restaurar aparência nativa do checkbox para manter comportamento esperado */
+.form-group input[type="checkbox"] {
+    -webkit-appearance: checkbox;
+    -moz-appearance: checkbox;
+    appearance: auto;
+    cursor: pointer;
+}
+
 .form-row {
     display: grid;
     grid-template-columns: repeat(2, 1fr);

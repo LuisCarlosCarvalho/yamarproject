@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "Website de Maquilhagem Profissional",
   "main": "index.html",
-
   "keywords": [
     "maquilhagem",
     "makeup",
@@ -11,12 +10,12 @@
     "yemar"
   ],
   "author": "",
-  "license": "ISC"
-  ,
+  "license": "ISC",
   "scripts": {
     "seed:supabase": "node tools/run-seed.js"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.36.0"
+    "@supabase/supabase-js": "^2.36.0",
+    "jsdom": "^27.4.0"
   }
 }

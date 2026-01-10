@@ -3419,6 +3419,12 @@ function initAdminSettingsForms() {
       e.preventDefault();
       const shopEnabled = document.getElementById("shopEnabled").checked;
       updateSiteSettings({ shopEnabled });
+      // Aplicar imediatamente as configurações para refletir a alteração na UI
+      try {
+        applySiteSettings();
+      } catch (err) {
+        console.warn('Erro ao aplicar site settings após salvar shopEnabled:', err);
+      }
       showToast("Configurações da loja atualizadas!", "success");
     });
     shopForm.dataset.initialized = "true";
